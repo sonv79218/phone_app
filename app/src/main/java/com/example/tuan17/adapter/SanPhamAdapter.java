@@ -1,8 +1,7 @@
-package com.example.tuan17;
+package com.example.tuan17.adapter;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -21,16 +20,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.tuan17.ChiTietSanPham_Activity;
+import com.example.tuan17.Database;
+import com.example.tuan17.NhomSanPham;
+import com.example.tuan17.R;
+import com.example.tuan17.models.ChiTietSanPham;
+import com.example.tuan17.models.SanPham;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public  class SanPhamAdapter extends BaseAdapter {
 
@@ -197,7 +201,7 @@ public  class SanPhamAdapter extends BaseAdapter {
 
         return viewtemp;
     }
-    // Hàm hiển thị dialog sửa thông tin bác sĩ
+    // Hàm hiển thị dialog sửa thông tin
     private void showEditDialog(SanPham tt) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         View dialogView = LayoutInflater.from(context).inflate(R.layout.activity_sua_san_pham, null);

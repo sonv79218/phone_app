@@ -6,6 +6,9 @@ android {
     namespace 'com.example.tuan17'
     compileSdk 33
 
+    buildFeatures {
+        buildConfig = true
+    }
     defaultConfig {
         applicationId "com.example.tuan17"
         minSdk 24

@@ -5,10 +5,10 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.example.tuan17.helper.BottomBar_Helper;
 
 public class TrangCaNhan_nguoidung_Activity extends AppCompatActivity {
     String tendn;
@@ -20,11 +20,11 @@ public class TrangCaNhan_nguoidung_Activity extends AppCompatActivity {
         Button dangxuat = findViewById(R.id.btndangxuat);
         TextView textTendn = findViewById(R.id.tendn); // TextView hiển thị tên đăng nhập
 
-        ImageButton btntimkiem = findViewById(R.id.btntimkiem);
-        ImageButton btntrangchu = findViewById(R.id.btntrangchu);
-        ImageButton btncard = findViewById(R.id.btncart);
-        ImageButton btndonhang = findViewById(R.id.btndonhang);
-        ImageButton btncanhan = findViewById(R.id.btncanhan);
+//        ImageButton btntimkiem = findViewById(R.id.btntimkiem);
+//        ImageButton btntrangchu = findViewById(R.id.btntrangchu);
+//        ImageButton btncard = findViewById(R.id.btncart);
+//        ImageButton btndonhang = findViewById(R.id.btndonhang);
+//        ImageButton btncanhan = findViewById(R.id.btncanhan);
 
         // Lấy giá trị tendn từ SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
@@ -46,45 +46,7 @@ public class TrangCaNhan_nguoidung_Activity extends AppCompatActivity {
             return;
         }
 
-        btncard.setOnClickListener(view -> {
-            // Kiểm tra trạng thái đăng nhập của người dùng
-            boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
-            if (!isLoggedIn) {
-                Intent intent = new Intent(getApplicationContext(), Login_Activity.class);
-                startActivity(intent);
-            } else {
-                Intent intent = new Intent(getApplicationContext(), GioHang_Activity.class);
-                startActivity(intent);
-            }
-        });
-
-        btntrangchu.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), TrangchuNgdung_Activity.class);
-            startActivity(intent);
-        });
-
-        btndonhang.setOnClickListener(view -> {
-            boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
-            if (isLoggedIn) {
-                Intent intent = new Intent(getApplicationContext(), DonHang_User_Activity.class);
-                intent.putExtra("tendn", tendn);  // Truyền tendn qua Intent
-                startActivity(intent);
-            } else {
-                Intent intent = new Intent(getApplicationContext(), Login_Activity.class);
-                startActivity(intent);
-            }
-        });
-
-        btncanhan.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), DonHang_User_Activity.class);
-            intent.putExtra("tendn", tendn);  // Truyền tendn qua Intent
-            startActivity(intent);
-        });
-
-        btntimkiem.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), TimKiemSanPham_Activity.class);
-            startActivity(intent);
-        });
+BottomBar_Helper.setupBottomBar(this);
 
         dangxuat.setOnClickListener(v -> {
             new AlertDialog.Builder(TrangCaNhan_nguoidung_Activity.this)

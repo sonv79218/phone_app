@@ -1,4 +1,4 @@
-package com.example.tuan17;
+package com.example.tuan17.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -11,8 +11,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.tuan17.DatabaseHelper;
+import com.example.tuan17.R;
+import com.example.tuan17.models.ChiTietDonHang;
+
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 

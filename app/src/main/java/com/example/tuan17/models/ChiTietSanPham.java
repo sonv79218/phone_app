@@ -1,16 +1,19 @@
-package com.example.tuan17;
+package com.example.tuan17.models;
 
-public class SanPham {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class ChiTietSanPham implements Parcelable {
     String masp;
     String tensp;
     Float dongia;
     String mota,ghichu;
     int soluongkho;
 
-String mansp;
+    String mansp;
     byte[] anh;
 
-    public SanPham(String masp, String tensp, Float dongia, String mota, String ghichu, int soluongkho, String mansp, byte[] anh) {
+    public ChiTietSanPham(String masp, String tensp, Float dongia, String mota, String ghichu, int soluongkho, String mansp, byte[] anh) {
         this.masp = masp;
         this.tensp = tensp;
         this.dongia = dongia;
@@ -83,6 +86,42 @@ String mansp;
 
     public void setAnh(byte[] anh) {
         this.anh = anh;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+    protected ChiTietSanPham(Parcel in) {
+        masp = in.readString();
+        tensp = in.readString();
+        dongia = in.readFloat();
+        mota = in.readString();
+        ghichu = in.readString();
+        soluongkho = in.readInt();
+       mansp = in.readString();
+        anh = in.createByteArray();
+    }
+    public static final Creator<ChiTietSanPham> CREATOR = new Creator<ChiTietSanPham>   () {
+        @Override
+        public ChiTietSanPham createFromParcel(Parcel in) {
+            return new ChiTietSanPham(in);
+        }
+
+        @Override
+        public ChiTietSanPham[] newArray(int size) {
+            return new ChiTietSanPham[size];
+        }
+    };
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(masp);
+        dest.writeString(tensp);
+        dest.writeFloat(dongia);
+        dest.writeString(mota);
+        dest.writeString(ghichu);
+        dest.writeInt(soluongkho);
+        dest.writeString(mansp);
+        dest.writeByteArray(anh);
     }
 
 }

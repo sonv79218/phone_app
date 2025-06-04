@@ -6,10 +6,10 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.example.tuan17.helper.BottomBar_Admin_Helper;
 
 public class TrangCaNhan_admin_Activity extends AppCompatActivity {
 
@@ -33,71 +33,7 @@ public class TrangCaNhan_admin_Activity extends AppCompatActivity {
             return;
         }
 
-        ImageButton btntrangchu=findViewById(R.id.btntrangchu);
-        btntrangchu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent a=new Intent(getApplicationContext(),TrangchuAdmin_Activity.class);
-                startActivity(a);
-            }
-        });
-        ImageButton btncanhan=findViewById(R.id.btncanhan);
-        btncanhan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //kiểm tra trạng thái đăng nhập của ng dùng
-                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-                boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
-
-                if (!isLoggedIn) {
-                    // Chưa đăng nhập, chuyển đến trang login
-                    Intent intent = new Intent(getApplicationContext(),Login_Activity.class);
-                    startActivity(intent);
-                } else {
-                    // Đã đăng nhập, chuyển đến trang 2
-                    Intent intent = new Intent(getApplicationContext(), TrangCaNhan_admin_Activity.class);
-                    startActivity(intent);
-                }
-            }
-        });
-        ImageButton btndonhang=findViewById(R.id.btndonhang);
-        btndonhang.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent a=new Intent(getApplicationContext(),DonHang_admin_Activity.class);
-                startActivity(a);
-            }
-        });
-        ImageButton btnsanpham    =findViewById(R.id.btnsanpham);
-        btnsanpham.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent a=new Intent(getApplicationContext(),Sanpham_admin_Activity.class);
-                startActivity(a);
-            }
-        });
-        ImageButton btnnhomsp   =findViewById(R.id.btnnhomsp);
-        btnnhomsp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent a=new Intent(getApplicationContext(),Nhomsanpham_admin_Actvity.class);
-                startActivity(a);
-            }
-        });
-        ImageButton btntaikhoan    =findViewById(R.id.btntaikhoan);
-        btntaikhoan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent a=new Intent(getApplicationContext(),Taikhoan_admin_Activity.class);
-                startActivity(a);
-            }
-        });
-
-        btntrangchu.setOnClickListener(view -> {
-            // Chuyển đến trang chính
-            Intent intent = new Intent(getApplicationContext(), TrangchuAdmin_Activity.class);
-            startActivity(intent);
-        });
+BottomBar_Admin_Helper.setupBottomBar(this);
 
         dangxuat.setOnClickListener(v -> {
             new AlertDialog.Builder(TrangCaNhan_admin_Activity.this)

@@ -15,6 +15,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tuan17.adapter.GioHangAdapter;
+import com.example.tuan17.models.GioHang;
+
 import java.util.List;
 
 public class GioHang_Activity extends AppCompatActivity {

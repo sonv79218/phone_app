@@ -1,34 +1,36 @@
-package com.example.tuan17;
+package com.example.tuan17.adapter;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.tuan17.ChiTietSanPham_Activity;
+import com.example.tuan17.R;
 import com.example.tuan17.models.ChiTietSanPham;
 import com.example.tuan17.models.SanPham;
 
 import java.util.ArrayList;
 
-public class SanPham_TrangChuAdmin_Adapter extends BaseAdapter {
+public class ChiTietSanPham_Adapter extends BaseAdapter {
     private Context context;
-    private Uri selectedImageUri;
-    private ArrayList<SanPham> spList;
-    private boolean showFullDetails;
-    private Database database;
 
-    public SanPham_TrangChuAdmin_Adapter(Context context, ArrayList<SanPham> spList, boolean showFullDetails) {
+    private ArrayList<SanPham> spList;
+    private boolean showFullDetails; // Biến để xác định xem có hiển thị 7 thuộc tính hay không
+
+
+    public ChiTietSanPham_Adapter(Context context, ArrayList<SanPham> bacsiList, boolean showFullDetails) {
         this.context = context;
-        this.spList = spList;
-        this.showFullDetails = showFullDetails;
-        this.database = new Database(context, "banhang.db", null, 1);
+        this.spList = bacsiList;
+        this.showFullDetails = showFullDetails; // Khởi tạo biến
+
     }
 
     @Override
@@ -40,6 +42,7 @@ public class SanPham_TrangChuAdmin_Adapter extends BaseAdapter {
     public Object getItem(int position) {
         return spList.get(position);
     }
+
 
     @Override
     public long getItemId(int position) {
@@ -55,7 +58,8 @@ public class SanPham_TrangChuAdmin_Adapter extends BaseAdapter {
         }
     }
 
-    private View getViewWith8Properties(int i, View view, ViewGroup parent) {
+
+    public View getViewWith8Properties(int i, View view, ViewGroup parent) {
         View viewtemp;
         if (view == null) {
             viewtemp = LayoutInflater.from(parent.getContext()).inflate(R.layout.ds_sanpham, parent, false);
@@ -72,16 +76,19 @@ public class SanPham_TrangChuAdmin_Adapter extends BaseAdapter {
         TextView soluongkho = viewtemp.findViewById(R.id.soluongkho);
         TextView manhomsanpham = viewtemp.findViewById(R.id.manhomsanpham);
         ImageView anh = viewtemp.findViewById(R.id.imgsp);
+        ImageButton sua = viewtemp.findViewById(R.id.imgsua);
+        ImageButton xoa = viewtemp.findViewById(R.id.imgxoa);
 
-
+        // Hiển thị thông tin bác sĩ
         masp.setText(tt.getMasp());
         tensp.setText(tt.getTensp());
-        dongia.setText(String.valueOf(tt.getDongia()));
+        dongia.setText(String.valueOf(tt.getDongia())); // Chuyển đổi Float thành String
         mota.setText(tt.getMota());
         ghichu.setText(tt.getGhichu());
-        soluongkho.setText(String.valueOf(tt.getSoluongkho()));
+        soluongkho.setText(String.valueOf(tt.getSoluongkho())); // Chuyển đổi Integer thành String
         manhomsanpham.setText(tt.getMansp());
 
+        // Hiển thị ảnh bác sĩ
         byte[] anhByteArray = tt.getAnh();
         if (anhByteArray != null && anhByteArray.length > 0) {
             Bitmap imganhbs = BitmapFactory.decodeByteArray(anhByteArray, 0, anhByteArray.length);
@@ -89,6 +96,7 @@ public class SanPham_TrangChuAdmin_Adapter extends BaseAdapter {
         } else {
             anh.setImageResource(R.drawable.vest);
         }
+
 
 
         return viewtemp;
@@ -132,7 +140,7 @@ public class SanPham_TrangChuAdmin_Adapter extends BaseAdapter {
 
         // Thêm sự kiện click để chuyển đến trang chi tiết
         viewtemp.setOnClickListener(v -> {
-            Intent intent = new Intent(parent.getContext(), ChiTietSanPham_Admin_Activity.class);
+            Intent intent = new Intent(parent.getContext(), ChiTietSanPham_Activity.class);
             ChiTietSanPham chiTietSanPham = new ChiTietSanPham(
                     tt.getMasp(),
                     tt.getTensp(),
@@ -150,4 +158,3 @@ public class SanPham_TrangChuAdmin_Adapter extends BaseAdapter {
         return viewtemp;
     }
 }
-

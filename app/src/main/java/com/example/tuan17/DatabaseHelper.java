@@ -1,11 +1,13 @@
 package com.example.tuan17;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import com.example.tuan17.models.ChiTietDonHang;
+import com.example.tuan17.models.SanPham;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tuan17.models.ChiTietSanPham;
+
 public class ChiTietSanPham_Activity extends AppCompatActivity {
 
      String masp, tendn;

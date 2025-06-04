@@ -1,4 +1,4 @@
-package com.example.tuan17;
+package com.example.tuan17.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;

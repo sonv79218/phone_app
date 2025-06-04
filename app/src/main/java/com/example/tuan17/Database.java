@@ -27,8 +27,7 @@ public class Database extends SQLiteOpenHelper {
         database.execSQL(sql);
 
     }
-    public void Q
-    ueryDulieu(String sql, byte[]... params) {
+    public void QueryDulieu(String sql, byte[]... params) {
         SQLiteDatabase database = this.getWritableDatabase();
         SQLiteStatement statement = database.compileStatement(sql);
 

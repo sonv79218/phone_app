@@ -87,6 +87,12 @@
             android:name=".Login_Activity"
             android:exported="false" />
         <activity
+            android:name=".ChiTietSanPham_Admin_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".DanhMucSanPham_Admin_Activity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

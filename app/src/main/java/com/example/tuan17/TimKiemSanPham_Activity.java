@@ -8,12 +8,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tuan17.adapter.SanPham_TimKiem_Adapter;
+import com.example.tuan17.helper.BottomBar_Helper;
+import com.example.tuan17.models.SanPham;
+
 import java.util.ArrayList;
-import java.util.List;
 
 public class TimKiemSanPham_Activity extends AppCompatActivity {
 
@@ -35,11 +37,11 @@ public class TimKiemSanPham_Activity extends AppCompatActivity {
         // Initialize and set the adapter with the product list
         productAdapter = new SanPham_TimKiem_Adapter(this, productList, false);
         grv.setAdapter(productAdapter);
-        ImageButton btntimkiem=findViewById(R.id.btntimkiem);
-        ImageButton btntrangchu=findViewById(R.id.btntrangchu);
-        ImageButton btncard=findViewById(R.id.btncart);
-        ImageButton btndonhang=findViewById(R.id.btndonhang);
-        ImageButton btncanhan=findViewById(R.id.btncanhan);
+//        ImageButton btntimkiem=findViewById(R.id.btntimkiem);
+//        ImageButton btntrangchu=findViewById(R.id.btntrangchu);
+//        ImageButton btncard=findViewById(R.id.btncart);
+//        ImageButton btndonhang=findViewById(R.id.btndonhang);
+//        ImageButton btncanhan=findViewById(R.id.btncanhan);
 
 
 
@@ -63,79 +65,7 @@ public class TimKiemSanPham_Activity extends AppCompatActivity {
             finish(); // Kết thúc activity nếu chưa đăng nhập
             return;
         }
-        btncard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //kiểm tra trạng thái đăng nhập của ng dùng
-                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-                boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
-
-                if (!isLoggedIn) {
-                    // Chưa đăng nhập, chuyển đến trang login
-                    Intent intent = new Intent(getApplicationContext(),Login_Activity.class);
-                    startActivity(intent);
-                } else {
-                    // Đã đăng nhập, chuyển đến trang 2
-                    Intent intent = new Intent(getApplicationContext(), GioHang_Activity.class);
-                    startActivity(intent);
-                }
-            }
-        });
-        btntrangchu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Đã đăng nhập, chuyển đến trang đơn hàng
-                Intent intent = new Intent(getApplicationContext(), TrangchuNgdung_Activity.class);
-                intent.putExtra("tendn", tendn); // Truyền tendn qua intent
-                startActivity(intent);
-            }
-        });
-        btndonhang.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Kiểm tra trạng thái đăng nhập của người dùng
-                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-                boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
-
-                if (!isLoggedIn) {
-                    // Chưa đăng nhập, chuyển đến trang login
-                    Intent intent = new Intent(getApplicationContext(), Login_Activity.class);
-                    startActivity(intent);
-                } else {
-                    // Đã đăng nhập, chuyển đến trang đơn hàng
-                    Intent intent = new Intent(getApplicationContext(), DonHang_User_Activity.class);
-                    intent.putExtra("tendn", tendn); // Truyền tendn qua intent
-                    startActivity(intent);
-                }
-            }
-        });
-
-        btncanhan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //kiểm tra trạng thái đăng nhập của ng dùng
-                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-                boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
-
-                if (!isLoggedIn) {
-                    // Chưa đăng nhập, chuyển đến trang login
-                    Intent intent = new Intent(getApplicationContext(),Login_Activity.class);
-                    startActivity(intent);
-                } else {
-                    // Đã đăng nhập, chuyển đến trang 2
-                    Intent intent = new Intent(getApplicationContext(), TrangCaNhan_nguoidung_Activity.class);
-                    startActivity(intent);
-                }
-            }
-        });
-
-        btntimkiem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent a=new Intent(getApplicationContext(),TimKiemSanPham_Activity.class);
-                startActivity(a);
-            }
-        });
+BottomBar_Helper.setupBottomBar(this);
 
         timkiem.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,9 +1,7 @@
-package com.example.tuan17;
+package com.example.tuan17.adapter;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -11,25 +9,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.example.tuan17.ChiTietSanPham_Activity;
+import com.example.tuan17.Database;
+import com.example.tuan17.R;
+import com.example.tuan17.models.ChiTietSanPham;
+import com.example.tuan17.models.SanPham;
 
 import java.util.ArrayList;
 
-public class ChiTietSanPham_Adapter extends BaseAdapter {
+public class SanPham_TimKiem_Adapter extends BaseAdapter {
     private Context context;
-
+    private Uri selectedImageUri;
     private ArrayList<SanPham> spList;
-    private boolean showFullDetails; // Biến để xác định xem có hiển thị 7 thuộc tính hay không
+    private boolean showFullDetails;
+    private Database database;
 
-
-    public ChiTietSanPham_Adapter(Context context, ArrayList<SanPham> bacsiList, boolean showFullDetails) {
+    public SanPham_TimKiem_Adapter(Context context, ArrayList<SanPham> spList, boolean showFullDetails) {
         this.context = context;
-        this.spList = bacsiList;
-        this.showFullDetails = showFullDetails; // Khởi tạo biến
-
+        this.spList = spList;
+        this.showFullDetails = showFullDetails;
+        this.database = new Database(context, "banhang.db", null, 1);
     }
 
     @Override
@@ -41,7 +43,6 @@ public class ChiTietSanPham_Adapter extends BaseAdapter {
     public Object getItem(int position) {
         return spList.get(position);
     }
-
 
     @Override
     public long getItemId(int position) {
@@ -57,8 +58,7 @@ public class ChiTietSanPham_Adapter extends BaseAdapter {
         }
     }
 
-
-    public View getViewWith8Properties(int i, View view, ViewGroup parent) {
+    private View getViewWith8Properties(int i, View view, ViewGroup parent) {
         View viewtemp;
         if (view == null) {
             viewtemp = LayoutInflater.from(parent.getContext()).inflate(R.layout.ds_sanpham, parent, false);
@@ -75,19 +75,16 @@ public class ChiTietSanPham_Adapter extends BaseAdapter {
         TextView soluongkho = viewtemp.findViewById(R.id.soluongkho);
         TextView manhomsanpham = viewtemp.findViewById(R.id.manhomsanpham);
         ImageView anh = viewtemp.findViewById(R.id.imgsp);
-        ImageButton sua = viewtemp.findViewById(R.id.imgsua);
-        ImageButton xoa = viewtemp.findViewById(R.id.imgxoa);
 
-        // Hiển thị thông tin bác sĩ
+
         masp.setText(tt.getMasp());
         tensp.setText(tt.getTensp());
-        dongia.setText(String.valueOf(tt.getDongia())); // Chuyển đổi Float thành String
+        dongia.setText(String.valueOf(tt.getDongia()));
         mota.setText(tt.getMota());
         ghichu.setText(tt.getGhichu());
-        soluongkho.setText(String.valueOf(tt.getSoluongkho())); // Chuyển đổi Integer thành String
+        soluongkho.setText(String.valueOf(tt.getSoluongkho()));
         manhomsanpham.setText(tt.getMansp());
 
-        // Hiển thị ảnh bác sĩ
         byte[] anhByteArray = tt.getAnh();
         if (anhByteArray != null && anhByteArray.length > 0) {
             Bitmap imganhbs = BitmapFactory.decodeByteArray(anhByteArray, 0, anhByteArray.length);
@@ -96,48 +93,7 @@ public class ChiTietSanPham_Adapter extends BaseAdapter {
             anh.setImageResource(R.drawable.vest);
         }
 
-
-
-        return viewtemp;
-    }
-
-    public View getViewWith4Properties(int i, View view, ViewGroup parent) {
-        View viewtemp;
-        if (view == null) {
-            viewtemp = LayoutInflater.from(parent.getContext()).inflate(R.layout.ds_hienthi_gridview1_nguoidung, parent, false);
-        } else {
-            viewtemp = view;
-        }
-
-        SanPham tt = spList.get(i);
-        TextView masp = viewtemp.findViewById(R.id.masp);
-        TextView tensp = viewtemp.findViewById(R.id.tensp);
-        TextView dongia = viewtemp.findViewById(R.id.dongia);
-        TextView mota = viewtemp.findViewById(R.id.mota);
-        TextView ghichu = viewtemp.findViewById(R.id.ghichu);
-        TextView soluongkho = viewtemp.findViewById(R.id.soluongkho);
-        TextView manhomsanpham = viewtemp.findViewById(R.id.manhomsanpham);
-        ImageView anh = viewtemp.findViewById(R.id.imgsp);
-
-        // Hiển thị thông tin sản phẩm
-        masp.setText(tt.getMasp());
-        tensp.setText(tt.getTensp());
-        dongia.setText(String.valueOf(tt.getDongia())); // Chuyển đổi Float thành String
-        mota.setText(tt.getMota());
-        ghichu.setText(tt.getGhichu());
-        soluongkho.setText(String.valueOf(tt.getSoluongkho())); // Chuyển đổi Integer thành String
-        manhomsanpham.setText(tt.getMansp());
-
-        // Hiển thị ảnh sản phẩm
-        byte[] anhByteArray = tt.getAnh();
-        if (anhByteArray != null && anhByteArray.length > 0) {
-            Bitmap imganhbs = BitmapFactory.decodeByteArray(anhByteArray, 0, anhByteArray.length);
-            anh.setImageBitmap(imganhbs);
-        } else {
-            anh.setImageResource(R.drawable.vest);
-        }
-
-        // Thêm sự kiện click để chuyển đến trang chi tiết
+        // Thay đổi ở đây: Truyền thêm thông tin sản phẩm khi người dùng nhấn vào sản phẩm
         viewtemp.setOnClickListener(v -> {
             Intent intent = new Intent(parent.getContext(), ChiTietSanPham_Activity.class);
             ChiTietSanPham chiTietSanPham = new ChiTietSanPham(
@@ -156,4 +112,59 @@ public class ChiTietSanPham_Adapter extends BaseAdapter {
 
         return viewtemp;
     }
+
+    private View getViewWith4Properties(int i, View view, ViewGroup parent) {
+        View viewtemp;
+        if (view == null) {
+            viewtemp = LayoutInflater.from(parent.getContext()).inflate(R.layout.ds_hienthi_gridview1_nguoidung, parent, false);
+        } else {
+            viewtemp = view;
+        }
+
+        SanPham tt = spList.get(i);
+        TextView masp = viewtemp.findViewById(R.id.masp);
+        TextView tensp = viewtemp.findViewById(R.id.tensp);
+        TextView dongia = viewtemp.findViewById(R.id.dongia);
+        TextView mota = viewtemp.findViewById(R.id.mota);
+        TextView ghichu = viewtemp.findViewById(R.id.ghichu);
+        TextView soluongkho = viewtemp.findViewById(R.id.soluongkho);
+        TextView manhomsanpham = viewtemp.findViewById(R.id.manhomsanpham);
+        ImageView anh = viewtemp.findViewById(R.id.imgsp);
+
+        masp.setText(tt.getMasp());
+        tensp.setText(tt.getTensp());
+        dongia.setText(String.valueOf(tt.getDongia()));
+        mota.setText(tt.getMota());
+        ghichu.setText(tt.getGhichu());
+        soluongkho.setText(String.valueOf(tt.getSoluongkho()));
+        manhomsanpham.setText(tt.getMansp());
+
+        byte[] anhByteArray = tt.getAnh();
+        if (anhByteArray != null && anhByteArray.length > 0) {
+            Bitmap imganhbs = BitmapFactory.decodeByteArray(anhByteArray, 0, anhByteArray.length);
+            anh.setImageBitmap(imganhbs);
+        } else {
+            anh.setImageResource(R.drawable.vest);
+        }
+
+        viewtemp.setOnClickListener(v -> {
+            Intent intent = new Intent(parent.getContext(), ChiTietSanPham_Activity.class);
+            ChiTietSanPham chiTietSanPham = new ChiTietSanPham(
+                    tt.getMasp(),
+                    tt.getTensp(),
+                    tt.getDongia(),
+                    tt.getMota(),
+                    tt.getGhichu(),
+                    tt.getSoluongkho(),
+                    tt.getMansp(),
+                    tt.getAnh()
+            );
+            intent.putExtra("chitietsanpham", chiTietSanPham); // Truyền đối tượng ChiTietSanPham
+            parent.getContext().startActivity(intent);
+        });
+        return viewtemp;
+    }
+
+
 }
+

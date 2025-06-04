@@ -2,15 +2,11 @@ package com.example.tuan17;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import java.util.List;
+import com.example.tuan17.adapter.ChiTietDonHangAdapter;
+import com.example.tuan17.helper.BottomBar_Admin_Helper;
 
 public class ChiTietDonHang_Admin_Activity extends AppCompatActivity {
 
@@ -22,7 +18,7 @@ public class ChiTietDonHang_Admin_Activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chi_tiet_don_hang_admin_cp);
+        setContentView(R.layout.activity_chi_tiet_don_hang_admin);
 
         // Khởi tạo cơ sở dữ liệu
 //        dbdata = new DatabaseHelper(this);
@@ -66,65 +62,7 @@ public class ChiTietDonHang_Admin_Activity extends AppCompatActivity {
 //            }
 //        }
 
-        ImageButton btntrangchu=findViewById(R.id.btntrangchu);
-        btntrangchu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent a=new Intent(getApplicationContext(),TrangchuAdmin_Activity.class);
-                startActivity(a);
-            }
-        });
-        ImageButton btncanhan=findViewById(R.id.btncanhan);
-        btncanhan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //kiểm tra trạng thái đăng nhập của ng dùng
-                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-                boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
-
-                if (!isLoggedIn) {
-                    // Chưa đăng nhập, chuyển đến trang login
-                    Intent intent = new Intent(getApplicationContext(),Login_Activity.class);
-                    startActivity(intent);
-                } else {
-                    // Đã đăng nhập, chuyển đến trang 2
-                    Intent intent = new Intent(getApplicationContext(), TrangCaNhan_admin_Activity.class);
-                    startActivity(intent);
-                }
-            }
-        });
-        ImageButton btndonhang=findViewById(R.id.btndonhang);
-        btndonhang.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent a=new Intent(getApplicationContext(),DonHang_admin_Activity.class);
-                startActivity(a);
-            }
-        });
-        ImageButton btnsanpham    =findViewById(R.id.btnsanpham);
-        btnsanpham.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent a=new Intent(getApplicationContext(),Sanpham_admin_Activity.class);
-                startActivity(a);
-            }
-        });
-        ImageButton btnnhomsp   =findViewById(R.id.btnnhomsp);
-        btnnhomsp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent a=new Intent(getApplicationContext(),Nhomsanpham_admin_Actvity.class);
-                startActivity(a);
-            }
-        });
-        ImageButton btntaikhoan    =findViewById(R.id.btntaikhoan);
-        btntaikhoan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent a=new Intent(getApplicationContext(),Taikhoan_admin_Activity.class);
-                startActivity(a);
-            }
-        });
+BottomBar_Admin_Helper.setupBottomBar(this);
     }
 
     private void createTableIfNotExists() {

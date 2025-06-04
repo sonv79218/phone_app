@@ -1,60 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-
-    android:name="android.permission.SYSTEM_ALERT_WINDOW"
-    xmlns:android="http://schemas.android.com/apk/res/android">
     <LinearLayout
-        android:id="@+id/bo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:backgroundTint="#B8B519"
-        android:layout_alignParentTop="true"
-        android:background="#072349"
-
-        android:padding="1dp">
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:background="#072349"
-            android:layout_height="60dp">
-            <TextView
-                android:layout_marginLeft="1dp"
-                android:layout_weight="9"
-                android:gravity="center"
-                android:fontFamily="sans-serif-condensed-light"
-                android:textStyle="bold"
-                android:textSize="20dp"
-                android:layout_gravity="center"
-                android:text="CHI TIẾT ĐƠN HÀNG"
-                android:textColor="#FFFFFF"
-                android:src="@drawable/logo1"
-                android:layout_width="80dp"
-                android:layout_height="80dp"></TextView>
-        </LinearLayout>
-
-    </LinearLayout>
-    <ListView
-        android:layout_marginTop="5dp"
-        android:layout_width="match_parent"
-        android:id="@+id/listtk"
-        android:layout_below="@+id/bo"
-        android:layout_marginLeft="10dp"
-        android:layout_marginBottom="50dp"
-        android:layout_marginRight="10dp"
-        android:layout_height="match_parent"></ListView>
-
-
-
-    <!-- Toolbar ở cuối màn hình -->
-    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/bottomToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
         android:background="#FFFFFF"
         android:padding="1dp">
         <LinearLayout
@@ -199,5 +153,4 @@
         </LinearLayout>
     </LinearLayout>
 
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,10 +1,9 @@
-package com.example.tuan17;
+package com.example.tuan17.adapter;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -21,6 +20,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.tuan17.Database;
+import com.example.tuan17.NhomSanPham;
+import com.example.tuan17.R;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;

@@ -1,9 +1,7 @@
-package com.example.tuan17;
+package com.example.tuan17.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -11,9 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.tuan17.ChiTietSanPham_Activity;
+import com.example.tuan17.Database;
+import com.example.tuan17.R;
+import com.example.tuan17.models.ChiTietSanPham;
+import com.example.tuan17.models.SanPham;
 
 import java.util.ArrayList;
 

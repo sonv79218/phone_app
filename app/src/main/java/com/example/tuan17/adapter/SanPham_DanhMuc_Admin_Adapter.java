@@ -1,4 +1,4 @@
-package com.example.tuan17;
+package com.example.tuan17.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,16 +12,23 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.tuan17.ChiTietSanPham_Activity;
+import com.example.tuan17.ChiTietSanPham_Admin_Activity;
+import com.example.tuan17.Database;
+import com.example.tuan17.R;
+import com.example.tuan17.models.ChiTietSanPham;
+import com.example.tuan17.models.SanPham;
+
 import java.util.ArrayList;
 
-public class SanPham_TimKiem_Adapter extends BaseAdapter {
+public class SanPham_DanhMuc_Admin_Adapter extends BaseAdapter {
     private Context context;
     private Uri selectedImageUri;
     private ArrayList<SanPham> spList;
     private boolean showFullDetails;
     private Database database;
 
-    public SanPham_TimKiem_Adapter(Context context, ArrayList<SanPham> spList, boolean showFullDetails) {
+    public SanPham_DanhMuc_Admin_Adapter(Context context, ArrayList<SanPham> spList, boolean showFullDetails) {
         this.context = context;
         this.spList = spList;
         this.showFullDetails = showFullDetails;
@@ -89,7 +96,7 @@ public class SanPham_TimKiem_Adapter extends BaseAdapter {
 
         // Thay đổi ở đây: Truyền thêm thông tin sản phẩm khi người dùng nhấn vào sản phẩm
         viewtemp.setOnClickListener(v -> {
-            Intent intent = new Intent(parent.getContext(), ChiTietSanPham_Activity.class);
+            Intent intent = new Intent(parent.getContext(), ChiTietSanPham_Admin_Activity.class);
             ChiTietSanPham chiTietSanPham = new ChiTietSanPham(
                     tt.getMasp(),
                     tt.getTensp(),
@@ -142,7 +149,7 @@ public class SanPham_TimKiem_Adapter extends BaseAdapter {
         }
 
         viewtemp.setOnClickListener(v -> {
-            Intent intent = new Intent(parent.getContext(), ChiTietSanPham_Activity.class);
+            Intent intent = new Intent(parent.getContext(), ChiTietSanPham_Admin_Activity.class);
             ChiTietSanPham chiTietSanPham = new ChiTietSanPham(
                     tt.getMasp(),
                     tt.getTensp(),
@@ -158,7 +165,4 @@ public class SanPham_TimKiem_Adapter extends BaseAdapter {
         });
         return viewtemp;
     }
-
-
 }
-

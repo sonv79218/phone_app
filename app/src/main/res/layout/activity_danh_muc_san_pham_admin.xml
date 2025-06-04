@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent"
 
 
     android:name="android.permission.SYSTEM_ALERT_WINDOW" xmlns:android="http://schemas.android.com/apk/res/android">
@@ -12,7 +10,7 @@
         android:orientation="vertical"
         android:backgroundTint="#072349"
         android:layout_alignParentTop="true"
-        android:background="#F6F3EF"
+
 
         android:padding="1dp">
         <LinearLayout
@@ -21,7 +19,6 @@
             android:background="#072349"
             android:layout_height="60dp">
             <TextView
-
                 android:layout_marginLeft="1dp"
                 android:layout_weight="9"
                 android:gravity="center"
@@ -29,8 +26,7 @@
                 android:textStyle="bold"
                 android:textSize="20dp"
                 android:layout_gravity="center"
-
-                android:text="DANH SÁCH TÀI KHOẢN"
+                android:text="DANH MỤC SẢN PHẨM BẠN MUỐN"
                 android:textColor="#FFFFFF"
                 android:src="@drawable/logo1"
                 android:layout_width="80dp"
@@ -38,36 +34,23 @@
         </LinearLayout>
 
     </LinearLayout>
-    <ListView
+    <GridView
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"
-        android:id="@+id/listtk"
+        android:id="@+id/grv"
         android:layout_below="@+id/bo"
         android:layout_marginLeft="10dp"
-        android:layout_marginBottom="50dp"
+        android:horizontalSpacing="5dp"
+        android:numColumns="2"
+        android:columnCount="4"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="5dp"
+
+    android:layout_marginBottom="50dp"
         android:layout_marginRight="10dp"
-        android:layout_height="match_parent"></ListView>
+        android:layout_height="match_parent"></GridView>
 
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true">
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/btnthem"
-            android:backgroundTint="#289700"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_marginBottom="100dp"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/add"
-            />
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-    <!-- Toolbar ở cuối màn hình -->
     <include
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"

@@ -14,6 +14,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tuan17.adapter.TaiKhoanAdapter;
+import com.example.tuan17.models.TaiKhoan;
+
 import java.util.ArrayList;
 
 public class DoiMatKhau_Activity extends AppCompatActivity {

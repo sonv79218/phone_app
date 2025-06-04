@@ -1,4 +1,4 @@
-package com.example.tuan17;
+package com.example.tuan17.adapter;
 
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -13,6 +13,10 @@ import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.tuan17.Database;
+import com.example.tuan17.R;
+import com.example.tuan17.models.TaiKhoan;
 
 import java.util.List;
 

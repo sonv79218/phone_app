@@ -4,6 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import com.example.tuan17.adapter.SanPhamAdapter;
+import com.example.tuan17.models.SanPham;
+
 import java.util.ArrayList;
 
 public class SuaSanPham_Activity extends AppCompatActivity {
