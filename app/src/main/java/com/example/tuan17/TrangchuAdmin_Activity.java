@@ -38,19 +38,15 @@ public class TrangchuAdmin_Activity extends AppCompatActivity {
         TextView textTendn = findViewById(R.id.tendn); // TextView hiển thị tên đăng nhập
         grv2 = findViewById(R.id.grv2);
         grv1 = findViewById(R.id.grv1);
-        // Lấy tên đăng nhập từ SharedPreferences
-//        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-//        String tendn = sharedPreferences.getString("tendn", null);
-        String tendn = SharedPrefHelper.getUsername(this);
-        // Kiểm tra tên đăng nhập
-        if (tendn != null) {
-            textTendn.setText(tendn);
-        } else {
-            Intent intent = new Intent(TrangchuAdmin_Activity.this, Login_Activity.class);
-            startActivity(intent);
-            finish(); // Kết thúc activity nếu chưa đăng nhập
-            return;
-        }
+//        String tendn = SharedPrefHelper.getUsername(this);
+//        if (tendn != null) {
+//            textTendn.setText(tendn);
+//        } else {
+//            Intent intent = new Intent(TrangchuAdmin_Activity.this, Login_Activity.class);
+//            startActivity(intent);
+//            finish(); // Kết thúc activity nếu chưa đăng nhập
+//            return;
+//        }
         grv2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

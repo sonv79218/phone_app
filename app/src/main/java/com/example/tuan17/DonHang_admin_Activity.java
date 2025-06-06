@@ -8,8 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import com.example.tuan17.database.Database;
+import com.example.tuan17.database.DonHangDB;
 import com.example.tuan17.helper.BottomBar_Admin_Helper;
 import com.example.tuan17.models.Order;
 
@@ -17,17 +16,18 @@ import java.util.List;
 
 public class DonHang_admin_Activity extends AppCompatActivity {
 
-    private Database database;
     private ListView listView;
     private DonHang_Adapter donHangAdapter;
+    // khai báo đối tượng donHangDB
+    private DonHangDB donHangDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_don_hang_admin);
+        donHangDB = new DonHangDB(this); // gán giá trị cho biến donhang đã được khai báo bên ngoài - làm việc tại activity này
         // Khởi tạo các thành phần
         listView = findViewById(R.id.listViewChiTiet);
-        database = new Database(this, "banhang.db", null, 1);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -36,7 +36,6 @@ public class DonHang_admin_Activity extends AppCompatActivity {
                 if (order != null) {
                     // Hiển thị Toast với ID đơn hàng
                     Toast.makeText(DonHang_admin_Activity.this, "ID đơn hàng: " + order.getId(), Toast.LENGTH_SHORT).show();
-
                     // Gửi thông tin đơn hàng qua Intent
                     Intent intent = new Intent(DonHang_admin_Activity.this, ChiTietDonHang_Admin_Activity.class);
                     intent.putExtra("donHangId", String.valueOf(order.getId())); // Đảm bảo rằng ID là chuỗi
@@ -48,25 +47,13 @@ public class DonHang_admin_Activity extends AppCompatActivity {
         });
         // xử lý bottom bar
       BottomBar_Admin_Helper.setupBottomBar(this);
-        // Tạo bảng nếu chưa tồn tại
-        createTableIfNotExists();
         loadDonHang(); // Gọi phương thức loadDonHang với tenDN
-    }
-
-    private void createTableIfNotExists() {
-        // Tạo bảng đơn hàng nếu chưa tồn tại
-        database.QueryData("CREATE TABLE IF NOT EXISTS Dathang (" +
-                "id_dathang INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "tenkh TEXT, " +
-                "diachi TEXT, " +
-                "sdt TEXT, " +
-                "tongthanhtoan REAL, " +
-                "ngaydathang DATETIME DEFAULT CURRENT_TIMESTAMP);");
     }
 
     private void loadDonHang() {
         // Lấy danh sách đơn hàng từ cơ sở dữ liệu
-        List<Order> orders = database.getAllDonHang();
+
+        List<Order> orders = donHangDB.getAllDonHang(); // lưu vào mảng đối tượng
         if (orders.isEmpty()) {
             Toast.makeText(this, "Không tìm thấy đơn hàng nào!", Toast.LENGTH_SHORT).show();
         } else {

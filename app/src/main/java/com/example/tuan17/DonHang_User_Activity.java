@@ -10,6 +10,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.tuan17.database.Database;
+import com.example.tuan17.database.DonHangDB;
 import com.example.tuan17.helper.BottomBar_Helper;
 import com.example.tuan17.helper.SharedPrefHelper;
 import com.example.tuan17.models.Order;
@@ -17,18 +18,19 @@ import com.example.tuan17.models.Order;
 import java.util.List;
 
 public class DonHang_User_Activity extends AppCompatActivity {
-    private Database database;
+//    private Database database;
     private ListView listView;
     private DonHang_Adapter donHangAdapter;
+    private DonHangDB donHangDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_don_hang_user);
-
+        donHangDB = new DonHangDB(this);
         // Khởi tạo các thành phần
         listView = findViewById(R.id.listViewChiTiet);
-        database = new Database(this, "banhang.db", null, 1);
+//        database = new Database(this, "banhang.db", null, 1);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -51,7 +53,7 @@ public class DonHang_User_Activity extends AppCompatActivity {
 
 
         // Tạo bảng nếu chưa tồn tại
-        createTableIfNotExists();
+//        createTableIfNotExists();
 String tenDN = SharedPrefHelper.getUsername(this);
 if( tenDN == null){
     // Lấy tên đăng nhập từ Intent
@@ -71,16 +73,16 @@ if( tenDN == null){
 BottomBar_Helper.setupBottomBar(this);
     }
 
-    private void createTableIfNotExists() {
-        // Tạo bảng đơn hàng nếu chưa tồn tại
-        database.QueryData("CREATE TABLE IF NOT EXISTS Dathang (" +
-                "id_dathang INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "tenkh TEXT, " +
-                "diachi TEXT, " +
-                "sdt TEXT, " +
-                "tongthanhtoan REAL, " +
-                "ngaydathang DATETIME DEFAULT CURRENT_TIMESTAMP);");
-    }
+//    private void createTableIfNotExists() {
+//        // Tạo bảng đơn hàng nếu chưa tồn tại
+//        database.QueryData("CREATE TABLE IF NOT EXISTS Dathang (" +
+//                "id_dathang INTEGER PRIMARY KEY AUTOINCREMENT, " +
+//                "tenkh TEXT, " +
+//                "diachi TEXT, " +
+//                "sdt TEXT, " +
+//                "tongthanhtoan REAL, " +
+//                "ngaydathang DATETIME DEFAULT CURRENT_TIMESTAMP);");
+//    }
 
     private void loadDonHang(String tenKh) {
         // Kiểm tra tên khách hàng trước khi truy vấn
@@ -90,7 +92,7 @@ BottomBar_Helper.setupBottomBar(this);
         }
 
         // Lấy danh sách đơn hàng từ cơ sở dữ liệu
-        List<Order> orders = database.getDonHangByTenKh(tenKh);
+        List<Order> orders = donHangDB.getDonHangByTenKh(tenKh);
         if (orders.isEmpty()) {
             Toast.makeText(this, "Không tìm thấy đơn hàng cho khách hàng này!", Toast.LENGTH_SHORT).show();
         } else {

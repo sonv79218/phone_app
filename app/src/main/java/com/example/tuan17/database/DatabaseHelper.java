@@ -33,14 +33,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "anh TEXT, " +
                 "FOREIGN KEY(id_dathang) REFERENCES Dathang(id_dathang));");
 
-        Log.d("DatabaseHelper", "Tables created successfully");
+//        Log.d("DatabaseHelper", "Tables created successfully");
+
+        // tạo bảng đơn hàng
+        db.execSQL("CREATE TABLE IF NOT EXISTS Dathang (" +
+                "id_dathang INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "tenkh TEXT, " +
+                "diachi TEXT, " +
+                "sdt TEXT, " +
+                "tongthanhtoan REAL, " +
+                "ngaydathang DATETIME DEFAULT CURRENT_TIMESTAMP);");
     }
+
+
 
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS Chitietdonhang");
-
+        db.execSQL("DROP TABLE IF EXISTS Dathang");
         onCreate(db);
         Log.d("DatabaseHelper", "Database upgraded from version " + oldVersion + " to " + newVersion);
     }
