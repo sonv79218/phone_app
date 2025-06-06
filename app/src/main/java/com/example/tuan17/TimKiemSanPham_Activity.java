@@ -12,7 +12,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tuan17.adapter.SanPham_TimKiem_Adapter;
+import com.example.tuan17.database.DatabaseHelper;
 import com.example.tuan17.helper.BottomBar_Helper;
+import com.example.tuan17.helper.SharedPrefHelper;
 import com.example.tuan17.models.SanPham;
 
 import java.util.ArrayList;
@@ -46,9 +48,9 @@ public class TimKiemSanPham_Activity extends AppCompatActivity {
 
 
 
-        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        tendn = sharedPreferences.getString("tendn", null);
-
+//        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+//        tendn = sharedPreferences.getString("tendn", null);
+        String tendn = SharedPrefHelper.getUsername(this);
         // Nếu SharedPreferences không có, thử lấy từ Intent
         if (tendn == null) {
             tendn = getIntent().getStringExtra("tendn");

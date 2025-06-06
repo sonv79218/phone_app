@@ -3,15 +3,18 @@ package com.example.tuan17;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tuan17.database.Database;
 import com.example.tuan17.helper.BottomBar_Admin_Helper;
+import com.example.tuan17.helper.SharedPrefHelper;
+import com.example.tuan17.models.NhomSanPham;
 import com.example.tuan17.models.SanPham;
 
 import java.util.ArrayList;
@@ -32,22 +35,22 @@ public class TrangchuAdmin_Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trangchu_admin);
-//        TextView textTendn = findViewById(R.id.tendn); // TextView hiển thị tên đăng nhập
+        TextView textTendn = findViewById(R.id.tendn); // TextView hiển thị tên đăng nhập
         grv2 = findViewById(R.id.grv2);
         grv1 = findViewById(R.id.grv1);
         // Lấy tên đăng nhập từ SharedPreferences
-        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        String tendn = sharedPreferences.getString("tendn", null);
-
-//        // Kiểm tra tên đăng nhập
-//        if (tendn != null) {
-//            textTendn.setText(tendn);
-//        } else {
-//            Intent intent = new Intent(TrangchuNgdung_Activity.this, Login_Activity.class);
-//            startActivity(intent);
-//            finish(); // Kết thúc activity nếu chưa đăng nhập
-//            return;
-//        }
+//        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+//        String tendn = sharedPreferences.getString("tendn", null);
+        String tendn = SharedPrefHelper.getUsername(this);
+        // Kiểm tra tên đăng nhập
+        if (tendn != null) {
+            textTendn.setText(tendn);
+        } else {
+            Intent intent = new Intent(TrangchuAdmin_Activity.this, Login_Activity.class);
+            startActivity(intent);
+            finish(); // Kết thúc activity nếu chưa đăng nhập
+            return;
+        }
         grv2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -62,7 +65,7 @@ public class TrangchuAdmin_Activity extends AppCompatActivity {
                 }
             }
         });
-BottomBar_Admin_Helper.setupBottomBar(this);
+        BottomBar_Admin_Helper.setupBottomBar(this);
 
         grv2=findViewById(R.id.grv2);
         grv1=findViewById(R.id.grv1);
@@ -101,7 +104,6 @@ BottomBar_Admin_Helper.setupBottomBar(this);
     private void Loaddulieugridview1() {
         Cursor sp = database.GetData("SELECT * FROM sanpham order by random() limit 8");
         mangSPgrv1.clear();
-
         if (sp != null && sp.moveToFirst()) {
             do {
                 String masp = sp.getString(0);
@@ -117,7 +119,6 @@ BottomBar_Admin_Helper.setupBottomBar(this);
         } else {
             Toast.makeText(this, "Null load dữ liệu", Toast.LENGTH_SHORT).show();
         }
-
         adapterGrv1.notifyDataSetChanged();
     }
 }

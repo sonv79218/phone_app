@@ -1,15 +1,15 @@
-package com.example.tuan17;
+package com.example.tuan17.database;
 
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.example.tuan17.models.Order;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,4 @@
-package com.example.tuan17;
-
-import com.example.tuan17.models.ChiTietDonHang;
+package com.example.tuan17.models;
 
 import java.util.ArrayList;
 import java.util.List;

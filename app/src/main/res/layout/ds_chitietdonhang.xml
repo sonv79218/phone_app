@@ -130,6 +130,14 @@
                     android:layout_height="wrap_content"
                     android:textSize="12sp" />
             </LinearLayout>
+            <Button
+                android:id="@+id/btnDanhGia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Đánh giá"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#FF9800"
+                android:layout_marginTop="8dp" />
 
         </LinearLayout>
     </LinearLayout>

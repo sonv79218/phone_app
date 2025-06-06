@@ -2,12 +2,9 @@ package com.example.tuan17;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.example.tuan17.database.DatabaseHelper;
 
 public class OrderManager {
     private DatabaseHelper dbHelper;

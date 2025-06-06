@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.example.tuan17.models.Order;
+
 import java.util.List;
 public class DonHang_Adapter extends ArrayAdapter<Order> {
     public DonHang_Adapter(Context context, List<Order> orders) {

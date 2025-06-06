@@ -13,7 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import com.example.tuan17.database.Database;
 
 public class Login_Activity extends AppCompatActivity {
 
@@ -55,7 +55,7 @@ public class Login_Activity extends AppCompatActivity {
             if (validateLogin(username, password)) {
                 // Gán tên đăng nhập cho biến tendn
                 tendn = username;
-
+//Lưu tên đăng nhập sau khi login:
                 SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("tendn", tendn); // Lưu tên đăng nhập

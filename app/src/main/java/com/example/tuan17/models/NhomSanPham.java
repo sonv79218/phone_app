@@ -1,4 +1,4 @@
-package com.example.tuan17;
+package com.example.tuan17.models;
 
 public class NhomSanPham {
 

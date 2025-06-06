@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.tuan17.adapter.NhomSanPhamAdapter;
+import com.example.tuan17.database.Database;
+import com.example.tuan17.models.NhomSanPham;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

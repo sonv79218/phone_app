@@ -47,10 +47,11 @@ BottomBar_Admin_Helper.setupBottomBar(this);
                         editor.apply();
 
                         // Quay lại Activity chính
-                        Intent intent = new Intent(getApplicationContext(), TrangchuNgdung_Activity.class);
+                        Intent intent = new Intent(getApplicationContext(), Login_Activity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
-                        finish(); // Kết thúc activity
+//                        finish(); // Kết thúc activity
+                        finishAffinity();
                     })
                     .setNegativeButton("Không", null)
                     .show();

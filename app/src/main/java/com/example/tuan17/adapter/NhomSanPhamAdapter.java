@@ -21,8 +21,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.tuan17.Database;
-import com.example.tuan17.NhomSanPham;
+import com.example.tuan17.database.Database;
+import com.example.tuan17.models.NhomSanPham;
 import com.example.tuan17.R;
 
 import java.io.ByteArrayOutputStream;

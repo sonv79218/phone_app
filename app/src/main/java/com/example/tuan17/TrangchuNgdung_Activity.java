@@ -3,7 +3,6 @@ package com.example.tuan17;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
@@ -15,7 +14,10 @@ import android.widget.Toast;
 
 import com.example.tuan17.adapter.NhomSanPhamAdapter;
 import com.example.tuan17.adapter.SanPhamAdapter;
+import com.example.tuan17.database.Database;
 import com.example.tuan17.helper.BottomBar_Helper;
+import com.example.tuan17.helper.SharedPrefHelper;
+import com.example.tuan17.models.NhomSanPham;
 import com.example.tuan17.models.SanPham;
 
 import java.util.ArrayList;
@@ -33,19 +35,15 @@ public class TrangchuNgdung_Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trangchu_ngdung);
-//        ImageButton btntimkiem = findViewById(R.id.btntimkiem);
-//        ImageButton btntrangchu = findViewById(R.id.btntrangchu);
-//        ImageButton btncard = findViewById(R.id.btncart);
-//        ImageButton btndonhang = findViewById(R.id.btndonhang);
-//        ImageButton btncanhan = findViewById(R.id.btncanhan);
         EditText timkiem = findViewById(R.id.timkiem);
         TextView textTendn = findViewById(R.id.tendn); // TextView hiển thị tên đăng nhập
         grv2 = findViewById(R.id.grv2);
         grv1 = findViewById(R.id.grv1);
 
         // Lấy tên đăng nhập từ SharedPreferences
-        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        String tendn = sharedPreferences.getString("tendn", null);
+//        String tendn = SharedPrefHelper.getUsername(this);
+        String tendn = SharedPrefHelper.getUsername(this);
+
 
         // Kiểm tra tên đăng nhập
         if (tendn != null) {
@@ -72,7 +70,7 @@ public class TrangchuNgdung_Activity extends AppCompatActivity {
         });
 
         // Gửi tên đăng nhập qua Intent trong sự kiện click
-BottomBar_Helper.setupBottomBar(this);
+        BottomBar_Helper.setupBottomBar(this);
         timkiem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

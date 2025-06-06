@@ -18,6 +18,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.tuan17.adapter.SanPhamAdapter;
+import com.example.tuan17.database.Database;
+import com.example.tuan17.models.NhomSanPham;
 import com.example.tuan17.models.SanPham;
 
 import java.io.ByteArrayOutputStream;

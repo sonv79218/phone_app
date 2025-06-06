@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.example.tuan17.adapter.NhomSanPhamAdapter;
+import com.example.tuan17.database.Database;
+import com.example.tuan17.models.NhomSanPham;
 
 import java.util.ArrayList;
 

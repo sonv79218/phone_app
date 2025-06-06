@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.tuan17.ChiTietSanPham_Activity;
-import com.example.tuan17.Database;
+import com.example.tuan17.database.Database;
 import com.example.tuan17.R;
 import com.example.tuan17.models.ChiTietSanPham;
 import com.example.tuan17.models.SanPham;

@@ -1,4 +1,4 @@
-package com.example.tuan17;
+package com.example.tuan17.database;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -35,6 +35,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         Log.d("DatabaseHelper", "Tables created successfully");
     }
+
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

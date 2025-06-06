@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.widget.ListView;
 
 import com.example.tuan17.adapter.ChiTietDonHangAdapter;
+import com.example.tuan17.database.Database;
+import com.example.tuan17.database.DatabaseHelper;
 import com.example.tuan17.helper.BottomBar_Admin_Helper;
 
 public class ChiTietDonHang_Admin_Activity extends AppCompatActivity {

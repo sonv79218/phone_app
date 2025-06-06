@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.widget.ImageButton;
 
+import com.example.tuan17.DonHang_User_Activity;
 import com.example.tuan17.DonHang_admin_Activity;
 import com.example.tuan17.GioHang_Activity;
 import com.example.tuan17.Login_Activity;
 import com.example.tuan17.R;
 import com.example.tuan17.TimKiemSanPham_Activity;
 import com.example.tuan17.TrangCaNhan_admin_Activity;
+import com.example.tuan17.TrangCaNhan_nguoidung_Activity;
 import com.example.tuan17.TrangchuNgdung_Activity;
 
 public class BottomBar_Helper {
@@ -27,7 +29,7 @@ public class BottomBar_Helper {
         });
 
         btnDonHang.setOnClickListener(view -> {
-            Intent intent = new Intent(activity, DonHang_admin_Activity.class);
+            Intent intent = new Intent(activity, DonHang_User_Activity.class);
             activity.startActivity(intent);
         });
 
@@ -41,7 +43,7 @@ public class BottomBar_Helper {
             boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
 
             Intent intent = isLoggedIn
-                    ? new Intent(activity, TrangCaNhan_admin_Activity.class)
+                    ? new Intent(activity, TrangCaNhan_nguoidung_Activity.class)
                     : new Intent(activity, Login_Activity.class);
 
             activity.startActivity(intent);

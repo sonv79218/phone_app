@@ -20,12 +20,6 @@ public class TrangCaNhan_nguoidung_Activity extends AppCompatActivity {
         Button dangxuat = findViewById(R.id.btndangxuat);
         TextView textTendn = findViewById(R.id.tendn); // TextView hiển thị tên đăng nhập
 
-//        ImageButton btntimkiem = findViewById(R.id.btntimkiem);
-//        ImageButton btntrangchu = findViewById(R.id.btntrangchu);
-//        ImageButton btncard = findViewById(R.id.btncart);
-//        ImageButton btndonhang = findViewById(R.id.btndonhang);
-//        ImageButton btncanhan = findViewById(R.id.btncanhan);
-
         // Lấy giá trị tendn từ SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
        tendn = sharedPreferences.getString("tendn", null);
@@ -60,10 +54,11 @@ BottomBar_Helper.setupBottomBar(this);
                         editor.apply();
 
                         // Quay lại Activity chính
-                        Intent intent = new Intent(getApplicationContext(), TrangchuNgdung_Activity.class);
+                        Intent intent = new Intent(getApplicationContext(), Login_Activity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
-                        finish(); // Kết thúc activity
+//                        finish(); // Kết thúc activity
+                        finishAffinity();
                     })
                     .setNegativeButton("Không", null)
                     .show();

@@ -69,24 +69,44 @@ public class GioHangAdapter extends ArrayAdapter<GioHang> {
         });
 
         // Thiết lập sự kiện cho nút giảm số lượng
+//        btnGiam.setOnClickListener(v -> {
+//            if (item.getSoLuong() > 1) {
+//                item.setSoLuong(item.getSoLuong() - 1);
+//            } else {
+//                gioHangManager.removeItem(position);
+//                items.remove(position);
+//            }
+//            notifyDataSetChanged();
+//            updateTongTien();
+//        });
         btnGiam.setOnClickListener(v -> {
             if (item.getSoLuong() > 1) {
                 item.setSoLuong(item.getSoLuong() - 1);
             } else {
-                gioHangManager.removeItem(position);
-                items.remove(position);
+                if (position >= 0 && position < items.size()) {
+                    gioHangManager.removeItem(position); // chỉ cần xóa từ manager
+                }
             }
             notifyDataSetChanged();
             updateTongTien();
         });
 
+
         // Thiết lập sự kiện cho TextView xoasp
+//        xoasp.setOnClickListener(v -> {
+//            gioHangManager.removeItem(position); // Gọi phương thức xóa sản phẩm trong giỏ hàng
+//            items.remove(position); // Xóa sản phẩm khỏi danh sách hiện tại
+//            notifyDataSetChanged(); // Cập nhật giao diện
+//            updateTongTien(); // Cập nhật tổng tiền
+//            Toast.makeText(context, "Sản phẩm đã được xóa khỏi giỏ hàng", Toast.LENGTH_SHORT).show(); // Hiển thị thông báo
+//        });
         xoasp.setOnClickListener(v -> {
-            gioHangManager.removeItem(position); // Gọi phương thức xóa sản phẩm trong giỏ hàng
-            items.remove(position); // Xóa sản phẩm khỏi danh sách hiện tại
-            notifyDataSetChanged(); // Cập nhật giao diện
-            updateTongTien(); // Cập nhật tổng tiền
-            Toast.makeText(context, "Sản phẩm đã được xóa khỏi giỏ hàng", Toast.LENGTH_SHORT).show(); // Hiển thị thông báo
+            if (position >= 0 && position < items.size()) {
+                gioHangManager.removeItem(position); // chỉ cần gọi cái này thôi
+                notifyDataSetChanged(); // cập nhật lại giao diện
+                updateTongTien(); // cập nhật tổng tiền
+                Toast.makeText(context, "Sản phẩm đã được xóa khỏi giỏ hàng", Toast.LENGTH_SHORT).show();
+            }
         });
 
 
