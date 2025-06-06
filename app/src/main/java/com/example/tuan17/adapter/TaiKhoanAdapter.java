@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.tuan17.database.Database;
 import com.example.tuan17.R;
+import com.example.tuan17.database.TaiKhoanDB;
 import com.example.tuan17.models.TaiKhoan;
 
 import java.util.List;
@@ -25,6 +26,8 @@ public class TaiKhoanAdapter extends BaseAdapter {
     private int layout;
     private List<TaiKhoan> taiKhoanList;
     private Database database; // Đối tượng Database
+
+    private TaiKhoanDB taiKhoanDB;
 
     public TaiKhoanAdapter(Context context, int layout, List<TaiKhoan> taiKhoanList) {
         this.context = context;
@@ -68,31 +71,27 @@ public class TaiKhoanAdapter extends BaseAdapter {
         matkhau.setText(tt.getMk());
         quyenhang.setText(tt.getQuyen());
 
-        // Xử lý sự kiện cho ImageButton "Sửa"
+
+// Xử lý sự kiện cho ImageButton "Sửa"
         sua.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(viewGroup.getContext());
 
+            View dialogView = LayoutInflater.from(viewGroup.getContext())
+                    .inflate(R.layout.activity_sua_tai_khoan, null);
 
-            View dialogView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.activity_sua_tai_khoan, null);
             EditText editTdn = dialogView.findViewById(R.id.tdn);
             EditText editMk = dialogView.findViewById(R.id.mk);
             RadioButton user = dialogView.findViewById(R.id.user);
-
             RadioButton admin = dialogView.findViewById(R.id.admin);
-
 
             editTdn.setText(tt.getTdn());
             editMk.setText(tt.getMk());
 
             // Đặt quyền hiện tại cho RadioButton
-            switch (tt.getQuyen()) {
-                case "admin":
-                    admin.setChecked(true);
-                    break;
-                case "user":
-                    user.setChecked(true);
-                    break;
-
+            if ("admin".equals(tt.getQuyen())) {
+                admin.setChecked(true);
+            } else {
+                user.setChecked(true);
             }
 
             builder.setView(dialogView)
@@ -101,16 +100,12 @@ public class TaiKhoanAdapter extends BaseAdapter {
                         String newMk = editMk.getText().toString().trim();
                         String quyen = user.isChecked() ? "user" : "admin";
 
-                        SQLiteDatabase db = database.getWritableDatabase(); // Sử dụng đối tượng Database
-                        ContentValues values = new ContentValues();
-                        values.put("tendn", newTdn);
-                        values.put("matkhau", newMk);
-                        values.put("quyen", quyen);
+                        // Sử dụng class DB riêng
+                        TaiKhoanDB taiKhoanDB = new TaiKhoanDB(viewGroup.getContext());
+                        boolean success = taiKhoanDB.suaTaiKhoan(tt.getTdn(), newMk, quyen); // sửa theo tên cũ
 
-                        // Cập nhật dữ liệu
-                        int rowsAffected = db.update("taikhoan", values, "tendn = ?", new String[]{tt.getTdn()});
-                        if (rowsAffected > 0) {
-                            tt.setTdn(newTdn);
+                        if (success) {
+                            tt.setTdn(newTdn); // Nếu cho phép đổi tên đăng nhập, cần xử lý thêm
                             tt.setMk(newMk);
                             tt.setQuyen(quyen);
                             notifyDataSetChanged();
@@ -130,9 +125,10 @@ public class TaiKhoanAdapter extends BaseAdapter {
                     .setTitle("Xác nhận")
                     .setMessage("Bạn có chắc chắn muốn xóa tài khoản này?")
                     .setPositiveButton("Có", (dialog, which) -> {
-                        SQLiteDatabase db = database.getWritableDatabase(); // Sử dụng đối tượng Database
-                        int rowsAffected = db.delete("taikhoan", "tendn = ?", new String[]{tt.getTdn()});
-                        if (rowsAffected > 0) {
+                        TaiKhoanDB taiKhoanDB = new TaiKhoanDB(viewGroup.getContext());
+                        boolean success = taiKhoanDB.xoaTaiKhoan(tt.getTdn());
+
+                        if (success) {
                             taiKhoanList.remove(i);
                             notifyDataSetChanged();
                             Toast.makeText(viewGroup.getContext(), "Xóa tài khoản thành công", Toast.LENGTH_SHORT).show();

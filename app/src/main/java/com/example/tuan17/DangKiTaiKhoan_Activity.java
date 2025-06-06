@@ -16,14 +16,16 @@ import android.widget.Toast;
 
 import com.example.tuan17.adapter.TaiKhoanAdapter;
 import com.example.tuan17.database.Database;
+import com.example.tuan17.database.TaiKhoanDB;
 import com.example.tuan17.models.TaiKhoan;
 
 import java.util.ArrayList;
 
 public class DangKiTaiKhoan_Activity extends AppCompatActivity {
 
-    Database database;
+//    Database database;
 
+    TaiKhoanDB taiKhoanDB;
 
     ArrayList<TaiKhoan> mangTK;
     TaiKhoanAdapter adapter;
@@ -34,7 +36,7 @@ public class DangKiTaiKhoan_Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dang_ki_tai_khoan);
-
+        taiKhoanDB = new TaiKhoanDB(this);
         Button btnadd = findViewById(R.id.btnDangki);
         EditText tendn = findViewById(R.id.tdn);
         EditText matkhau = findViewById(R.id.mk);
@@ -69,8 +71,8 @@ public class DangKiTaiKhoan_Activity extends AppCompatActivity {
         mangTK = new ArrayList<>();
         adapter = new TaiKhoanAdapter(getApplicationContext(), R.layout.ds_taikhoan, mangTK);
 //        lv.setAdapter(adapter);
-        database = new Database(this, "banhang.db", null, 1);
-        database.QueryData("CREATE TABLE IF NOT EXISTS taikhoan(tendn VARCHAR(20) PRIMARY KEY, matkhau VARCHAR(50), quyen VARCHAR(50))");
+//        database = new Database(this, "banhang.db", null, 1);
+//        database.QueryData("CREATE TABLE IF NOT EXISTS taikhoan(tendn VARCHAR(20) PRIMARY KEY, matkhau VARCHAR(50), quyen VARCHAR(50))");
 
 
 
@@ -94,18 +96,27 @@ public class DangKiTaiKhoan_Activity extends AppCompatActivity {
                 }
 
                 // Kiểm tra xem username có tồn tại trong cơ sở dữ liệu không
-                Cursor cursor = database.GetData("SELECT * FROM taikhoan WHERE tendn = '" + username + "'");
+                Cursor cursor = taiKhoanDB.GetData("SELECT * FROM taikhoan WHERE tendn = '" + username + "'");
                 if (cursor.getCount() > 0) {
                     Toast.makeText(DangKiTaiKhoan_Activity.this, "Tên đăng nhập đã tồn tại, vui lòng chọn tên khác!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
+              boolean success =   taiKhoanDB.dangky(username,password);
                 // Thêm tài khoản vào cơ sở dữ liệu
-                database.QueryData("INSERT INTO taikhoan VALUES('" + username + "', '" + password + "', '" + spn + "')");
-                Toast.makeText(DangKiTaiKhoan_Activity.this, "Đăng kí tài khoản thành công", Toast.LENGTH_LONG).show();
-                // Chuyển đến Activity thứ hai
-                Intent intent = new Intent(getApplicationContext(), Login_Activity.class);
-                startActivity(intent);
+//                database.QueryData("INSERT INTO taikhoan VALUES('" + username + "', '" + password + "', '" + spn + "')");
+                if(success){
+                    Toast.makeText(DangKiTaiKhoan_Activity.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getApplicationContext(), Login_Activity.class);
+                    startActivity(intent);
+                }
+                else {
+                    Toast.makeText(DangKiTaiKhoan_Activity.this, "Đăng ký không thành công", Toast.LENGTH_SHORT).show();
+                }
+//                Toast.makeText(DangKiTaiKhoan_Activity.this, "Đăng kí tài khoản thành công", Toast.LENGTH_LONG).show();
+//                // Chuyển đến Activity thứ hai
+//                Intent intent = new Intent(getApplicationContext(), Login_Activity.class);
+//                startActivity(intent);
             }
         });
     }

@@ -14,10 +14,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tuan17.database.Database;
+import com.example.tuan17.database.TaiKhoanDB;
 
 public class Login_Activity extends AppCompatActivity {
 
-    private Database database;
+//    private Database database;
+    private TaiKhoanDB taiKhoanDB;
     private String tendn;
     private Handler handler = new Handler();
     private Runnable timeoutRunnable;
@@ -39,7 +41,8 @@ public class Login_Activity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        database = new Database(this, "banhang.db", null, 1);
+//        database = new Database(this, "banhang.db", null, 1);
+        taiKhoanDB = new TaiKhoanDB(this);
 
         // Chuyển đến activity đăng ký tài khoản
         dangki.setOnClickListener(view -> {
@@ -92,34 +95,40 @@ public class Login_Activity extends AppCompatActivity {
 
     // Hàm kiểm tra thông tin đăng nhập
     private boolean validateLogin(String username, String password) {
-        Cursor cursor = database.getReadableDatabase().rawQuery(
-                "SELECT * FROM taikhoan WHERE tendn = ? AND matkhau = ?",
-                new String[]{username, password});
-        boolean isValid = cursor.getCount() > 0; // Kiểm tra xem có hàng nào không
-        cursor.close(); // Đóng cursor để tránh rò rỉ bộ nhớ
-        return isValid;
+        return taiKhoanDB.checkLogin(username, password);
     }
+//    private boolean validateLogin(String username, String password) {
+//        Cursor cursor = database.getReadableDatabase().rawQuery(
+//                "SELECT * FROM taikhoan WHERE tendn = ? AND matkhau = ?",
+//                new String[]{username, password});
+//        boolean isValid = cursor.getCount() > 0; // Kiểm tra xem có hàng nào không
+//        cursor.close(); // Đóng cursor để tránh rò rỉ bộ nhớ
+//        return isValid;
+//    }
 
     // Hàm lấy quyền người dùng
     private String getUserQuyen(String username) {
-        String quyen = "";
-        Cursor cursor = database.getReadableDatabase().rawQuery(
-                "SELECT quyen FROM taikhoan WHERE tendn = ?",
-                new String[]{username});
-
-        if (cursor.moveToFirst()) {
-            int quyenColumnIndex = cursor.getColumnIndex("quyen");
-            if (quyenColumnIndex != -1) {
-                quyen = cursor.getString(quyenColumnIndex);
-            } else {
-                Log.e("Error", "Column 'quyen' not found in result set");
-            }
-        } else {
-            Log.e("Error", "No user found with username: " + username);
-        }
-        cursor.close(); // Đóng cursor
-        return quyen;
+        return taiKhoanDB.getQuyenByUsername(username);
     }
+//    private String getUserQuyen(String username) {
+//        String quyen = "";
+//        Cursor cursor = database.getReadableDatabase().rawQuery(
+//                "SELECT quyen FROM taikhoan WHERE tendn = ?",
+//                new String[]{username});
+//
+//        if (cursor.moveToFirst()) {
+//            int quyenColumnIndex = cursor.getColumnIndex("quyen");
+//            if (quyenColumnIndex != -1) {
+//                quyen = cursor.getString(quyenColumnIndex);
+//            } else {
+//                Log.e("Error", "Column 'quyen' not found in result set");
+//            }
+//        } else {
+//            Log.e("Error", "No user found with username: " + username);
+//        }
+//        cursor.close(); // Đóng cursor
+//        return quyen;
+//    }
 
     // Hàm khởi động timer tự động đăng xuất
     private void startAutoLogoutTimer() {

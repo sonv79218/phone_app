@@ -12,12 +12,15 @@ import android.widget.Toast;
 
 import com.example.tuan17.adapter.TaiKhoanAdapter;
 import com.example.tuan17.database.Database;
+import com.example.tuan17.database.TaiKhoanDB;
 import com.example.tuan17.models.TaiKhoan;
 
 import java.util.ArrayList;
 
 public class ThemTaiKhoan_Activity extends AppCompatActivity {
-    Database database;
+//    Database database;
+
+    TaiKhoanDB taiKhoanDB;
 
 
     ArrayList<TaiKhoan> mangTK;
@@ -29,22 +32,17 @@ public class ThemTaiKhoan_Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_them_tai_khoan);
-
+        taiKhoanDB = new TaiKhoanDB(this);
         Button btnadd = findViewById(R.id.btnadd);
         EditText tendn = findViewById(R.id.tdn);
         EditText matkhau = findViewById(R.id.mk);
-         admin= findViewById(R.id.admin);
+        admin= findViewById(R.id.admin);
         user= findViewById(R.id.user);
-
-
-
-
-
         mangTK = new ArrayList<>();
         adapter = new TaiKhoanAdapter(getApplicationContext(), R.layout.ds_taikhoan, mangTK);
 //        lv.setAdapter(adapter);
-        database = new Database(this, "banhang.db", null, 1);
-        database.QueryData("CREATE TABLE IF NOT EXISTS taikhoan(tendn VARCHAR(20) PRIMARY KEY, matkhau VARCHAR(50), quyen VARCHAR(50))");
+//        database = new Database(this, "banhang.db", null, 1);
+//        database.QueryData("CREATE TABLE IF NOT EXISTS taikhoan(tendn VARCHAR(20) PRIMARY KEY, matkhau VARCHAR(50), quyen VARCHAR(50))");
         btnadd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,10 +56,16 @@ public class ThemTaiKhoan_Activity extends AppCompatActivity {
                     quyen = "user";}
 
 
-                // Thêm tài khoản vào cơ sở dữ liệu
-                database.QueryData("INSERT INTO taikhoan VALUES('" + username + "', '" + password + "', '" + quyen + "')");
-                Toast.makeText(ThemTaiKhoan_Activity.this, "Thêm dữ liệu thành công", Toast.LENGTH_SHORT).show();
-                // Chuyển đến Activity thứ hai
+                boolean success = taiKhoanDB.addTaiKhoan(username, password, quyen);
+                if (success) {
+                    Toast.makeText(ThemTaiKhoan_Activity.this, "Thêm thành công", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(ThemTaiKhoan_Activity.this, "Lỗi khi thêm tài khoản", Toast.LENGTH_SHORT).show();
+                }
+//                taiKhoanDB.addTaiKhoan(username,password,quyen);
+//                // Thêm tài khoản vào cơ sở dữ liệu
+//                Toast.makeText(ThemTaiKhoan_Activity.this, "Thêm dữ liệu thành công", Toast.LENGTH_SHORT).show();
+//                // Chuyển đến Activity thứ hai
                 Intent intent = new Intent(ThemTaiKhoan_Activity.this, Taikhoan_admin_Activity.class);
                 startActivity(intent);
             }

@@ -10,30 +10,36 @@ import android.widget.ListView;
 
 import com.example.tuan17.adapter.TaiKhoanAdapter;
 import com.example.tuan17.database.Database;
+import com.example.tuan17.database.TaiKhoanDB;
 import com.example.tuan17.helper.BottomBar_Admin_Helper;
 import com.example.tuan17.models.TaiKhoan;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Taikhoan_admin_Activity extends AppCompatActivity {
 
 
-    Database database;
+//    Database database;
+
+    TaiKhoanDB taiKhoanDB;
     ListView lv;
     int vitri;
-    ArrayList<TaiKhoan> mangTK;
+//    ArrayList<TaiKhoan> mangTK;
+List<TaiKhoan> mangTK;
     TaiKhoanAdapter adapter;
+
     FloatingActionButton dauconggocphai;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_taikhoan_admin);
+        taiKhoanDB = new TaiKhoanDB(this);
         dauconggocphai = findViewById(R.id.btnthem);
         lv = findViewById(R.id.listtk);
-BottomBar_Admin_Helper.setupBottomBar(this);
-
+        BottomBar_Admin_Helper.setupBottomBar(this);
 
         dauconggocphai.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,29 +48,26 @@ BottomBar_Admin_Helper.setupBottomBar(this);
                 startActivity(a);
             }
         });
-        mangTK = new ArrayList<>();
+//        mangTK = new ArrayList<>();
+        mangTK = taiKhoanDB.getAllTaiKhoan();
         adapter = new TaiKhoanAdapter(getApplicationContext(), R.layout.ds_taikhoan, mangTK);
         lv.setAdapter(adapter);
-        database = new Database(this, "banhang.db", null, 1);
-        database.QueryData("CREATE TABLE IF NOT EXISTS taikhoan(tendn VARCHAR(20) PRIMARY KEY, matkhau VARCHAR(50), quyen VARCHAR(50))");
-        // Thêm 2 dòng dữ liệu
-//        database.QueryData("INSERT  INTO taikhoan VALUES ('admin', '1234', 'admin')");
-//        database.QueryData("INSERT  INTO taikhoan VALUES ('bac2', '1111', 'user')");
-//        database.QueryData("INSERT  INTO taikhoan VALUES ('bac3', '1111', 'user')");
-//        database.QueryData("INSERT  INTO taikhoan VALUES ('bac4', '1111', 'bacsi')");
-        Loaddulieutaikhoan();
+//        database = new Database(this, "banhang.db", null, 1);
+//        database.QueryData("CREATE TABLE IF NOT EXISTS taikhoan(tendn VARCHAR(20) PRIMARY KEY, matkhau VARCHAR(50), quyen VARCHAR(50))");
+
+//        Loaddulieutaikhoan();
 
 
     }
-    private void Loaddulieutaikhoan() {
-        Cursor dataCongViec = database.GetData("SELECT * FROM taikhoan");
-        mangTK.clear();
-        while (dataCongViec.moveToNext()) {
-            String tdn = dataCongViec.getString(0);
-            String mk= dataCongViec.getString(1);
-            String q = dataCongViec.getString(2);
-            mangTK.add(new TaiKhoan(tdn, mk, q));
-        }
-        adapter.notifyDataSetChanged();
-    }
+//    private void Loaddulieutaikhoan() {
+//        Cursor dataTK = database.GetData("SELECT * FROM taikhoan");
+//        mangTK.clear();
+//        while (dataTK.moveToNext()) {
+//            String tdn = dataTK.getString(0);
+//            String mk= dataTK.getString(1);
+//            String q = dataTK.getString(2);
+//            mangTK.add(new TaiKhoan(tdn, mk, q));
+//        }
+//        adapter.notifyDataSetChanged();
+//    }
 }

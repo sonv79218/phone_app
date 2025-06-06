@@ -75,63 +75,63 @@ public class Database extends SQLiteOpenHelper {
                 + "anh BLOB)");
     }
 
-    public List<Order> getDonHangByTenKh(String tenKh) {
-        List<Order> orders = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT * FROM Dathang WHERE tenkh = ?";
-        Cursor cursor = db.rawQuery(query, new String[]{tenKh});
+//    public List<Order> getDonHangByTenKh(String tenKh) {
+//        List<Order> orders = new ArrayList<>();
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        String query = "SELECT * FROM Dathang WHERE tenkh = ?";
+//        Cursor cursor = db.rawQuery(query, new String[]{tenKh});
+//
+//        if (cursor.moveToFirst()) {
+//            do {
+//               int id = cursor.getInt(0); // id_dathang
+//                String diaChi = cursor.getString(2); // diachi
+//                String sdt = cursor.getString(3); // sdt
+//                float tongThanhToan = cursor.getFloat(4); // tongthanhtoan
+//                String ngayDatHang = cursor.getString(5); // ngaydathang
+//
+//                // Tạo đối tượng Order và thêm vào danh sách
+//                orders.add(new Order(id, tenKh, diaChi, sdt, tongThanhToan, ngayDatHang));
+//            } while (cursor.moveToNext());
+//        }
+//
+//        cursor.close();
+//        db.close();
+//        return orders;
+//    }
 
-        if (cursor.moveToFirst()) {
-            do {
-               int id = cursor.getInt(0); // id_dathang
-                String diaChi = cursor.getString(2); // diachi
-                String sdt = cursor.getString(3); // sdt
-                float tongThanhToan = cursor.getFloat(4); // tongthanhtoan
-                String ngayDatHang = cursor.getString(5); // ngaydathang
 
-                // Tạo đối tượng Order và thêm vào danh sách
-                orders.add(new Order(id, tenKh, diaChi, sdt, tongThanhToan, ngayDatHang));
-            } while (cursor.moveToNext());
-        }
-
-        cursor.close();
-        db.close();
-        return orders;
-    }
-
-
-    public List<Order> getAllDonHang() {
-        List<Order> orders = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = null;
-
-        try {
-            String query = "SELECT * FROM Dathang";
-            cursor = db.rawQuery(query, null); // Cần đối số thứ 2 là null
-
-            if (cursor != null && cursor.moveToFirst()) {
-                do {
-                    int id = cursor.getInt(0); // id_dathang
-                    String tenKh = cursor.getString(1); // tenkh
-                    String diaChi = cursor.getString(2); // diachi
-                    String sdt = cursor.getString(3); // sdt
-                    float tongThanhToan = cursor.getFloat(4); // tongthanhtoan
-                    String ngayDatHang = cursor.getString(5); // ngaydathang
-
-                    // Tạo đối tượng Order và thêm vào danh sách
-                    orders.add(new Order(id, tenKh, diaChi, sdt, tongThanhToan, ngayDatHang));
-                } while (cursor.moveToNext());
-            }
-        } catch (Exception e) {
-            e.printStackTrace(); // In ra lỗi nếu có
-        } finally {
-            if (cursor != null) {
-                cursor.close(); // Đóng cursor để tránh rò rỉ bộ nhớ
-            }
-            db.close(); // Đóng database sau khi hoàn thành
-        }
-
-        return orders;
-    }
+//    public List<Order> getAllDonHang() {
+//        List<Order> orders = new ArrayList<>();
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        Cursor cursor = null;
+//
+//        try {
+//            String query = "SELECT * FROM Dathang";
+//            cursor = db.rawQuery(query, null); // Cần đối số thứ 2 là null
+//
+//            if (cursor != null && cursor.moveToFirst()) {
+//                do {
+//                    int id = cursor.getInt(0); // id_dathang
+//                    String tenKh = cursor.getString(1); // tenkh
+//                    String diaChi = cursor.getString(2); // diachi
+//                    String sdt = cursor.getString(3); // sdt
+//                    float tongThanhToan = cursor.getFloat(4); // tongthanhtoan
+//                    String ngayDatHang = cursor.getString(5); // ngaydathang
+//
+//                    // Tạo đối tượng Order và thêm vào danh sách
+//                    orders.add(new Order(id, tenKh, diaChi, sdt, tongThanhToan, ngayDatHang));
+//                } while (cursor.moveToNext());
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace(); // In ra lỗi nếu có
+//        } finally {
+//            if (cursor != null) {
+//                cursor.close(); // Đóng cursor để tránh rò rỉ bộ nhớ
+//            }
+//            db.close(); // Đóng database sau khi hoàn thành
+//        }
+//
+//        return orders;
+//    }
 
 }

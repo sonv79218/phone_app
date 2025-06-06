@@ -75,33 +75,29 @@
                     android:layout_marginBottom="5dp" />
 
                 <RadioGroup
-                    android:layout_width="wrap_content"
+                    android:id="@+id/radioGroup"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
-                    android:orientation="horizontal"
-                    />
+                    android:orientation="horizontal">
 
                     <RadioButton
                         android:id="@+id/user"
-                        android:layout_marginLeft="1dp"
                         android:text="user"
                         android:checked="true"
                         android:buttonTint="#8E8E8E"
                         android:textColor="#000000"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp" />
+                        android:layout_marginEnd="40dp" />
 
                     <RadioButton
-
                         android:id="@+id/admin"
-                        android:layout_marginLeft="40dp"
                         android:text="admin"
                         android:buttonTint="#8E8E8E"
                         android:textColor="#000000"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp" />
+                        android:layout_height="wrap_content" />
+                </RadioGroup>
 
                       </LinearLayout>
 
