@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.tuan17.adapter.SanPham_TimKiem_Adapter;
 import com.example.tuan17.database.DatabaseHelper;
+import com.example.tuan17.database.SanPhamDB;
 import com.example.tuan17.helper.BottomBar_Helper;
 import com.example.tuan17.helper.SharedPrefHelper;
 import com.example.tuan17.models.SanPham;
@@ -26,10 +27,12 @@ public class TimKiemSanPham_Activity extends AppCompatActivity {
     private SanPham_TimKiem_Adapter productAdapter;
     private DatabaseHelper dbHelper;
     String tendn;
+    private SanPhamDB sanPhamDB;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tim_kiem_san_pham);
+        sanPhamDB = new SanPhamDB(this);
         EditText timkiem=findViewById(R.id.timkiem);
         timkiem.requestFocus();
         // Initialize the GridView and DatabaseHelper
@@ -39,19 +42,7 @@ public class TimKiemSanPham_Activity extends AppCompatActivity {
         // Initialize and set the adapter with the product list
         productAdapter = new SanPham_TimKiem_Adapter(this, productList, false);
         grv.setAdapter(productAdapter);
-//        ImageButton btntimkiem=findViewById(R.id.btntimkiem);
-//        ImageButton btntrangchu=findViewById(R.id.btntrangchu);
-//        ImageButton btncard=findViewById(R.id.btncart);
-//        ImageButton btndonhang=findViewById(R.id.btndonhang);
-//        ImageButton btncanhan=findViewById(R.id.btncanhan);
-
-
-
-
-//        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-//        tendn = sharedPreferences.getString("tendn", null);
         String tendn = SharedPrefHelper.getUsername(this);
-        // Nếu SharedPreferences không có, thử lấy từ Intent
         if (tendn == null) {
             tendn = getIntent().getStringExtra("tendn");
         }
@@ -77,6 +68,7 @@ BottomBar_Helper.setupBottomBar(this);
                     // Gọi phương thức tìm kiếm trong DatabaseHelper
                     productList.clear(); // Xóa danh sách trước khi thêm kết quả mới
                     ArrayList<SanPham> foundProducts = dbHelper.searchSanPhamByName(query);
+//                    ArrayList<SanPham> foundProducts = sanPhamDB.searchSanPhamByName(query);
                     if (foundProducts.isEmpty()) {
                         Toast.makeText(TimKiemSanPham_Activity.this, "Không tìm thấy sản phẩm", Toast.LENGTH_SHORT).show();
                     } else {

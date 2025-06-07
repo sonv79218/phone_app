@@ -108,9 +108,6 @@ public class GioHangAdapter extends ArrayAdapter<GioHang> {
                 Toast.makeText(context, "Sản phẩm đã được xóa khỏi giỏ hàng", Toast.LENGTH_SHORT).show();
             }
         });
-
-
-
         return convertView;
     }
 
@@ -118,12 +115,6 @@ public class GioHangAdapter extends ArrayAdapter<GioHang> {
         float tongTien = gioHangManager.getTongTien(); // Lấy tổng tiền từ GioHangManager
         txtTongTien.setText(String.valueOf(tongTien)); // Cập nhật TextView
     }
-
-
-
-
-
-
 
 
 }

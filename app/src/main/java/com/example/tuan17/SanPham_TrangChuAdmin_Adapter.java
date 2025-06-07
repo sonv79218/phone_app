@@ -23,13 +23,14 @@ public class SanPham_TrangChuAdmin_Adapter extends BaseAdapter {
     private Uri selectedImageUri;
     private ArrayList<SanPham> spList;
     private boolean showFullDetails;
-    private Database database;
+//    private Database database;
+
 
     public SanPham_TrangChuAdmin_Adapter(Context context, ArrayList<SanPham> spList, boolean showFullDetails) {
         this.context = context;
         this.spList = spList;
         this.showFullDetails = showFullDetails;
-        this.database = new Database(context, "banhang.db", null, 1);
+//        this.database = new Database(context, "banhang.db", null, 1);
     }
 
     @Override

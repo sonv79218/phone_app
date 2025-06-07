@@ -56,6 +56,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "sdt TEXT, " +
                 "tongthanhtoan REAL, " +
                 "ngaydathang DATETIME DEFAULT CURRENT_TIMESTAMP);");
+
+        // nhom san pham
+        db.execSQL("CREATE TABLE IF NOT EXISTS nhomsanpham ("
+                + "maso INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "tennsp NVARCHAR(200), "
+                + "anh BLOB)");
     }
 
 
@@ -73,86 +79,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Đổi mức truy cập của phương thức này thành public
 
-    public List<ChiTietDonHang> getChiTietByOrderId(int orderId) {
-        List<ChiTietDonHang> chiTietList = new ArrayList<>();
-        SQLiteDatabase database = this.getReadableDatabase();
-
-        // Thực hiện truy vấn
-        Cursor cursor = database.rawQuery("SELECT Chitietdonhang.* FROM Chitietdonhang INNER JOIN sanpham ON sanpham.masp = Chitietdonhang.masp INNER JOIN Dathang ON Dathang.id_dathang = Chitietdonhang.id_dathang WHERE Dathang.id_dathang = ?", new String[]{String.valueOf(orderId)});
-
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                // Kiểm tra chỉ mục của các cột trước khi truy cập
-                int idIndex = cursor.getColumnIndex("id_chitiet");
-                int dathangIdIndex = cursor.getColumnIndex("id_dathang");
-                int maSpIndex = cursor.getColumnIndex("masp");
-                int soLuongIndex = cursor.getColumnIndex("soluong");
-                int donGiaIndex = cursor.getColumnIndex("dongia");
-                int anhIndex = cursor.getColumnIndex("anh");
-
-                // Kiểm tra các chỉ mục trước khi sử dụng
-                if (idIndex != -1 && maSpIndex != -1 && soLuongIndex != -1 && donGiaIndex != -1 && anhIndex != -1 && dathangIdIndex != -1) {
-                    // Khởi tạo và thêm ChiTietDonHang vào danh sách
-                    ChiTietDonHang chiTiet = new ChiTietDonHang(
-                            cursor.getInt(idIndex),
-                            cursor.getInt(dathangIdIndex),
-                            cursor.getInt(maSpIndex),
-                            cursor.getInt(soLuongIndex),
-                            cursor.getFloat(donGiaIndex),
-                            cursor.getBlob(anhIndex) // Sử dụng getBlob để lấy ảnh dưới dạng byte[]
-                    );
-                    chiTietList.add(chiTiet);
-                } else {
-                    // In thông báo cảnh báo nếu có cột không hợp lệ
-                    Log.w("Database", "One of the column indexes is -1. Check if the column exists in the database.");
-                }
-            }
-            cursor.close();
-        }
-        return chiTietList;
-    }
-
-    public List<ChiTietDonHang> getAllChiTietDonHang() {
-        List<ChiTietDonHang> chiTietList = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase(); // Sử dụng dbHelper để lấy cơ sở dữ liệu
-
-        Cursor cursor = db.rawQuery("SELECT * FROM Chitietdonhang", null);
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                int idChitietIndex = cursor.getColumnIndex("id_chitiet");
-                int idDathangIndex = cursor.getColumnIndex("id_dathang");
-                int maspIndex = cursor.getColumnIndex("masp");
-                int soluongIndex = cursor.getColumnIndex("soluong");
-                int dongiaIndex = cursor.getColumnIndex("dongia");
-                int anhIndex = cursor.getColumnIndex("anh");
-
-                // Kiểm tra các chỉ số cột trước khi sử dụng
-                if (idChitietIndex != -1 && idDathangIndex != -1 && maspIndex != -1 &&
-                        soluongIndex != -1 && dongiaIndex != -1 && anhIndex != -1) {
-
-                    int idChitiet = cursor.getInt(idChitietIndex);
-                    int idDathang = cursor.getInt(idDathangIndex);
-                    int masp = cursor.getInt(maspIndex);
-                    int soluong = cursor.getInt(soluongIndex);
-                    float dongia = cursor.getFloat(dongiaIndex);
-                    byte[] anh = cursor.getBlob(anhIndex);
-
-                    // Thêm vào danh sách chi tiết đơn hàng
-                    ChiTietDonHang chiTiet = new ChiTietDonHang(idChitiet, idDathang, masp, soluong, dongia, anh);
-                    chiTietList.add(chiTiet);
-
-                    // Kiểm tra dữ liệu đã lấy được
-                    Log.d("Chitietdonhang", "ID: " + idChitiet + ", ID ĐH: " + idDathang +
-                            ", Mã SP: " + masp + ", Số lượng: " + soluong + ", Đơn giá: " + dongia);
-                } else {
-                    Log.w("Chitietdonhang", "One of the column indexes is -1. Check if the column exists in the database.");
-                }
-            } while (cursor.moveToNext());
-            cursor.close();
-        }
-
-        return chiTietList; // Trả về danh sách chi tiết đơn hàng
-    }
 
     public String getTenSanPhamByMaSp(int masp) {
         String tensp = null;

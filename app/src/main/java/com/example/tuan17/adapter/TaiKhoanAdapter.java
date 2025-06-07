@@ -25,7 +25,6 @@ public class TaiKhoanAdapter extends BaseAdapter {
     private Context context;
     private int layout;
     private List<TaiKhoan> taiKhoanList;
-    private Database database; // Đối tượng Database
 
     private TaiKhoanDB taiKhoanDB;
 
@@ -33,7 +32,6 @@ public class TaiKhoanAdapter extends BaseAdapter {
         this.context = context;
         this.layout = layout;
         this.taiKhoanList = taiKhoanList;
-        this.database = new Database(context, "banhang.db", null, 1); // Khởi tạo đối tượng Database
     }
 
     @Override
@@ -59,20 +57,16 @@ public class TaiKhoanAdapter extends BaseAdapter {
         } else {
             viewtemp = view;
         }
-
         TaiKhoan tt = taiKhoanList.get(i);
         TextView tendn = viewtemp.findViewById(R.id.tdn1);
         TextView matkhau = viewtemp.findViewById(R.id.mk1);
         TextView quyenhang = viewtemp.findViewById(R.id.quyen1);
         ImageButton sua = viewtemp.findViewById(R.id.imgsua);
         ImageButton xoa = viewtemp.findViewById(R.id.imgxoa);
-
         tendn.setText(tt.getTdn());
         matkhau.setText(tt.getMk());
         quyenhang.setText(tt.getQuyen());
-
-
-// Xử lý sự kiện cho ImageButton "Sửa"
+        // Xử lý sự kiện cho ImageButton "Sửa"
         sua.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(viewGroup.getContext());
 
@@ -101,7 +95,7 @@ public class TaiKhoanAdapter extends BaseAdapter {
                         String quyen = user.isChecked() ? "user" : "admin";
 
                         // Sử dụng class DB riêng
-                        TaiKhoanDB taiKhoanDB = new TaiKhoanDB(viewGroup.getContext());
+                        taiKhoanDB = new TaiKhoanDB(viewGroup.getContext());
                         boolean success = taiKhoanDB.suaTaiKhoan(tt.getTdn(), newMk, quyen); // sửa theo tên cũ
 
                         if (success) {
@@ -118,14 +112,13 @@ public class TaiKhoanAdapter extends BaseAdapter {
 
             builder.show();
         });
-
         // Xử lý sự kiện cho ImageButton "Xóa"
         xoa.setOnClickListener(v -> {
             new AlertDialog.Builder(viewGroup.getContext())
                     .setTitle("Xác nhận")
                     .setMessage("Bạn có chắc chắn muốn xóa tài khoản này?")
                     .setPositiveButton("Có", (dialog, which) -> {
-                        TaiKhoanDB taiKhoanDB = new TaiKhoanDB(viewGroup.getContext());
+                        taiKhoanDB = new TaiKhoanDB(viewGroup.getContext());
                         boolean success = taiKhoanDB.xoaTaiKhoan(tt.getTdn());
 
                         if (success) {
@@ -139,7 +132,6 @@ public class TaiKhoanAdapter extends BaseAdapter {
                     .setNegativeButton("Không", (dialog, which) -> dialog.dismiss())
                     .show();
         });
-
         return viewtemp;
     }
 }

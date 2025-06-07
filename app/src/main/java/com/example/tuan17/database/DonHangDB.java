@@ -3,11 +3,7 @@ package com.example.tuan17.database;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteStatement;
-import android.widget.Toast;
 
-import com.example.tuan17.DonHang_Adapter;
 import com.example.tuan17.models.Order;
 
 import java.util.ArrayList;

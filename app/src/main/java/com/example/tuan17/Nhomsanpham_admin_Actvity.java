@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.tuan17.adapter.NhomSanPhamAdapter;
 import com.example.tuan17.database.Database;
+import com.example.tuan17.database.NhomSanPhamDB;
 import com.example.tuan17.helper.BottomBar_Admin_Helper;
 import com.example.tuan17.models.NhomSanPham;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -26,51 +27,32 @@ public class Nhomsanpham_admin_Actvity extends AppCompatActivity {
     private ArrayList<NhomSanPham> mangNSP;
     private NhomSanPhamAdapter adapter;
 
+    private NhomSanPhamDB nhomSanPhamDB;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nhomsanpham_admin_actvity);
+        nhomSanPhamDB = new NhomSanPhamDB(this);
+        lv = findViewById(R.id.listtk);
+        addButton = findViewById(R.id.btnthem);
+        mangNSP = new ArrayList<>();
+        adapter = new NhomSanPhamAdapter(Nhomsanpham_admin_Actvity.this, mangNSP, true);
 
-        initializeViews();
-        setupDatabase();
+        lv.setAdapter(adapter);
         loadData();
-BottomBar_Admin_Helper.setupBottomBar(this);
+        BottomBar_Admin_Helper.setupBottomBar(this);
         addButton.setOnClickListener(view -> {
             Intent intent = new Intent(getApplicationContext(), ThemNhomSanPham_Activity.class);
             startActivity(intent);
         });
     }
 
-    private void initializeViews() {
-        lv = findViewById(R.id.listtk);
-        addButton = findViewById(R.id.btnthem);
-        mangNSP = new ArrayList<>();
-
-        adapter = new NhomSanPhamAdapter(Nhomsanpham_admin_Actvity.this, mangNSP, true);
-
-        lv.setAdapter(adapter);
-    }
-
-    private void setupDatabase() {
-        database = new Database(this, "banhang.db", null, 1);
-        database.QueryData("CREATE TABLE IF NOT EXISTS nhomsanpham(maso INTEGER PRIMARY KEY AUTOINCREMENT, tennsp NVARCHAR(200), anh BLOB)");
-    }
 
     private void loadData() {
-        Cursor cursor = database.GetData("SELECT * FROM nhomsanpham");
         mangNSP.clear();
-
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                String maso = cursor.getString(0);
-                String tennsp = cursor.getString(1);
-                byte[] blob = cursor.getBlob(2);
-                mangNSP.add(new NhomSanPham(maso, tennsp, blob));
-            } while (cursor.moveToNext());
-        } else {
-            Toast.makeText(this, "Null load dữ liuej", Toast.LENGTH_SHORT).show();
-        }
-
+        mangNSP.addAll(nhomSanPhamDB.getAllNhomSanPham());
         adapter.notifyDataSetChanged();
     }
     private byte[] convertBitmapToByteArray(int resourceId) {

@@ -119,7 +119,6 @@ public class NhomSanPhamAdapter extends BaseAdapter {
 
         id.setText(nhomSanPham.getMa());
         ten.setText(nhomSanPham.getTennhom());
-
         byte[] anhByteArray = nhomSanPham.getAnh();
         if (anhByteArray != null && anhByteArray.length > 0) {
             Bitmap imganhbs = BitmapFactory.decodeByteArray(anhByteArray, 0, anhByteArray.length);

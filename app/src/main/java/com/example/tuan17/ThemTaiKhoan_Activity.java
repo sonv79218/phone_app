@@ -40,9 +40,6 @@ public class ThemTaiKhoan_Activity extends AppCompatActivity {
         user= findViewById(R.id.user);
         mangTK = new ArrayList<>();
         adapter = new TaiKhoanAdapter(getApplicationContext(), R.layout.ds_taikhoan, mangTK);
-//        lv.setAdapter(adapter);
-//        database = new Database(this, "banhang.db", null, 1);
-//        database.QueryData("CREATE TABLE IF NOT EXISTS taikhoan(tendn VARCHAR(20) PRIMARY KEY, matkhau VARCHAR(50), quyen VARCHAR(50))");
         btnadd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

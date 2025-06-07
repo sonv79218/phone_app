@@ -37,7 +37,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 public  class SanPhamAdapter extends BaseAdapter {
-
+// format lai phan nay
     private Context context;
     private Uri selectedImageUri; // Biến lưu trữ URI đã chọn
     private static final int REQUEST_CODE_PICK_IMAGE = 1; // Định nghĩa mã yêu cầu
@@ -128,7 +128,7 @@ public  class SanPhamAdapter extends BaseAdapter {
         xoa.setOnClickListener(v -> {
             new AlertDialog.Builder(parent.getContext())
                     .setTitle("Xác nhận")
-                    .setMessage("Bạn có chắc chắn muốn xóa bác sĩ này?")
+                    .setMessage("Bạn có chắc chắn muốn xóa ?")
                     .setPositiveButton("Có", (dialog, which) -> {
                         SQLiteDatabase db = database.getWritableDatabase();
                         int rowsAffected = db.delete("sanpham", "masp = ?", new String[]{tt.getMasp()});

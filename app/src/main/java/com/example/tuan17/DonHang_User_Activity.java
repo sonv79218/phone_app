@@ -9,7 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.tuan17.database.Database;
+import com.example.tuan17.adapter.DonHang_Adapter;
 import com.example.tuan17.database.DonHangDB;
 import com.example.tuan17.helper.BottomBar_Helper;
 import com.example.tuan17.helper.SharedPrefHelper;
@@ -30,7 +30,6 @@ public class DonHang_User_Activity extends AppCompatActivity {
         donHangDB = new DonHangDB(this);
         // Khởi tạo các thành phần
         listView = findViewById(R.id.listViewChiTiet);
-//        database = new Database(this, "banhang.db", null, 1);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -72,18 +71,6 @@ if( tenDN == null){
 
 BottomBar_Helper.setupBottomBar(this);
     }
-
-//    private void createTableIfNotExists() {
-//        // Tạo bảng đơn hàng nếu chưa tồn tại
-//        database.QueryData("CREATE TABLE IF NOT EXISTS Dathang (" +
-//                "id_dathang INTEGER PRIMARY KEY AUTOINCREMENT, " +
-//                "tenkh TEXT, " +
-//                "diachi TEXT, " +
-//                "sdt TEXT, " +
-//                "tongthanhtoan REAL, " +
-//                "ngaydathang DATETIME DEFAULT CURRENT_TIMESTAMP);");
-//    }
-
     private void loadDonHang(String tenKh) {
         // Kiểm tra tên khách hàng trước khi truy vấn
         if (tenKh == null || tenKh.isEmpty()) {

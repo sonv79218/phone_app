@@ -21,13 +21,10 @@ import java.util.List;
 public class Taikhoan_admin_Activity extends AppCompatActivity {
 
 
-//    Database database;
-
     TaiKhoanDB taiKhoanDB;
     ListView lv;
     int vitri;
-//    ArrayList<TaiKhoan> mangTK;
-List<TaiKhoan> mangTK;
+    List<TaiKhoan> mangTK;
     TaiKhoanAdapter adapter;
 
     FloatingActionButton dauconggocphai;
@@ -48,26 +45,10 @@ List<TaiKhoan> mangTK;
                 startActivity(a);
             }
         });
-//        mangTK = new ArrayList<>();
+
         mangTK = taiKhoanDB.getAllTaiKhoan();
         adapter = new TaiKhoanAdapter(getApplicationContext(), R.layout.ds_taikhoan, mangTK);
         lv.setAdapter(adapter);
-//        database = new Database(this, "banhang.db", null, 1);
-//        database.QueryData("CREATE TABLE IF NOT EXISTS taikhoan(tendn VARCHAR(20) PRIMARY KEY, matkhau VARCHAR(50), quyen VARCHAR(50))");
-
-//        Loaddulieutaikhoan();
-
-
     }
-//    private void Loaddulieutaikhoan() {
-//        Cursor dataTK = database.GetData("SELECT * FROM taikhoan");
-//        mangTK.clear();
-//        while (dataTK.moveToNext()) {
-//            String tdn = dataTK.getString(0);
-//            String mk= dataTK.getString(1);
-//            String q = dataTK.getString(2);
-//            mangTK.add(new TaiKhoan(tdn, mk, q));
-//        }
-//        adapter.notifyDataSetChanged();
-//    }
+
 }

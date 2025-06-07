@@ -97,38 +97,11 @@ public class Login_Activity extends AppCompatActivity {
     private boolean validateLogin(String username, String password) {
         return taiKhoanDB.checkLogin(username, password);
     }
-//    private boolean validateLogin(String username, String password) {
-//        Cursor cursor = database.getReadableDatabase().rawQuery(
-//                "SELECT * FROM taikhoan WHERE tendn = ? AND matkhau = ?",
-//                new String[]{username, password});
-//        boolean isValid = cursor.getCount() > 0; // Kiểm tra xem có hàng nào không
-//        cursor.close(); // Đóng cursor để tránh rò rỉ bộ nhớ
-//        return isValid;
-//    }
 
     // Hàm lấy quyền người dùng
     private String getUserQuyen(String username) {
         return taiKhoanDB.getQuyenByUsername(username);
     }
-//    private String getUserQuyen(String username) {
-//        String quyen = "";
-//        Cursor cursor = database.getReadableDatabase().rawQuery(
-//                "SELECT quyen FROM taikhoan WHERE tendn = ?",
-//                new String[]{username});
-//
-//        if (cursor.moveToFirst()) {
-//            int quyenColumnIndex = cursor.getColumnIndex("quyen");
-//            if (quyenColumnIndex != -1) {
-//                quyen = cursor.getString(quyenColumnIndex);
-//            } else {
-//                Log.e("Error", "Column 'quyen' not found in result set");
-//            }
-//        } else {
-//            Log.e("Error", "No user found with username: " + username);
-//        }
-//        cursor.close(); // Đóng cursor
-//        return quyen;
-//    }
 
     // Hàm khởi động timer tự động đăng xuất
     private void startAutoLogoutTimer() {
@@ -151,7 +124,6 @@ public class Login_Activity extends AppCompatActivity {
                 finish();
             }
         };
-
         handler.postDelayed(timeoutRunnable, TIMEOUT_DURATION); // Đặt thời gian để đăng xuất
     }
 

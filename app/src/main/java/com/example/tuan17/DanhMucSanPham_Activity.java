@@ -25,11 +25,6 @@ public class DanhMucSanPham_Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_danh_muc_san_pham);
-//        ImageButton btntimkiem = findViewById(R.id.btntimkiem);
-//        ImageButton btntrangchu = findViewById(R.id.btntrangchu);
-//        ImageButton btncard = findViewById(R.id.btncart);
-//        ImageButton btndonhang = findViewById(R.id.btndonhang);
-//        ImageButton btncanhan = findViewById(R.id.btncanhan);
         BottomBar_Helper.setupBottomBar(this);
         // Initialize the GridView and DatabaseHelper
         grv = findViewById(R.id.grv);

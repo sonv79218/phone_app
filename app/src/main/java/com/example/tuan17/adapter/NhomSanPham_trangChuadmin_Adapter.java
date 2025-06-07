@@ -1,4 +1,4 @@
-package com.example.tuan17;
+package com.example.tuan17.adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.tuan17.R;
 import com.example.tuan17.database.Database;
 import com.example.tuan17.models.NhomSanPham;
 

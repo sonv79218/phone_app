@@ -30,10 +30,6 @@ public class ChiTietDonHang_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chi_tiet_don_hang);
         BottomBar_Helper.setupBottomBar(this);
-        // Khởi tạo cơ sở dữ liệu
-//        dbdata = new DatabaseHelper(this);
-//        database = new Database(this, "banhang.db", null, 1);
-//        createTableIfNotExists();
 
         chiTietDonHangDB = new ChiTietDonHangDB(this);
 
@@ -46,9 +42,6 @@ public class ChiTietDonHang_Activity extends AppCompatActivity {
             try {
                 // Chuyển đổi chuỗi donHangId thành kiểu int
                 int donHangId = Integer.parseInt(donHangIdStr);
-
-                // Lấy chi tiết đơn hàng từ database
-//                List<ChiTietDonHang> chiTietList = dbdata.getChiTietByOrderId(donHangId);
                 List<ChiTietDonHang> chiTietList = chiTietDonHangDB.getChiTietByOrderId(donHangId);
 
                 // Kiểm tra danh sách chi tiết
@@ -63,30 +56,7 @@ public class ChiTietDonHang_Activity extends AppCompatActivity {
                 Toast.makeText(this, "ID đơn hàng không hợp lệ!", Toast.LENGTH_SHORT).show();
             }
         }
-//        else {
-//            // Nếu không có ID đơn hàng, lấy tất cả chi tiết đơn hàng
-//            List<ChiTietDonHang> allChiTietList = dbdata.getAllChiTietDonHang();
-//            if (allChiTietList != null && !allChiTietList.isEmpty()) {
-//                chiTietAdapter = new ChiTietDonHangAdapter(this, allChiTietList);
-//                listViewChiTiet.setAdapter(chiTietAdapter);
-//            } else {
-//                Toast.makeText(this, "Không tìm thấy bất kỳ chi tiết đơn hàng nào!", Toast.LENGTH_SHORT).show();
-//            }
-//        }
-
-
 
     }
 
-//    private void createTableIfNotExists() {
-//        // Tạo bảng Chitietdonhang nếu chưa tồn tại
-//        database.QueryData("CREATE TABLE IF NOT EXISTS Chitietdonhang (" +
-//                "id_chitiet INTEGER PRIMARY KEY AUTOINCREMENT, " +
-//                "id_dathang INTEGER, " +
-//                "masp INTEGER, " +
-//                "soluong INTEGER, " +
-//                "dongia REAL, " +
-//                "anh TEXT, " +
-//                "FOREIGN KEY(id_dathang) REFERENCES Dathang(id_dathang));");
-//    }
 }

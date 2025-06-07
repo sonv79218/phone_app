@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.tuan17.adapter.GioHangAdapter;
 import com.example.tuan17.database.Database;
+import com.example.tuan17.database.DonHangDB;
 import com.example.tuan17.helper.BottomBar_Helper;
 import com.example.tuan17.helper.SharedPrefHelper;
 import com.example.tuan17.models.GioHang;
@@ -28,9 +29,9 @@ public class GioHang_Activity extends AppCompatActivity {
     private GioHangAdapter adapter;
     private GioHangManager gioHangManager;
     private Button thanhtoan;
-    private Database database;
     private OrderManager orderManager;
     private TextView txtTongTien; // Khai báo TextView cho tổng tiền
+    private DonHangDB donHangDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,14 +54,7 @@ public class GioHang_Activity extends AppCompatActivity {
         }
 
         txtTongTien = findViewById(R.id.tongtien); // Khởi tạo TextView cho tổng tiền
-        database = new Database(this, "banhang.db", null, 1);
-        database.QueryData("CREATE TABLE IF NOT EXISTS Dathang (" +
-                "id_dathang INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "tenkh TEXT, " +
-                "diachi TEXT, " +
-                "sdt TEXT, " +
-                "tongthanhtoan REAL, " +
-                "ngaydathang DATETIME DEFAULT CURRENT_TIMESTAMP);");
+
 
         gioHangManager = GioHangManager.getInstance();
         orderManager = new OrderManager(this);

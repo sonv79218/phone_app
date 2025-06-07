@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.example.tuan17.adapter.DonHang_Adapter;
 import com.example.tuan17.database.DonHangDB;
 import com.example.tuan17.helper.BottomBar_Admin_Helper;
 import com.example.tuan17.models.Order;
@@ -42,17 +44,14 @@ public class DonHang_admin_Activity extends AppCompatActivity {
                     startActivity(intent);
                 }
             }
-
-
         });
         // xử lý bottom bar
       BottomBar_Admin_Helper.setupBottomBar(this);
-        loadDonHang(); // Gọi phương thức loadDonHang với tenDN
+        loadDonHang(); // Gọi phương thức loadDonHang
     }
 
     private void loadDonHang() {
         // Lấy danh sách đơn hàng từ cơ sở dữ liệu
-
         List<Order> orders = donHangDB.getAllDonHang(); // lưu vào mảng đối tượng
         if (orders.isEmpty()) {
             Toast.makeText(this, "Không tìm thấy đơn hàng nào!", Toast.LENGTH_SHORT).show();
