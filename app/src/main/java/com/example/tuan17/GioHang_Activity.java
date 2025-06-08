@@ -105,7 +105,7 @@ public class GioHang_Activity extends AppCompatActivity {
                 }
 
                 if (orderManager != null) {
-                    long orderId = orderManager.addOrder(tenKh, diaChi, sdt, tongThanhToan);
+                    long orderId = orderManager.addOrder(tenKh, diaChi, sdt, tongThanhToan); // trả về id đơn hàng sau khi thực hiện
                     if (orderId > 0) {
                         // Lưu thông tin chi tiết đơn hàng
                         List<GioHang> gioHangList = gioHangManager.getGioHangList();

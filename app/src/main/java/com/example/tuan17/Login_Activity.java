@@ -41,7 +41,6 @@ public class Login_Activity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-//        database = new Database(this, "banhang.db", null, 1);
         taiKhoanDB = new TaiKhoanDB(this);
 
         // Chuyển đến activity đăng ký tài khoản
@@ -54,14 +53,20 @@ public class Login_Activity extends AppCompatActivity {
         btnLogin.setOnClickListener(v -> {
             String username = tdn.getText().toString();
             String password = mk.getText().toString();
-
             if (validateLogin(username, password)) {
                 // Gán tên đăng nhập cho biến tendn
                 tendn = username;
+                int userId = taiKhoanDB.getUserId(username);
+                if (userId == -1) {
+                    Toast.makeText(this, "Lỗi không tìm thấy người dùng", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+//                Log.d("Id","id = "+userId);
 //Lưu tên đăng nhập sau khi login:
                 SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("tendn", tendn); // Lưu tên đăng nhập
+                editor.putInt("user_id", userId); // Lưu ID thay vì tên đăng nhập
                 editor.putBoolean("isLoggedIn", true);  // Đánh dấu người dùng đã đăng nhập
                 editor.apply(); // Lưu các thay đổi
 
@@ -98,6 +103,7 @@ public class Login_Activity extends AppCompatActivity {
         return taiKhoanDB.checkLogin(username, password);
     }
 
+
     // Hàm lấy quyền người dùng
     private String getUserQuyen(String username) {
         return taiKhoanDB.getQuyenByUsername(username);
@@ -115,7 +121,9 @@ public class Login_Activity extends AppCompatActivity {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean("isLoggedIn", false); // Đánh dấu là chưa đăng nhập
                 editor.putString("tendn", null); // Xóa tên đăng nhập
+                editor.putInt("user_id", -1); // dat id bang -1
                 editor.apply();
+
 
                 // Quay lại activity chính
                 Intent intent = new Intent(Login_Activity.this, TrangchuNgdung_Activity.class);

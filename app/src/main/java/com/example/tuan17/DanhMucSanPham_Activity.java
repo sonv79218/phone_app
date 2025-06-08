@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.example.tuan17.adapter.SanPham_DanhMuc_Adapter;
 import com.example.tuan17.database.DatabaseHelper;
+import com.example.tuan17.database.SanPhamDB;
 import com.example.tuan17.helper.BottomBar_Helper;
 import com.example.tuan17.models.SanPham;
 
@@ -19,7 +20,9 @@ public class DanhMucSanPham_Activity extends AppCompatActivity {
     private GridView grv;
     private ArrayList<SanPham> productList; // Change to ArrayList
     private SanPham_DanhMuc_Adapter productAdapter;
-    private DatabaseHelper dbHelper;
+//    private DatabaseHelper dbHelper;
+
+    SanPhamDB sanPhamDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +31,8 @@ public class DanhMucSanPham_Activity extends AppCompatActivity {
         BottomBar_Helper.setupBottomBar(this);
         // Initialize the GridView and DatabaseHelper
         grv = findViewById(R.id.grv);
-        dbHelper = new DatabaseHelper(this);
+//        dbHelper = new DatabaseHelper(this);
+        sanPhamDB = new SanPhamDB(this);
 
         // Retrieve nhomSpId from the Intent
         String nhomSpId = getIntent().getStringExtra("nhomSpId");
@@ -36,7 +40,7 @@ public class DanhMucSanPham_Activity extends AppCompatActivity {
         // Check if nhomSpId is not null
         if (nhomSpId != null) {
             // Get the list of products by nhomSpId
-            List<SanPham> tempProductList = dbHelper.getProductsByNhomSpId(nhomSpId); // Use a temporary variable
+            List<SanPham> tempProductList = sanPhamDB.getProductsByNhomSpId(nhomSpId); // Use a temporary variable
             if (tempProductList != null && !tempProductList.isEmpty()) {
                 // Convert List to ArrayList
                 productList = new ArrayList<>(tempProductList);

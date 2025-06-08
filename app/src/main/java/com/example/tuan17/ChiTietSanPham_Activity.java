@@ -1,11 +1,17 @@
 package com.example.tuan17;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -14,9 +20,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tuan17.models.ChiTietSanPham;
+import com.example.tuan17.models.DanhGia;
+
+import java.util.ArrayList;
 
 public class ChiTietSanPham_Activity extends AppCompatActivity {
 
+    ArrayList<DanhGia> danhGiaList = new ArrayList<>();
      String masp, tendn;
   Button btndathang, btnaddcart;
     private ChiTietSanPham chiTietSanPham;
@@ -27,6 +37,27 @@ public class ChiTietSanPham_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chi_tiet_san_pham);
 
+        TextView tvXemDanhGia = findViewById(R.id.tv_danhgia_title);
+
+        tvXemDanhGia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (masp != null && !masp.isEmpty()) {
+                    try {
+                        int id = Integer.parseInt(masp);
+                        Intent intent = new Intent(ChiTietSanPham_Activity.this, XemDanhGiaActivity.class);
+                        intent.putExtra("masp", id);
+                        startActivity(intent);
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(ChiTietSanPham_Activity.this, "Mã sản phẩm không hợp lệ!", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(ChiTietSanPham_Activity.this, "Không có mã sản phẩm!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
         // Khởi tạo các thành phần giao diện
         btndathang = findViewById(R.id.btndathang);
         btnaddcart = findViewById(R.id.btnaddcart);
@@ -35,8 +66,8 @@ public class ChiTietSanPham_Activity extends AppCompatActivity {
         ImageView imgsp = findViewById(R.id.imgsp);
         TextView dongia = findViewById(R.id.dongia);
         TextView mota = findViewById(R.id.mota);
-
-        TextView soluongkho = findViewById(R.id.soluongkho);
+        TextView ghichu = findViewById(R.id.ghichu);
+        TextView soluongkho = findViewById(R.id.soluongkho);// giá trị để check
         gioHangManager = GioHangManager.getInstance(); // Sử dụng singleton
         TextView textTendn = findViewById(R.id.tendn); // TextView hiển thị tên đăng nhập
 
@@ -59,11 +90,14 @@ public class ChiTietSanPham_Activity extends AppCompatActivity {
 
             // Nhận chi tiết sản phẩm nếu có
             chiTietSanPham = intent.getParcelableExtra("chitietsanpham");
+//        Log.d(TAG, "Mã sản phẩm: " + chiTietSanPham.getMasp());
+//        Log.d(TAG, "Tên sản phẩm: " + chiTietSanPham.getGhichu());
 
-            // Nếu không có chi tiết sản phẩm, bạn có thể xử lý mã sản phẩm theo cách của riêng bạn
+        // Nếu không có chi tiết sản phẩm, bạn có thể xử lý mã sản phẩm theo cách của riêng bạn
             if (chiTietSanPham != null) {
                 masp = chiTietSanPham.getMasp(); // Lấy mã sản phẩm từ chi tiết
                 tensp.setText(chiTietSanPham.getTensp());
+                ghichu.setText(chiTietSanPham.getGhichu());
                 dongia.setText(chiTietSanPham.getDongia() != null ? String.valueOf(chiTietSanPham.getDongia()) : "Không có dữ liệu");
                 mota.setText(chiTietSanPham.getMota() != null ? chiTietSanPham.getMota() : "Không có dữ liệu");
                 soluongkho.setText(String.valueOf(chiTietSanPham.getSoluongkho()));

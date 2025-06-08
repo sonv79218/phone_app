@@ -5,21 +5,21 @@ import java.util.List;
 
 public class Order {
     private int id; // ID đơn hàng
-    private String tenKh;
+    private int userId; // ID người dùng
     private String diaChi;
     private String sdt;
     private float tongTien;
     private String ngayDatHang;
     private List<ChiTietDonHang> chiTietList; // Danh sách chi tiết đơn hàng
 
-    public Order(int id, String tenKh, String diaChi, String sdt, float tongTien, String ngayDatHang) {
+    public Order(int id, int userId, String diaChi, String sdt, float tongTien, String ngayDatHang) {
         this.id = id;
-        this.tenKh = tenKh;
+        this.userId = userId;
         this.diaChi = diaChi;
         this.sdt = sdt;
         this.tongTien = tongTien;
         this.ngayDatHang = ngayDatHang;
-        this.chiTietList = new ArrayList<>(); // Khởi tạo danh sách
+        this.chiTietList = new ArrayList<>(); // Khởi tạo danh sách chi tiết
     }
 
     // Getter methods
@@ -27,8 +27,8 @@ public class Order {
         return id;
     }
 
-    public String getTenKh() {
-        return tenKh;
+    public int getUserId() {
+        return userId;
     }
 
     public String getDiaChi() {
@@ -48,10 +48,10 @@ public class Order {
     }
 
     public List<ChiTietDonHang> getChiTietList() {
-        return chiTietList; // Getter cho danh sách chi tiết
+        return chiTietList;
     }
 
     public void setChiTietList(List<ChiTietDonHang> chiTietList) {
-        this.chiTietList = chiTietList; // Setter cho danh sách chi tiết
+        this.chiTietList = chiTietList;
     }
 }

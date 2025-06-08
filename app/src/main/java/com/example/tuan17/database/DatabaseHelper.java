@@ -19,16 +19,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
-
+    @Override
+    public void onConfigure(SQLiteDatabase db) {
+        super.onConfigure(db);
+        db.setForeignKeyConstraintsEnabled(true);
+    }
     @Override
     public void onCreate(SQLiteDatabase db) {
 
+
         // bang taikhoan
-//        db.execSQL("CREATE TABLE IF NOT EXISTS taikhoan(tendn VARCHAR(20) PRIMARY KEY, matkhau VARCHAR(50), quyen VARCHAR(50))");
-        db.execSQL("CREATE TABLE IF NOT EXISTS taikhoan(" +
-                "tendn TEXT PRIMARY KEY, " +
-                "matkhau TEXT, " +
-                "quyen TEXT)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS taikhoan (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "tendn TEXT UNIQUE NOT NULL, " +
+                "matkhau TEXT NOT NULL, " +
+                "email TEXT, " +
+                "sdt TEXT, " +
+                "hoten TEXT, " +
+                "diachi TEXT, " +
+                "quyen TEXT DEFAULT 'user', " +
+                "ngaytao DATETIME DEFAULT CURRENT_TIMESTAMP)");
+
+        db.execSQL("INSERT INTO taikhoan (tendn, matkhau, email, sdt, hoten, diachi, quyen) " +
+                "VALUES ('admin', 'admin123', 'admin@example.com', '0123456789', 'Quản trị viên', 'Hà Nội', 'admin');");
+
 
 
         db.execSQL("CREATE TABLE IF NOT EXISTS nhomsanpham ("
@@ -43,41 +57,63 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "masp INTEGER, " +
                 "soluong INTEGER, " +
                 "dongia REAL, " +
-                "anh TEXT, " +
-                "FOREIGN KEY(id_dathang) REFERENCES Dathang(id_dathang));");
+                "anh BLOB, " +
+                "FOREIGN KEY(id_dathang) REFERENCES Dathang(id_dathang) ON DELETE CASCADE, " +// xóa khi dathang bị xóa
+                "FOREIGN KEY(masp) REFERENCES sanpham(masp) ON DELETE CASCADE" + // xóa khi sản phẩm bị xóa
+                ");");
+
 
 //        Log.d("DatabaseHelper", "Tables created successfully");
 
-        // tạo bảng đơn hàng
+// tạo bảng đơn hàng
         db.execSQL("CREATE TABLE IF NOT EXISTS Dathang (" +
                 "id_dathang INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "user_id INTEGER, " +
                 "tenkh TEXT, " +
                 "diachi TEXT, " +
                 "sdt TEXT, " +
                 "tongthanhtoan REAL, " +
-                "ngaydathang DATETIME DEFAULT CURRENT_TIMESTAMP);");
+                "ngaydathang DATETIME DEFAULT CURRENT_TIMESTAMP, " +
+                "FOREIGN KEY(user_id) REFERENCES taikhoan(id) ON DELETE CASCADE" +
+                ");");
 
-        // nhom san pham
-        db.execSQL("CREATE TABLE IF NOT EXISTS nhomsanpham ("
-                + "maso INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + "tennsp NVARCHAR(200), "
-                + "anh BLOB)");
+
+
+        db.execSQL("CREATE TABLE IF NOT EXISTS sanpham(" +
+                "masp INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "tensp NVARCHAR(200), " +
+                "dongia FLOAT, " +
+                "mota TEXT, " +
+                "ghichu TEXT, " +
+                "soluongkho INTEGER, " +
+                "maso INTEGER, " +
+                "anh BLOB, " +
+                "FOREIGN KEY(maso) REFERENCES nhomsanpham(maso) ON DELETE SET NULL)");
+
+
+        // bảng đánh giá
+        db.execSQL("CREATE TABLE IF NOT EXISTS danhgia (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "id_chitietdonhang INTEGER, " +
+                "user_id INTEGER, " +
+                "masp INTEGER, " +
+                "rating INTEGER, " +
+                "comment TEXT, " +
+                "ngay_danhgia TEXT, " +
+                "FOREIGN KEY(user_id) REFERENCES taikhoan(id), " +
+                "FOREIGN KEY(id_chitietdonhang) REFERENCES Chitietdonhang(id_chitiet) ON DELETE CASCADE, " +
+                "FOREIGN KEY(masp) REFERENCES sanpham(masp) ON DELETE CASCADE" +
+                ");");
+
     }
-
 
 
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS Chitietdonhang");
-        db.execSQL("DROP TABLE IF EXISTS Dathang");
-        onCreate(db);
-        Log.d("DatabaseHelper", "Database upgraded from version " + oldVersion + " to " + newVersion);
+
     }
 
-
-
-    // Đổi mức truy cập của phương thức này thành public
 
 
     public String getTenSanPhamByMaSp(int masp) {
@@ -177,5 +213,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return sanPhamList;
     }
+    public int getUserIdByChiTietDonHangId(int idChiTietDonHang) {
+        int userId = -1;
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "SELECT d.user_id FROM Dathang d " +
+                "INNER JOIN Chitietdonhang ct ON d.id_dathang = ct.id_dathang " +
+                "WHERE ct.id_chitiet = ?";
+
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(idChiTietDonHang)});
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                userId = cursor.getInt(cursor.getColumnIndexOrThrow("user_id"));
+            }
+            cursor.close();
+        }
+        return userId;
+    }
+
 
 }

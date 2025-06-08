@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TaiKhoanDB {
+
     private final SQLiteDatabase db;
     public TaiKhoanDB(Context context){
         if(context == null){
@@ -58,22 +59,49 @@ public class TaiKhoanDB {
 
 
     // hàm lấy dữ liệu mảng tài khoản từ db
+//    public List<TaiKhoan> getAllTaiKhoan() {
+//        List<TaiKhoan> danhSach = new ArrayList<>();
+//        Cursor cursor = db.rawQuery("SELECT * FROM taikhoan", null);
+//
+//        if (cursor.moveToFirst()) {
+//            do {
+//                String tdn = cursor.getString(0);
+//                String mk = cursor.getString(1);
+//                String q = cursor.getString(2);
+//                danhSach.add(new TaiKhoan(tdn, mk, q));
+//            } while (cursor.moveToNext());
+//        }
+//
+//        cursor.close();
+//        return danhSach;
+//    }
     public List<TaiKhoan> getAllTaiKhoan() {
         List<TaiKhoan> danhSach = new ArrayList<>();
         Cursor cursor = db.rawQuery("SELECT * FROM taikhoan", null);
 
         if (cursor.moveToFirst()) {
             do {
-                String tdn = cursor.getString(0);
-                String mk = cursor.getString(1);
-                String q = cursor.getString(2);
-                danhSach.add(new TaiKhoan(tdn, mk, q));
+                int id = getIntFromCursor(cursor, "id");
+                String tendn = getStringFromCursor(cursor, "tendn");
+                String matkhau = getStringFromCursor(cursor, "matkhau");
+                String email = getStringFromCursor(cursor, "email");
+                String sdt = getStringFromCursor(cursor, "sdt");
+                String hoten = getStringFromCursor(cursor, "hoten");
+                String diachi = getStringFromCursor(cursor, "diachi");
+                String quyen = getStringFromCursor(cursor, "quyen");
+                String ngaytao = getStringFromCursor(cursor, "ngaytao");
+
+
+                // Tạo đối tượng TaiKhoan, bạn cần có constructor phù hợp hoặc set các trường
+                TaiKhoan tk = new TaiKhoan(id, tendn, matkhau, email, sdt, hoten, diachi, quyen, ngaytao);
+
+                danhSach.add(tk);
             } while (cursor.moveToNext());
         }
-
         cursor.close();
         return danhSach;
     }
+
 
     public boolean addTaiKhoan(String username, String password, String quyen){
 //        db.rawQuery("INSERT INTO taikhoan VALUES('" + username + "', '" + password + "', '" + quyen + "')");
@@ -160,6 +188,46 @@ public boolean xoaTaiKhoan(String username) {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public int getUserId(String username) {
+        Cursor cursor = db.rawQuery("SELECT id FROM taikhoan WHERE tendn = ?", new String[]{username});
+        if (cursor.moveToFirst()) {
+            int columnIndex = cursor.getColumnIndex("id");
+            if (columnIndex != -1) {  // kiểm tra cột id có tồn tại
+                int id = cursor.getInt(columnIndex);
+                cursor.close();
+                return id;
+            }
+        }
+        cursor.close();
+        return -1; // không tìm thấy hoặc cột id không tồn tại
+    }
+
+    public String getTenNguoiDung(int userId) {
+        String ten = "";
+        Cursor cursor = db.rawQuery("SELECT tendn FROM taikhoan WHERE id = ?", new String[]{String.valueOf(userId)});
+        if (cursor.moveToFirst()) {
+            ten = cursor.getString(0);
+        }
+        cursor.close();
+        return ten;
+    }
+
+    private String getStringFromCursor(Cursor cursor, String columnName) {
+        int index = cursor.getColumnIndex(columnName);
+        if (index == -1) {
+            return null;  // Hoặc giá trị mặc định bạn muốn
+        }
+        return cursor.getString(index);
+    }
+
+    private int getIntFromCursor(Cursor cursor, String columnName) {
+        int index = cursor.getColumnIndex(columnName);
+        if (index == -1) {
+            return -1; // Hoặc giá trị mặc định
+        }
+        return cursor.getInt(index);
     }
 
 

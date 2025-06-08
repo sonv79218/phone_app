@@ -1,8 +1,11 @@
 package com.example.tuan17.adapter;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,22 +66,22 @@ public class GioHangAdapter extends ArrayAdapter<GioHang> {
 
         // Thiết lập sự kiện cho nút tăng số lượng
         btnTang.setOnClickListener(v -> {
-            gioHangManager.addItem(item.getSanPham());
-            notifyDataSetChanged();
-            updateTongTien();
-        });
-
-        // Thiết lập sự kiện cho nút giảm số lượng
-//        btnGiam.setOnClickListener(v -> {
-//            if (item.getSoLuong() > 1) {
-//                item.setSoLuong(item.getSoLuong() - 1);
-//            } else {
-//                gioHangManager.removeItem(position);
-//                items.remove(position);
-//            }
+            int soluongKho = item.getSanPham().getSoluongkho();
+            int soluongtronggio = item.getSoLuong();
+//            Log.d(TAG, "getView: "+soluonghienco);
+            if (soluongtronggio < soluongKho) {
+                gioHangManager.addItem(item.getSanPham());
+                notifyDataSetChanged();
+                updateTongTien();
+            } else {
+                Toast.makeText(context, "Không thể tăng. Đã vượt quá số lượng trong kho!", Toast.LENGTH_SHORT).show();
+            }
+//            gioHangManager.addItem(item.getSanPham());
 //            notifyDataSetChanged();
 //            updateTongTien();
-//        });
+        });
+
+
         btnGiam.setOnClickListener(v -> {
             if (item.getSoLuong() > 1) {
                 item.setSoLuong(item.getSoLuong() - 1);
@@ -92,14 +95,6 @@ public class GioHangAdapter extends ArrayAdapter<GioHang> {
         });
 
 
-        // Thiết lập sự kiện cho TextView xoasp
-//        xoasp.setOnClickListener(v -> {
-//            gioHangManager.removeItem(position); // Gọi phương thức xóa sản phẩm trong giỏ hàng
-//            items.remove(position); // Xóa sản phẩm khỏi danh sách hiện tại
-//            notifyDataSetChanged(); // Cập nhật giao diện
-//            updateTongTien(); // Cập nhật tổng tiền
-//            Toast.makeText(context, "Sản phẩm đã được xóa khỏi giỏ hàng", Toast.LENGTH_SHORT).show(); // Hiển thị thông báo
-//        });
         xoasp.setOnClickListener(v -> {
             if (position >= 0 && position < items.size()) {
                 gioHangManager.removeItem(position); // chỉ cần gọi cái này thôi

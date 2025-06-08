@@ -195,6 +195,27 @@ android:layout_marginTop="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginStart="8dp"/>
             </LinearLayout>
+            <TextView
+                android:id="@+id/tv_danhgia_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="XEM ĐÁNH GIÁ SẢN PHẨM"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#072349"
+                android:gravity="center"
+                android:layout_marginTop="20dp"
+                android:background="#ECECEC"
+                android:padding="8dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_danhgia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:nestedScrollingEnabled="false"
+                />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -227,7 +248,9 @@ android:layout_marginTop="10dp"
                     android:textStyle="bold"
                     android:backgroundTint="#FFDD00"/>
             </LinearLayout>
+
         </LinearLayout>
+
     </ScrollView>
 
     <!-- Toolbar ở cuối màn hình -->

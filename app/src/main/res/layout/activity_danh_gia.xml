@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- RatingBar chọn sao -->
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numStars="5"
+        android:stepSize="1.0"
+        android:rating="3" />
+
+    <!-- Nhập nội dung đánh giá -->
+    <EditText
+        android:id="@+id/editTextNoiDung"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nội dung đánh giá"
+        android:inputType="textMultiLine"
+        android:minLines="3"
+        android:gravity="top|start" />
+
+    <!-- Nút gửi đánh giá -->
+    <Button
+        android:id="@+id/btnGuiDanhGia"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Gửi đánh giá"
+        android:layout_marginTop="16dp" />
+</LinearLayout>

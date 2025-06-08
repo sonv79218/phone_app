@@ -45,9 +45,9 @@ public  class SanPhamAdapter extends BaseAdapter {
     private boolean showFullDetails; // Biến để xác định xem có hiển thị 7 thuộc tính hay không
     private Database database;
 
-    public SanPhamAdapter(Context context, ArrayList<SanPham> bacsiList, boolean showFullDetails) {
+    public SanPhamAdapter(Context context, ArrayList<SanPham> spList, boolean showFullDetails) {
         this.context = context;
-        this.spList = bacsiList;
+        this.spList = spList;
         this.showFullDetails = showFullDetails; // Khởi tạo biến
         this.database = new Database(context, "banhang.db", null, 1);
     }

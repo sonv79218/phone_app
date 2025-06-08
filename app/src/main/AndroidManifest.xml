@@ -54,8 +54,12 @@
             android:name=".DangKiTaiKhoan_Activity"
             android:exported="false" />
         <activity
-            android:name=".SuaTaiKhoan_Activity"
+            android:name=".DanhGiaActivity"
             android:exported="false" />
+
+        <activity android:name=".XemDanhGiaActivity"
+            android:exported="false" />
+
         <activity
             android:name=".ThemTaiKhoan_Activity"
             android:exported="false" />

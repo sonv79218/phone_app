@@ -1,18 +1,26 @@
 package com.example.tuan17.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.tuan17.DanhGiaActivity;
+import com.example.tuan17.XemDanhGiaActivity;
+import com.example.tuan17.database.DanhGiaDB;
 import com.example.tuan17.database.DatabaseHelper;
 import com.example.tuan17.R;
+import com.example.tuan17.helper.SharedPrefHelper;
 import com.example.tuan17.models.ChiTietDonHang;
 
 import java.io.InputStream;
@@ -26,7 +34,11 @@ public class ChiTietDonHangAdapter extends ArrayAdapter<ChiTietDonHang> {
 
 
     public View getView(int position, View convertView, ViewGroup parent) {
+
         ChiTietDonHang detail = getItem(position);
+        int masp = detail.getMasp();
+
+//        int productId = detail.getId_dathang();
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.ds_chitietdonhang, parent, false);
         }
@@ -37,12 +49,48 @@ public class ChiTietDonHangAdapter extends ArrayAdapter<ChiTietDonHang> {
         TextView tvSoLuong = convertView.findViewById(R.id.txtSoLuong);
         TextView tvDonGia = convertView.findViewById(R.id.txtGia);
         ImageView ivAnh = convertView.findViewById(R.id.imgsp);
+        Button danhGia = convertView.findViewById(R.id.btnDanhGia);
+        // lấy id người mua, mã đơn hàng, và sản phẩm
+        int userId = SharedPrefHelper.getUserId(getContext());
+        DanhGiaDB db = new DanhGiaDB(getContext());
+
+        boolean daDanhGia = db.daDanhGia(userId, masp, detail.getId_chitiet());
+//        boolean daDanhGia = db.daDanhGia(userId, masp, detail.getId_chitiet());
+
+        if (daDanhGia) {
+            danhGia.setText("Xem đánh giá");
+            danhGia.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), XemDanhGiaActivity.class);
+                    intent.putExtra("userId", userId);
+                    intent.putExtra("sanPhamId", masp);
+                    intent.putExtra("chitietdonhangId", detail.getId_chitiet());
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getContext().startActivity(intent);
+                }
+            });
+        } else {
+            danhGia.setText("Đánh giá");
+            danhGia.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), DanhGiaActivity.class);
+                    intent.putExtra("userId", userId);
+                    intent.putExtra("sanPhamId", masp);
+                    intent.putExtra("chitietdonhangId", detail.getId_chitiet());
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getContext().startActivity(intent);
+                }
+            });
+        }
+
+
+
 
         // Hiển thị ID đơn hàng
         tvID_dathang.setText(String.valueOf(detail.getId_dathang()));
-
         // Hiển thị mã sản phẩm
-        int masp = detail.getMasp();
         tvMaSp.setText(String.valueOf(masp)); // Hiển thị mã sản phẩm
 
         // Lấy tên sản phẩm từ DatabaseHelper

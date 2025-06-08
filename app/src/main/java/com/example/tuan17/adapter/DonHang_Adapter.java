@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.tuan17.R;
+import com.example.tuan17.database.TaiKhoanDB;
 import com.example.tuan17.models.Order;
 
 import java.util.List;
@@ -22,7 +23,11 @@ public class DonHang_Adapter extends ArrayAdapter<Order> {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.ds_donhang, parent, false);
             }
 
+
+
             Order order = getItem(position);
+        TaiKhoanDB taiKhoanDB = new TaiKhoanDB(getContext());
+        String tenKh = taiKhoanDB.getTenNguoiDung(order.getUserId()); // dùng để lấy tên khách hàng nhờ ID
         TextView txtMadh = convertView.findViewById(R.id.txtMahd);
             TextView txtTenKh = convertView.findViewById(R.id.txtTenKh);
             TextView txtDiaChi = convertView.findViewById(R.id.txtDiaChi);
@@ -30,7 +35,7 @@ public class DonHang_Adapter extends ArrayAdapter<Order> {
             TextView txtTongThanhToan = convertView.findViewById(R.id.txtTongThanhToan);
             TextView txtNgayDatHang = convertView.findViewById(R.id.txtNgayDatHang);
 
-        txtTenKh.setText(order.getTenKh());
+        txtTenKh.setText(tenKh);
             txtDiaChi.setText(order.getDiaChi());
             txtSdt.setText(order.getSdt());
             txtTongThanhToan.setText(String.valueOf(order.getTongTien()));

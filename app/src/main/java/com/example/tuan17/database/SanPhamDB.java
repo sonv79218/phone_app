@@ -3,6 +3,7 @@ package com.example.tuan17.database;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import android.widget.Toast;
 
 
@@ -10,6 +11,7 @@ import com.example.tuan17.models.NhomSanPham;
 import com.example.tuan17.models.SanPham;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SanPhamDB {
     private SQLiteDatabase db;
@@ -106,5 +108,61 @@ public class SanPhamDB {
         sp.close();
         return list;
     }
+
+    public List<SanPham> getProductsByNhomSpId(String nhomSpId) {
+        List<SanPham> productList = new ArrayList<>();
+//        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Truy vấn để lấy sản phẩm theo nhomSpId
+        Cursor cursor = db.rawQuery("SELECT * FROM sanpham WHERE maso = ?", new String[]{nhomSpId});
+
+        if (cursor.moveToFirst()) {
+            do {
+                String masp = cursor.getString(cursor.getColumnIndexOrThrow("masp"));
+                String tensp = cursor.getString(cursor.getColumnIndexOrThrow("tensp"));
+                Float dongia = cursor.getFloat(cursor.getColumnIndexOrThrow("dongia"));
+                String mota = cursor.getString(cursor.getColumnIndexOrThrow("mota"));
+                String ghichu = cursor.getString(cursor.getColumnIndexOrThrow("ghichu"));
+                int soluongkho = cursor.getInt(cursor.getColumnIndexOrThrow("soluongkho"));
+                String mansp = cursor.getString(cursor.getColumnIndexOrThrow("maso"));
+                byte[] anh = cursor.getBlob(cursor.getColumnIndexOrThrow("anh"));
+
+                SanPham sanPham = new SanPham(masp, tensp, dongia, mota, ghichu, soluongkho, mansp, anh);
+                productList.add(sanPham);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return productList;
+    }
+
+    public String getTenSanPhamByMaSp(int masp) {
+        String tensp = null;
+//        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Thực hiện truy vấn
+        Cursor cursor = db.rawQuery("SELECT tensp FROM sanpham WHERE masp = ?", new String[]{String.valueOf(masp)});
+
+        // Kiểm tra cursor không null và di chuyển đến bản ghi đầu tiên
+        if (cursor != null && cursor.moveToFirst()) {
+            // Lấy tên sản phẩm từ cursor
+            int tenspIndex = cursor.getColumnIndex("tensp");
+            if (tenspIndex != -1) {
+                tensp = cursor.getString(tenspIndex);
+            } else {
+                Log.e("Database Error", "Column 'tensp' not found.");
+            }
+        } else {
+            Log.e("Database Error", "Cursor is empty or null.");
+        }
+
+        // Đóng cursor
+        if (cursor != null) {
+            cursor.close();
+        }
+
+        return tensp; // Trả về tên sản phẩm
+    }
+
 }
 

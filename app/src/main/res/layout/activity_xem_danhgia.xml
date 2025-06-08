@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/tvNgayDanhGia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ngày đánh giá:"
+        android:textSize="16sp"
+        android:layout_marginBottom="12dp"/>
+
+    <RatingBar
+        android:id="@+id/ratingBarXem"
+        style="?android:attr/ratingBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numStars="5"
+        android:isIndicator="true"
+        android:stepSize="1.0"
+        android:layout_marginBottom="12dp"/>
+
+    <TextView
+        android:id="@+id/tvNoiDung"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nội dung đánh giá"
+        android:textSize="16sp"
+        android:padding="8dp"
+        android:background="#EEEEEE" />
+</LinearLayout>

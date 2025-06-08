@@ -9,4 +9,10 @@ public class SharedPrefHelper {
         SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         return sharedPreferences.getString("tendn", null);
     }
+
+    public static int getUserId(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        return sharedPreferences.getInt("user_id",-1);
+    }
+
 }
