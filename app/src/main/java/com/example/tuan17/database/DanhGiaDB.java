@@ -110,22 +110,18 @@ public class DanhGiaDB {
         cursor.close();
         return danhGiaList;
     }
-    public double tinhTrungBinhSoSao(int sanPhamId) {
-        double trungBinh = 0;
-        Cursor cursor = db.rawQuery(
-                "SELECT AVG(soSao) as trungBinh FROM danhgia WHERE sanPhamId = ?",
-                new String[]{String.valueOf(sanPhamId)}
-        );
 
-        if (cursor.moveToFirst()) {
-            int index = cursor.getColumnIndex("trungBinh");
-            if (index >= 0) {
-                trungBinh = cursor.getDouble(index);
-            }
-        }
-        cursor.close();
-        return trungBinh;
+public float tinhTrungBinhSoSao(int masp) {
+//    SQLiteDatabase db = this.getReadableDatabase();
+    float avg = 0f;
+    String query = "SELECT AVG(rating) FROM danhgia WHERE masp = ?";
+    Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(masp)});
+    if (cursor.moveToFirst()) {
+        avg = cursor.getFloat(0);
     }
+    cursor.close();
+    return avg;
+}
 
 
     private String getStringFromCursor(Cursor cursor, String columnName) {

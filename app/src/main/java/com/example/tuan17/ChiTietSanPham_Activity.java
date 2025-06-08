@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tuan17.database.DanhGiaDB;
 import com.example.tuan17.models.ChiTietSanPham;
 import com.example.tuan17.models.DanhGia;
 
@@ -36,31 +37,45 @@ public class ChiTietSanPham_Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chi_tiet_san_pham);
-
+        DanhGiaDB danhGiaDB = new DanhGiaDB(this);
         TextView tvXemDanhGia = findViewById(R.id.tv_danhgia_title);
 
-        tvXemDanhGia.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (masp != null && !masp.isEmpty()) {
-                    try {
-                        int id = Integer.parseInt(masp);
-                        Intent intent = new Intent(ChiTietSanPham_Activity.this, XemDanhGiaActivity.class);
-                        intent.putExtra("masp", id);
-                        startActivity(intent);
-                    } catch (NumberFormatException e) {
-                        Toast.makeText(ChiTietSanPham_Activity.this, "Mã sản phẩm không hợp lệ!", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(ChiTietSanPham_Activity.this, "Không có mã sản phẩm!", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+//        tvXemDanhGia.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (masp != null && !masp.isEmpty()) {
+//                    try {
+//                        int id = Integer.parseInt(masp);
+//                        Intent intent = new Intent(ChiTietSanPham_Activity.this, XemDanhGiaActivity.class);
+//                        intent.putExtra("masp", id);
+//                        startActivity(intent);
+//                    } catch (NumberFormatException e) {
+//                        Toast.makeText(ChiTietSanPham_Activity.this, "Mã sản phẩm không hợp lệ!", Toast.LENGTH_SHORT).show();
+//                    }
+//                } else {
+//                    Toast.makeText(ChiTietSanPham_Activity.this, "Không có mã sản phẩm!", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
 
 
         // Khởi tạo các thành phần giao diện
         btndathang = findViewById(R.id.btndathang);
         btnaddcart = findViewById(R.id.btnaddcart);
+
+        //sao
+        // Khai báo biến ImageView
+        ImageView star1 = findViewById(R.id.star1);
+        ImageView star2 = findViewById(R.id.star2);
+        ImageView star3 = findViewById(R.id.star3);
+        ImageView star4 = findViewById(R.id.star4);
+        ImageView star5 = findViewById(R.id.star5);
+
+
+
+
+
+
 
         TextView tensp = findViewById(R.id.tensp);
         ImageView imgsp = findViewById(R.id.imgsp);
@@ -68,6 +83,8 @@ public class ChiTietSanPham_Activity extends AppCompatActivity {
         TextView mota = findViewById(R.id.mota);
         TextView ghichu = findViewById(R.id.ghichu);
         TextView soluongkho = findViewById(R.id.soluongkho);// giá trị để check
+
+//        TextView danhgia = findViewById(R.id.danhgia);
         gioHangManager = GioHangManager.getInstance(); // Sử dụng singleton
         TextView textTendn = findViewById(R.id.tendn); // TextView hiển thị tên đăng nhập
 
@@ -96,6 +113,13 @@ public class ChiTietSanPham_Activity extends AppCompatActivity {
         // Nếu không có chi tiết sản phẩm, bạn có thể xử lý mã sản phẩm theo cách của riêng bạn
             if (chiTietSanPham != null) {
                 masp = chiTietSanPham.getMasp(); // Lấy mã sản phẩm từ chi tiết
+                Log.d("ChiTietSanPham", "masp = " + masp);
+
+                // Lấy điểm trung bình sao (float)
+                int maSpInt = Integer.parseInt(masp);
+                float avgRating = danhGiaDB.tinhTrungBinhSoSao(maSpInt);
+                // Hàm hiển thị sao
+                displayStarRating(avgRating, star1, star2, star3, star4, star5);
                 tensp.setText(chiTietSanPham.getTensp());
                 ghichu.setText(chiTietSanPham.getGhichu());
                 dongia.setText(chiTietSanPham.getDongia() != null ? String.valueOf(chiTietSanPham.getDongia()) : "Không có dữ liệu");
@@ -220,4 +244,17 @@ btntimkiem.setOnClickListener(new View.OnClickListener() {
             startActivity(intent);
         }
     }
+
+    private void displayStarRating(float rating, ImageView... stars) {
+        for (int i = 0; i < stars.length; i++) {
+            if (rating >= i + 1) {
+                stars[i].setImageResource(R.drawable.star_full);
+            } else if (rating > i && rating < i + 1) {
+                stars[i].setImageResource(R.drawable.star_half);
+            } else {
+                stars[i].setImageResource(R.drawable.star_empty);
+            }
+        }
+    }
+
 }

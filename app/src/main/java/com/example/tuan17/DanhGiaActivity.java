@@ -1,5 +1,6 @@
 package com.example.tuan17;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -71,7 +72,10 @@ public class DanhGiaActivity extends AppCompatActivity {
             boolean success = danhGiaDB.themDanhGia(danhGia);
             if (success) {
                 Toast.makeText(this, "Đánh giá đã được gửi!", Toast.LENGTH_SHORT).show();
-                finish(); // hoặc chuyển về danh sách sản phẩm
+                Intent intent = new Intent(this, TrangchuNgdung_Activity.class) ;
+                finish();
+                startActivity(intent);
+
 
                 // Ghi log thông tin đánh giá
 //                Log.d("DanhGiaActivity", "Đánh giá mới: userId=" + userId
