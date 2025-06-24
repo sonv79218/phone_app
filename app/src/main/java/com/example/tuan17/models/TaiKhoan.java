@@ -24,6 +24,11 @@ public class TaiKhoan {
         this.quyen = quyen;
         this.ngaytao = ngaytao;
     }
+    public TaiKhoan(String tendn, String matkhau, String quyen) {
+        this.tendn = tendn;
+        this.matkhau = matkhau;
+        this.quyen = quyen;
+    }
 
     // Getter và Setter (nếu cần)
     public int getId() {
