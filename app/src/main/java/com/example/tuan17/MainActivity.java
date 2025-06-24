@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish(); // Kết thúc Activity1 nếu không muốn quay lại
             }
-        }, 5000); // 1000 milliseconds = 1 seconds
+        }, 100); // 1000 milliseconds = 1 seconds
 
     }
 }

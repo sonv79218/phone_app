@@ -56,25 +56,6 @@ public class TaiKhoanDB {
         return db.rawQuery(sql,null);
     }
 
-
-
-    // hàm lấy dữ liệu mảng tài khoản từ db
-//    public List<TaiKhoan> getAllTaiKhoan() {
-//        List<TaiKhoan> danhSach = new ArrayList<>();
-//        Cursor cursor = db.rawQuery("SELECT * FROM taikhoan", null);
-//
-//        if (cursor.moveToFirst()) {
-//            do {
-//                String tdn = cursor.getString(0);
-//                String mk = cursor.getString(1);
-//                String q = cursor.getString(2);
-//                danhSach.add(new TaiKhoan(tdn, mk, q));
-//            } while (cursor.moveToNext());
-//        }
-//
-//        cursor.close();
-//        return danhSach;
-//    }
     public List<TaiKhoan> getAllTaiKhoan() {
         List<TaiKhoan> danhSach = new ArrayList<>();
         Cursor cursor = db.rawQuery("SELECT * FROM taikhoan", null);

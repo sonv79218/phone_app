@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +15,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.tuan17.adapter.NhomSanPhamAdapter;
 import com.example.tuan17.database.Database;
 import com.example.tuan17.models.NhomSanPham;
@@ -22,11 +26,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ThemNhomSanPham_Activity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1; // Mã yêu cầu cho việc chọn ảnh
     EditText tennsp;
-    Database database;
+//    Database database;
     ImageView imgnsp;
     ArrayList<NhomSanPham> mangNSP;
   NhomSanPhamAdapter adapter;
@@ -52,8 +58,8 @@ public class ThemNhomSanPham_Activity extends AppCompatActivity {
         mangNSP = new ArrayList<>();
         adapter = new NhomSanPhamAdapter(ThemNhomSanPham_Activity.this, mangNSP, true) {
         };
-        database = new Database(this, "banhang.db", null, 1);
-        database.QueryData("CREATE TABLE IF NOT EXISTS nhomsanpham(maso INTEGER PRIMARY KEY AUTOINCREMENT, tennsp NVARCHAR(200), anh BLOB)");
+//        database = new Database(this, "banhang.db", null, 1);
+//        database.QueryData("CREATE TABLE IF NOT EXISTS nhomsanpham(maso INTEGER PRIMARY KEY AUTOINCREMENT, tennsp NVARCHAR(200), anh BLOB)");
 
         // Thiết lập OnClickListener cho nút chọn ảnh
         chonimgbs.setOnClickListener(new View.OnClickListener() {
@@ -63,40 +69,85 @@ public class ThemNhomSanPham_Activity extends AppCompatActivity {
             }
         });
 
-        btnthem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Lấy dữ liệu từ các trường
-                String tenNsp = tennsp.getText().toString().trim();
+//        btnthem.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                // Lấy dữ liệu từ các trường
+//                String tenNsp = tennsp.getText().toString().trim();
+//
+//                // Kiểm tra dữ liệu không rỗng
+//                if (tenNsp.isEmpty() ) {
+//                    Toast.makeText(ThemNhomSanPham_Activity.this, "Vui lòng điền đầy đủ thông tin!", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//
+//                // Khởi tạo biến imageBytes
+//                byte[] imageBytes = null;
+//
+//                // Kiểm tra imageUri có khác null không
+//                if (imageUri != null) {
+//                    imageBytes = getBytesFromUri(imageUri);
+//                    if (imageBytes == null) {
+//                        Toast.makeText(ThemNhomSanPham_Activity.this, "Lỗi khi lấy ảnh!", Toast.LENGTH_SHORT).show();
+//                        return;
+//                    }
+//                }
+//
+//                database.QueryData("INSERT INTO nhomsanpham(tennsp, anh) VALUES ('"
+//                        + tenNsp + "', ?)", new Object[]{imageBytes}); // Sử dụng tham số để tránh lỗi SQL Injection   Toast.makeText(ThemNhomSanPham_Activity.this, "Thêm nhóm sản phẩm thành công!", Toast.LENGTH_LONG).show();
+//
+//                // Chuyển đến Activity thứ hai
+//                Intent intent = new Intent(getApplicationContext(), Nhomsanpham_admin_Actvity.class);
+//                startActivity(intent);
+//                finish(); // Đóng Activity hiện tại
+//            }
+//        });
 
-                // Kiểm tra dữ liệu không rỗng
-                if (tenNsp.isEmpty() ) {
-                    Toast.makeText(ThemNhomSanPham_Activity.this, "Vui lòng điền đầy đủ thông tin!", Toast.LENGTH_SHORT).show();
+        btnthem.setOnClickListener(view -> {
+            String tenNsp = tennsp.getText().toString().trim();
+            if (tenNsp.isEmpty()) {
+                Toast.makeText(this, "Vui lòng điền đầy đủ thông tin!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            byte[] imageBytes = null;
+            if (imageUri != null) {
+                imageBytes = getBytesFromUri(imageUri);
+                if (imageBytes == null) {
+                    Toast.makeText(this, "Lỗi khi lấy ảnh!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-                // Khởi tạo biến imageBytes
-                byte[] imageBytes = null;
-
-                // Kiểm tra imageUri có khác null không
-                if (imageUri != null) {
-                    imageBytes = getBytesFromUri(imageUri);
-                    if (imageBytes == null) {
-                        Toast.makeText(ThemNhomSanPham_Activity.this, "Lỗi khi lấy ảnh!", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                }
-
-                database.QueryData("INSERT INTO nhomsanpham(tennsp, anh) VALUES ('"
-                        + tenNsp + "', ?)", new Object[]{imageBytes}); // Sử dụng tham số để tránh lỗi SQL Injection   Toast.makeText(ThemNhomSanPham_Activity.this, "Thêm nhóm sản phẩm thành công!", Toast.LENGTH_LONG).show();
-
-                // Chuyển đến Activity thứ hai
-                Intent intent = new Intent(getApplicationContext(), Nhomsanpham_admin_Actvity.class);
-                startActivity(intent);
-                finish(); // Đóng Activity hiện tại
             }
+
+            String base64Image = (imageBytes != null) ? Base64.encodeToString(imageBytes, Base64.DEFAULT) : "";
+
+            // Gửi lên API
+            String url = "http://10.0.2.2:3000/nhomsanpham"; // Thay <IP> bằng IP máy chủ Node
+            StringRequest request = new StringRequest(Request.Method.POST, url,
+                    response -> {
+                        Toast.makeText(this, "Thêm nhóm sản phẩm thành công!", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(this, Nhomsanpham_admin_Actvity.class));
+                        finish();
+                    },
+                    error -> {
+                        Toast.makeText(this, "Lỗi kết nối API", Toast.LENGTH_SHORT).show();
+                        error.printStackTrace();
+                    }
+            ) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> data = new HashMap<>();
+                    data.put("tennsp", tenNsp);
+                    data.put("anh", base64Image); // Gửi ảnh base64
+                    return data;
+                }
+            };
+
+            Volley.newRequestQueue(this).add(request);
         });
+
     }
+
     // Mở dialog chọn hình ảnh từ drawable
     private void openDrawableImagePicker() {
         final String[] imageNames = {"iphone", "nokia", "samsung", "lg", "huawei", "gionee", "oppo", "vivo"};

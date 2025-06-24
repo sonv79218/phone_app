@@ -12,6 +12,9 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.tuan17.adapter.NhomSanPhamAdapter;
 import com.example.tuan17.adapter.SanPhamAdapter;
 import com.example.tuan17.database.Database;
@@ -22,6 +25,9 @@ import com.example.tuan17.helper.SharedPrefHelper;
 import com.example.tuan17.models.NhomSanPham;
 import com.example.tuan17.models.SanPham;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class TrangchuNgdung_Activity extends AppCompatActivity {
@@ -31,17 +37,17 @@ public class TrangchuNgdung_Activity extends AppCompatActivity {
     ArrayList<NhomSanPham> mangNSPgrv2; // Danh sách cho ListView
     NhomSanPhamAdapter adapterGrv2;
     SanPhamAdapter adapterGrv1;
-
-    SanPhamDB sanPhamDB;
-    NhomSanPhamDB nhomSanPhamDB;
+    String serverUrl = "http://10.0.2.2:3000"; // hoặc IP máy thật khi dùng điện thoại
+//    SanPhamDB sanPhamDB;
+//    NhomSanPhamDB nhomSanPhamDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trangchu_ngdung);
         // khai bao
-        sanPhamDB = new SanPhamDB(this);
-        nhomSanPhamDB = new NhomSanPhamDB(this);
+//        sanPhamDB = new SanPhamDB(this);
+//        nhomSanPhamDB = new NhomSanPhamDB(this);
 
         EditText timkiem = findViewById(R.id.timkiem);
         TextView textTendn = findViewById(R.id.tendn); // TextView hiển thị tên đăng nhập
@@ -97,20 +103,72 @@ public class TrangchuNgdung_Activity extends AppCompatActivity {
         grv2.setAdapter(adapterGrv2);
         grv1.setAdapter(adapterGrv1);
 
-        Loaddulieugridview2();
-        Loaddulieugridview1();
+//        Loaddulieugridview2();
+//        Loaddulieugridview1();
+        // Gọi API backend
+        loadNhomSanPhamAPI();
+        loadSanPhamAPI();
     }
 
 
-    private void Loaddulieugridview2() {
-        mangNSPgrv2.clear();
-        mangNSPgrv2.addAll(nhomSanPhamDB.getRandomNhomSanPham(8));
-        adapterGrv2.notifyDataSetChanged(); // Cập nhật adapter
+//    private void Loaddulieugridview2() {
+//        mangNSPgrv2.clear();
+//        mangNSPgrv2.addAll(nhomSanPhamDB.getRandomNhomSanPham(8));
+//        adapterGrv2.notifyDataSetChanged(); // Cập nhật adapter
+//    }
+    private void loadNhomSanPhamAPI() {
+        String url = serverUrl + "/nhomsanpham/random?limit=8";
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
+                response -> {
+                    mangNSPgrv2.clear();
+                    for (int i = 0; i < response.length(); i++) {
+                        try {
+                            JSONObject obj = response.getJSONObject(i);
+                            String ma = obj.getString("maso");
+                            String ten = obj.getString("tennsp");
+                            byte[] anh = android.util.Base64.decode(obj.getString("anh"), android.util.Base64.DEFAULT);
+                            mangNSPgrv2.add(new NhomSanPham(ma, ten, anh));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    adapterGrv2.notifyDataSetChanged();
+                },
+                error -> Toast.makeText(this, "Không thể tải nhóm sản phẩm", Toast.LENGTH_SHORT).show()
+        );
+        Volley.newRequestQueue(this).add(request);
     }
+//    private void Loaddulieugridview1() {
+//        mangSPgrv1.clear();
+//        mangSPgrv1.addAll(sanPhamDB.getRandomSanPham(8));
+//        adapterGrv1.notifyDataSetChanged();
+//    }
+    private void loadSanPhamAPI() {
+        String url = serverUrl + "/sanpham/random?limit=8";
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
+                response -> {
+                    mangSPgrv1.clear();
+                    for (int i = 0; i < response.length(); i++) {
+                        try {
+                            JSONObject obj = response.getJSONObject(i);
+                            String masp = obj.getString("masp");
+                            String tensp = obj.getString("tensp");
+                            float dongia = (float) obj.getDouble("dongia");
+                            String mota = obj.getString("mota");
+                            String ghichu = obj.getString("ghichu");
+                            int soluongkho = obj.getInt("soluongkho");
+                            String maso = obj.getString("maso");
+                            byte[] anh = android.util.Base64.decode(obj.getString("anh"), android.util.Base64.DEFAULT);
 
-    private void Loaddulieugridview1() {
-        mangSPgrv1.clear();
-        mangSPgrv1.addAll(sanPhamDB.getRandomSanPham(8));
-        adapterGrv1.notifyDataSetChanged();
+                            mangSPgrv1.add(new SanPham(masp, tensp, dongia, mota, ghichu, soluongkho, maso, anh));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    adapterGrv1.notifyDataSetChanged();
+                },
+                error -> Toast.makeText(this, "Không thể tải sản phẩm", Toast.LENGTH_SHORT).show()
+        );
+        Volley.newRequestQueue(this).add(request);
     }
 }

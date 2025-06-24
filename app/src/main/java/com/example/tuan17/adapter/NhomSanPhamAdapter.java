@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.tuan17.database.Database;
 import com.example.tuan17.models.NhomSanPham;
 import com.example.tuan17.R;
@@ -30,12 +34,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class NhomSanPhamAdapter extends BaseAdapter {
     private Context context;
     private ArrayList<NhomSanPham> nhomSanPhamList;
     private boolean showFullDetails;
-    private Database database;
+//    private Database database;
     private Uri selectedImageUri;
     private static final int REQUEST_CODE_PICK_IMAGE = 1;
 
@@ -43,7 +49,7 @@ public class NhomSanPhamAdapter extends BaseAdapter {
         this.context = context;
         this.nhomSanPhamList = nhomSanPhamList;
         this.showFullDetails = showFullDetails;
-        this.database = new Database(context, "banhang.db", null, 1);
+//        this.database = new Database(context, "banhang.db", null, 1);
     }
 
     @Override
@@ -96,11 +102,25 @@ public class NhomSanPhamAdapter extends BaseAdapter {
 
         sua.setOnClickListener(v -> showEditDialog(nhomSanPham));
         xoa.setOnClickListener(v -> {
-            Toast.makeText(context, "Bạn đã nhấn nút xóa", Toast.LENGTH_SHORT).show();
-            database.deleteNhomSanPham(nhomSanPham.getMa());
-            nhomSanPhamList.remove(position);
-            notifyDataSetChanged();
-            Toast.makeText(context, "Đã xóa nhóm sản phẩm", Toast.LENGTH_SHORT).show();
+            String maso = nhomSanPham.getMa(); // lấy mã nhóm
+
+            // Gọi API DELETE
+            String url = "http://10.0.2.2:3000/nhomsanpham/" + maso;
+
+            StringRequest request = new StringRequest(Request.Method.DELETE, url,
+                    response -> {
+                        // Xóa khỏi danh sách và cập nhật UI
+                        nhomSanPhamList.remove(position);
+                        notifyDataSetChanged();
+                        Toast.makeText(context, "Đã xóa nhóm sản phẩm", Toast.LENGTH_SHORT).show();
+                    },
+                    error -> {
+                        error.printStackTrace();
+                        Toast.makeText(context, "Lỗi xóa nhóm sản phẩm", Toast.LENGTH_SHORT).show();
+                    }
+            );
+
+            Volley.newRequestQueue(context).add(request);
         });
 
         return view;
@@ -161,25 +181,56 @@ public class NhomSanPhamAdapter extends BaseAdapter {
         builder.show();
     }
 
-    private void updateNhomSanPham(NhomSanPham nhomSanPham, EditText editTen) {
-        String newTen = editTen.getText().toString().trim();
-        byte[] newAnh = selectedImageUri != null ? getBytesFromUri(selectedImageUri) : null;
+//    private void updateNhomSanPham(NhomSanPham nhomSanPham, EditText editTen) {
+//        String newTen = editTen.getText().toString().trim();
+//        byte[] newAnh = selectedImageUri != null ? getBytesFromUri(selectedImageUri) : null;
+//
+//        SQLiteDatabase db = database.getWritableDatabase();
+//        ContentValues values = new ContentValues();
+//        values.put("tennsp", newTen);
+//        if (newAnh != null) {
+//            values.put("anh", newAnh);
+//        }
+//
+//        db.update("nhomsanpham", values, "maso = ?", new String[]{nhomSanPham.getMa()});
+//        nhomSanPham.setTennhom(newTen);
+//        if (newAnh != null) {
+//            nhomSanPham.setAnh(newAnh);
+//        }
+//
+//        notifyDataSetChanged();
+//    }
+private void updateNhomSanPham(NhomSanPham nhomSanPham, EditText editTen) {
+    String newTen = editTen.getText().toString().trim();
+    byte[] newAnhBytes = selectedImageUri != null ? getBytesFromUri(selectedImageUri) : null;
+    String base64Image = newAnhBytes != null ? Base64.encodeToString(newAnhBytes, Base64.DEFAULT) : "";
 
-        SQLiteDatabase db = database.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("tennsp", newTen);
-        if (newAnh != null) {
-            values.put("anh", newAnh);
+    String url = "http://10.0.2.2:3000/nhomsanpham/" + nhomSanPham.getMa();
+
+    StringRequest request = new StringRequest(Request.Method.PUT, url,
+            response -> {
+                // Cập nhật dữ liệu trong adapter
+                nhomSanPham.setTennhom(newTen);
+                if (newAnhBytes != null) nhomSanPham.setAnh(newAnhBytes);
+                notifyDataSetChanged();
+                Toast.makeText(context, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+            },
+            error -> {
+                error.printStackTrace();
+                Toast.makeText(context, "Lỗi cập nhật nhóm sản phẩm", Toast.LENGTH_SHORT).show();
+            }
+    ) {
+        @Override
+        protected Map<String, String> getParams() {
+            Map<String, String> params = new HashMap<>();
+            params.put("tennsp", newTen);
+            params.put("anh", base64Image); // base64 string (có thể rỗng)
+            return params;
         }
+    };
 
-        db.update("nhomsanpham", values, "maso = ?", new String[]{nhomSanPham.getMa()});
-        nhomSanPham.setTennhom(newTen);
-        if (newAnh != null) {
-            nhomSanPham.setAnh(newAnh);
-        }
-
-        notifyDataSetChanged();
-    }
+    Volley.newRequestQueue(context).add(request);
+}
 
     private byte[] getBytesFromUri(Uri uri) {
         try (InputStream inputStream = context.getContentResolver().openInputStream(uri)) {

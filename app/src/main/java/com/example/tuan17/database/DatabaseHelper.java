@@ -27,7 +27,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-
         // bang taikhoan
         db.execSQL("CREATE TABLE IF NOT EXISTS taikhoan (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
