@@ -7,11 +7,19 @@ import android.os.Bundle;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.tuan17.adapter.SanPham_DanhMuc_Adapter;
+import com.example.tuan17.adapter.SanPham_DanhMuc_Admin_Adapter;
 import com.example.tuan17.database.DatabaseHelper;
 import com.example.tuan17.database.SanPhamDB;
 import com.example.tuan17.helper.BottomBar_Helper;
 import com.example.tuan17.models.SanPham;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList; // Import ArrayList
 import java.util.List;
@@ -34,22 +42,10 @@ public class DanhMucSanPham_Activity extends AppCompatActivity {
 //        dbHelper = new DatabaseHelper(this);
         sanPhamDB = new SanPhamDB(this);
 
-        // Retrieve nhomSpId from the Intent
         String nhomSpId = getIntent().getStringExtra("nhomSpId");
 
-        // Check if nhomSpId is not null
         if (nhomSpId != null) {
-            // Get the list of products by nhomSpId
-            List<SanPham> tempProductList = sanPhamDB.getProductsByNhomSpId(nhomSpId); // Use a temporary variable
-            if (tempProductList != null && !tempProductList.isEmpty()) {
-                // Convert List to ArrayList
-                productList = new ArrayList<>(tempProductList);
-                // Initialize and set the adapter with the product list
-                productAdapter = new SanPham_DanhMuc_Adapter(this, productList, false);
-                grv.setAdapter(productAdapter);
-            } else {
-                Toast.makeText(this, "Không tìm thấy sản phẩm nào trong nhóm này!", Toast.LENGTH_SHORT).show();
-            }
+            loadSanPhamTheoNhom(nhomSpId);
         } else {
             Toast.makeText(this, "ID nhóm sản phẩm không hợp lệ!", Toast.LENGTH_SHORT).show();
         }
@@ -76,5 +72,45 @@ public class DanhMucSanPham_Activity extends AppCompatActivity {
             startActivity(intent);
         });
 
+    }
+    private void loadSanPhamTheoNhom(String maso) {
+        String url = "http://10.0.2.2:3000/sanpham/nhom/" + maso;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                response -> {
+                    try {
+                        JSONArray dataArray = response.getJSONArray("data");
+                        productList = new ArrayList<>();
+
+                        for (int i = 0; i < dataArray.length(); i++) {
+                            JSONObject obj = dataArray.getJSONObject(i);
+                            String masp = obj.getString("masp");
+                            String tensp = obj.getString("tensp");
+                            float dongia = (float) obj.getDouble("dongia");
+                            String mota = obj.getString("mota");
+                            String ghichu = obj.getString("ghichu");
+                            int soluongkho = obj.getInt("soluongkho");
+                            String masoSp = obj.getString("maso");
+                            String anhBase64 = obj.optString("anh", null);
+                            byte[] anhBytes = (anhBase64 != null) ? android.util.Base64.decode(anhBase64, android.util.Base64.DEFAULT) : null;
+
+                            SanPham sp = new SanPham(masp, tensp, dongia, mota, ghichu, soluongkho, masoSp, anhBytes);
+                            productList.add(sp);
+                        }
+
+                        productAdapter = new SanPham_DanhMuc_Adapter(this, productList, false);
+                        grv.setAdapter(productAdapter);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(this, "Lỗi định dạng JSON", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                error -> {
+                    error.printStackTrace();
+                    Toast.makeText(this, "Lỗi kết nối đến API", Toast.LENGTH_SHORT).show();
+                }
+        );
+
+        Volley.newRequestQueue(this).add(request);
     }
 }

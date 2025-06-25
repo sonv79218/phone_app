@@ -35,7 +35,7 @@ public class DonHang_Adapter extends ArrayAdapter<Order> {
             TextView txtTongThanhToan = convertView.findViewById(R.id.txtTongThanhToan);
             TextView txtNgayDatHang = convertView.findViewById(R.id.txtNgayDatHang);
 
-        txtTenKh.setText(tenKh);
+        txtTenKh.setText(order.getTenkh());
             txtDiaChi.setText(order.getDiaChi());
             txtSdt.setText(order.getSdt());
             txtTongThanhToan.setText(String.valueOf(order.getTongTien()));

@@ -20,6 +20,13 @@ public class ChiTietDonHang implements Parcelable {
         this.donGia = donGia;
         this.anh = anh; // Đặt thuộc tính ảnh là kiểu byte[]
     }
+    public ChiTietDonHang(int id_chitiet, int masp, int soLuong, float donGia, byte[] anh) {
+        this.id_chitiet = id_chitiet;
+        this.masp = masp;
+        this.soLuong = soLuong;
+        this.donGia = donGia;
+        this.anh = anh; // Đặt thuộc tính ảnh là kiểu byte[]
+    }
 
     public int getId_chitiet() {
         return id_chitiet;

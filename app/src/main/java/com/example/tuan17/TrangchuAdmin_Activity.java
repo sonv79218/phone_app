@@ -50,7 +50,7 @@ public class TrangchuAdmin_Activity extends AppCompatActivity {
 //        sanPhamDB = new SanPhamDB(this);
         grv2 = findViewById(R.id.grv2);
         grv1 = findViewById(R.id.grv1);
-
+// nhấn vào nhóm sản phẩm
         grv2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

@@ -23,13 +23,13 @@ public class NhomSanPham_trangChuadmin_Adapter  extends BaseAdapter {
     private ArrayList<NhomSanPham> nhomSanPhamList;
     private boolean showFullDetails;
 
-  Database database;
+//  Database database;
 
     public NhomSanPham_trangChuadmin_Adapter(Activity context, ArrayList<NhomSanPham> nhomSanPhamList, boolean showFullDetails) {
         this.context = context;
         this.nhomSanPhamList = nhomSanPhamList;
         this.showFullDetails = showFullDetails;
-        this.database = new Database(context, "banhang.db", null, 1);
+//        this.database = new Database(context, "banhang.db", null, 1);
     }
 
     @Override

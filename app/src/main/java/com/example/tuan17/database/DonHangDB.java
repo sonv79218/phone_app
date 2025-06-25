@@ -55,34 +55,34 @@ public class DonHangDB {
 //
 //        return orders;
 //    }
-public List<Order> getAllDonHang() {
-    List<Order> orders = new ArrayList<>();
-    Cursor cursor = null;
-
-    try {
-        String query = "SELECT * FROM Dathang ORDER BY ngaydathang DESC LIMIT 8";
-        cursor = db.rawQuery(query, null);
-
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                int id = cursor.getInt(cursor.getColumnIndexOrThrow("id_dathang"));
-                int userId = cursor.getInt(cursor.getColumnIndexOrThrow("user_id")); // ✅ THÊM DÒNG NÀY
-                String diaChi = cursor.getString(cursor.getColumnIndexOrThrow("diachi"));
-                String sdt = cursor.getString(cursor.getColumnIndexOrThrow("sdt"));
-                float tongThanhToan = cursor.getFloat(cursor.getColumnIndexOrThrow("tongthanhtoan"));
-                String ngayDatHang = cursor.getString(cursor.getColumnIndexOrThrow("ngaydathang"));
-
-                orders.add(new Order(id, userId, diaChi, sdt, tongThanhToan, ngayDatHang));
-            } while (cursor.moveToNext());
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-    } finally {
-        if (cursor != null) cursor.close();
-    }
-
-    return orders;
-}
+//public List<Order> getAllDonHang() {
+//    List<Order> orders = new ArrayList<>();
+//    Cursor cursor = null;
+//
+//    try {
+//        String query = "SELECT * FROM Dathang ORDER BY ngaydathang DESC LIMIT 8";
+//        cursor = db.rawQuery(query, null);
+//
+//        if (cursor != null && cursor.moveToFirst()) {
+//            do {
+//                int id = cursor.getInt(cursor.getColumnIndexOrThrow("id_dathang"));
+//                int userId = cursor.getInt(cursor.getColumnIndexOrThrow("user_id")); // ✅ THÊM DÒNG NÀY
+//                String diaChi = cursor.getString(cursor.getColumnIndexOrThrow("diachi"));
+//                String sdt = cursor.getString(cursor.getColumnIndexOrThrow("sdt"));
+//                float tongThanhToan = cursor.getFloat(cursor.getColumnIndexOrThrow("tongthanhtoan"));
+//                String ngayDatHang = cursor.getString(cursor.getColumnIndexOrThrow("ngaydathang"));
+//
+//                orders.add(new Order(id, userId, diaChi, sdt, tongThanhToan, ngayDatHang));
+//            } while (cursor.moveToNext());
+//        }
+//    } catch (Exception e) {
+//        e.printStackTrace();
+//    } finally {
+//        if (cursor != null) cursor.close();
+//    }
+//
+//    return orders;
+//}
 
     // lấy đơn hàng theo tên khách hàng
 
@@ -111,28 +111,28 @@ public List<Order> getAllDonHang() {
 //        return orders;
 //    }
 
-    public List<Order> getDonHangById(Integer id_user) {
-        List<Order> orders = new ArrayList<>();
-
-        String query = "SELECT * FROM Dathang WHERE user_id = ?";
-        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(id_user)});  // Sửa cú pháp truyền tham số
-
-        if (cursor.moveToFirst()) {
-            do {
-                int id = cursor.getInt(cursor.getColumnIndexOrThrow("id_dathang"));
-                String diaChi = cursor.getString(cursor.getColumnIndexOrThrow("diachi"));
-                String sdt = cursor.getString(cursor.getColumnIndexOrThrow("sdt"));
-                float tongThanhToan = cursor.getFloat(cursor.getColumnIndexOrThrow("tongthanhtoan"));
-                String ngayDatHang = cursor.getString(cursor.getColumnIndexOrThrow("ngaydathang"));
-
-                orders.add(new Order(id, id_user, diaChi, sdt, tongThanhToan, ngayDatHang));
-            } while (cursor.moveToNext());
-        }
-
-        cursor.close();
-        db.close();
-        return orders;
-    }
+//    public List<Order> getDonHangById(Integer id_user) {
+//        List<Order> orders = new ArrayList<>();
+//
+//        String query = "SELECT * FROM Dathang WHERE user_id = ?";
+//        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(id_user)});  // Sửa cú pháp truyền tham số
+//
+//        if (cursor.moveToFirst()) {
+//            do {
+//                int id = cursor.getInt(cursor.getColumnIndexOrThrow("id_dathang"));
+//                String diaChi = cursor.getString(cursor.getColumnIndexOrThrow("diachi"));
+//                String sdt = cursor.getString(cursor.getColumnIndexOrThrow("sdt"));
+//                float tongThanhToan = cursor.getFloat(cursor.getColumnIndexOrThrow("tongthanhtoan"));
+//                String ngayDatHang = cursor.getString(cursor.getColumnIndexOrThrow("ngaydathang"));
+//
+//                orders.add(new Order(id, id_user, diaChi, sdt, tongThanhToan, ngayDatHang));
+//            } while (cursor.moveToNext());
+//        }
+//
+//        cursor.close();
+//        db.close();
+//        return orders;
+//    }
 
 
 }

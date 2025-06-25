@@ -16,6 +16,13 @@ import com.example.tuan17.models.DanhGia;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import com.android.volley.Request;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 public class DanhGiaActivity extends AppCompatActivity {
     private RatingBar ratingBar;
@@ -52,6 +59,41 @@ public class DanhGiaActivity extends AppCompatActivity {
 //        }
 //
 
+//        btnGui.setOnClickListener(v -> {
+//            int soSao = (int) ratingBar.getRating();
+//            String noiDung = editTextNoiDung.getText().toString().trim();
+//
+//            if (noiDung.isEmpty()) {
+//                Toast.makeText(this, "Vui lòng nhập nội dung đánh giá", Toast.LENGTH_SHORT).show();
+//                return;
+//            }
+//            String ngayHienTai = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+//            DanhGia danhGia = new DanhGia(userId, sanPhamId, ChitietDonhangId, soSao, noiDung, ngayHienTai);
+//            danhGia.setUserId(userId);
+//            danhGia.setProductId(sanPhamId);
+//            danhGia.setChitietdonhangId(ChitietDonhangId);
+//            danhGia.setRating(soSao);
+//            danhGia.setComment(noiDung);
+//            danhGia.setNgayDanhGia(ngayHienTai);
+//
+//            boolean success = danhGiaDB.themDanhGia(danhGia);
+//            if (success) {
+//                Toast.makeText(this, "Đánh giá đã được gửi!", Toast.LENGTH_SHORT).show();
+//                Intent intent = new Intent(this, TrangchuNgdung_Activity.class) ;
+//                finish();
+//                startActivity(intent);
+//
+//
+//                // Ghi log thông tin đánh giá
+////                Log.d("DanhGiaActivity", "Đánh giá mới: userId=" + userId
+////                        + ", productId=" + sanPhamId
+////                        + ", rating=" + soSao
+////                        + ", noiDung=" + noiDung
+////                        + ", ngay=" + ngayHienTai);
+//            } else {
+//                Toast.makeText(this, "Gửi đánh giá thất bại!", Toast.LENGTH_SHORT).show();
+//            }
+//        });
         btnGui.setOnClickListener(v -> {
             int soSao = (int) ratingBar.getRating();
             String noiDung = editTextNoiDung.getText().toString().trim();
@@ -60,32 +102,47 @@ public class DanhGiaActivity extends AppCompatActivity {
                 Toast.makeText(this, "Vui lòng nhập nội dung đánh giá", Toast.LENGTH_SHORT).show();
                 return;
             }
+
             String ngayHienTai = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-            DanhGia danhGia = new DanhGia(userId, sanPhamId, ChitietDonhangId, soSao, noiDung, ngayHienTai);
-            danhGia.setUserId(userId);
-            danhGia.setProductId(sanPhamId);
-            danhGia.setChitietdonhangId(ChitietDonhangId);
-            danhGia.setRating(soSao);
-            danhGia.setComment(noiDung);
-            danhGia.setNgayDanhGia(ngayHienTai);
 
-            boolean success = danhGiaDB.themDanhGia(danhGia);
-            if (success) {
-                Toast.makeText(this, "Đánh giá đã được gửi!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(this, TrangchuNgdung_Activity.class) ;
-                finish();
-                startActivity(intent);
+            String url = "http://10.0.2.2:3000/danhgia";  // Đổi IP nếu cần
 
+            StringRequest request = new StringRequest(Request.Method.POST, url,
+                    response -> {
+                        try {
+                            JSONObject res = new JSONObject(response);
+                            if (res.getBoolean("success")) {
+                                Toast.makeText(this, "Đánh giá đã được gửi!", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(this, TrangchuNgdung_Activity.class);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                Toast.makeText(this, "Gửi đánh giá thất bại!", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    },
+                    error -> {
+                        error.printStackTrace();
+                        Toast.makeText(this, "Lỗi kết nối API!", Toast.LENGTH_SHORT).show();
+                    }
+            ) {
+                @Override
+                protected java.util.Map<String, String> getParams() {
+                    java.util.Map<String, String> params = new java.util.HashMap<>();
+                    params.put("user_id", String.valueOf(userId));
+                    params.put("masp", String.valueOf(sanPhamId));
+                    params.put("id_chitietdonhang", String.valueOf(ChitietDonhangId));
+                    params.put("rating", String.valueOf(soSao));
+                    params.put("comment", noiDung);
+                    params.put("ngay", ngayHienTai);
+                    return params;
+                }
+            };
 
-                // Ghi log thông tin đánh giá
-//                Log.d("DanhGiaActivity", "Đánh giá mới: userId=" + userId
-//                        + ", productId=" + sanPhamId
-//                        + ", rating=" + soSao
-//                        + ", noiDung=" + noiDung
-//                        + ", ngay=" + ngayHienTai);
-            } else {
-                Toast.makeText(this, "Gửi đánh giá thất bại!", Toast.LENGTH_SHORT).show();
-            }
+            Volley.newRequestQueue(this).add(request);
         });
+
     }
 }

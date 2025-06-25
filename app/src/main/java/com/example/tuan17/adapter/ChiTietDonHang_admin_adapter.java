@@ -1,10 +1,13 @@
 package com.example.tuan17.adapter;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +16,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.tuan17.DanhGiaActivity;
 import com.example.tuan17.XemDanhGiaActivity;
 import com.example.tuan17.database.DatabaseHelper;
@@ -20,13 +26,17 @@ import com.example.tuan17.R;
 import com.example.tuan17.database.SanPhamDB;
 import com.example.tuan17.models.ChiTietDonHang;
 
+import org.json.JSONException;
+
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
 public class ChiTietDonHang_admin_adapter extends ArrayAdapter<ChiTietDonHang> {
+    private Context context;
     public ChiTietDonHang_admin_adapter(Context context, List<ChiTietDonHang> details) {
         super(context, 0, details);
+        this.context = context;
     }
 
 
@@ -47,27 +57,46 @@ public class ChiTietDonHang_admin_adapter extends ArrayAdapter<ChiTietDonHang> {
         xemdanhgia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                xemdanhgia.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+//                        int id_chitiet = detail.getId_chitiet();
+
+                        // GỌI API để lấy userId từ đơn hàng
+                    }
+                });
+
                 Intent intent = new Intent(getContext(), XemDanhGiaActivity.class);
-                DatabaseHelper dbHelper = new DatabaseHelper(getContext());
-                int userId = dbHelper.getUserIdByChiTietDonHangId(detail.getId_chitiet());
-                intent.putExtra("userId", userId);
-                intent.putExtra("sanPhamId", detail.getMasp());
+//                DatabaseHelper dbHelper = new DatabaseHelper(getContext());
+//                int userId = dbHelper.getUserIdByChiTietDonHangId(detail.getId_chitiet());
+//                // có id đơn hàng (bảng đơn hàng)
+//                intent.putExtra("userId", userId);
+//                intent.putExtra("sanPhamId", detail.getMasp());
                 intent.putExtra("chitietdonhangId", detail.getId_chitiet());
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 getContext().startActivity(intent);
             }});
         // Hiển thị ID đơn hàng
-        tvID_dathang.setText(String.valueOf(detail.getId_dathang()));
+        int id_donhang = detail.getId_chitiet();
+
+        tvID_dathang.setText(String.valueOf(id_donhang));
 
         // Hiển thị mã sản phẩm
         int masp = detail.getMasp();
         tvMaSp.setText(String.valueOf(masp)); // Hiển thị mã sản phẩm
 
         // Lấy tên sản phẩm từ Database
-        SanPhamDB sanPhamDB = new SanPhamDB(getContext());
-        String tenSanPham = sanPhamDB.getTenSanPhamByMaSp(masp);
-        tvTenSp.setText(tenSanPham != null ? tenSanPham : "Không tìm thấy tên sản phẩm");
-
+//        SanPhamDB sanPhamDB = new SanPhamDB(getContext());
+//        String tenSanPham = sanPhamDB.getTenSanPhamByMaSp(masp);
+//        tvTenSp.setText(tenSanPham != null ? tenSanPham : "Không tìm thấy tên sản phẩm");
+        getTenSanPhamByMaSp(String.valueOf(masp), tenSp -> {
+            if (tenSp != null) {
+                tvTenSp.setText(tenSp);
+            } else {
+                tvTenSp.setText("Không xác định");
+            }
+        });
         // Hiển thị số lượng và đơn giá
         tvSoLuong.setText(String.valueOf(detail.getSoLuong()));
         tvDonGia.setText(String.valueOf(detail.getDonGia()));
@@ -113,4 +142,29 @@ public class ChiTietDonHang_admin_adapter extends ArrayAdapter<ChiTietDonHang> {
             }
         }
     }
+    private void getTenSanPhamByMaSp(String masp, ChiTietDonHangAdapter.TenSanPhamCallback callback) {
+        String url = "http://10.0.2.2:3000/sanpham/tensp/" + masp;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                response -> {
+                    try {
+                        String tenSp = response.getString("tensp");
+                        callback.onTenSanPhamReceived(tenSp);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        callback.onTenSanPhamReceived(null);
+                    }
+                },
+                error -> {
+                    error.printStackTrace();
+                    callback.onTenSanPhamReceived(null);
+                }
+        );
+
+        Volley.newRequestQueue(context).add(request);
+
+    }
+
+
+
 }

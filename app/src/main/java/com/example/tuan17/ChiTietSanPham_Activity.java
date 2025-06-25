@@ -40,23 +40,23 @@ public class ChiTietSanPham_Activity extends AppCompatActivity {
         DanhGiaDB danhGiaDB = new DanhGiaDB(this);
         TextView tvXemDanhGia = findViewById(R.id.tv_danhgia_title);
 
-//        tvXemDanhGia.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (masp != null && !masp.isEmpty()) {
-//                    try {
-//                        int id = Integer.parseInt(masp);
-//                        Intent intent = new Intent(ChiTietSanPham_Activity.this, XemDanhGiaActivity.class);
-//                        intent.putExtra("masp", id);
-//                        startActivity(intent);
-//                    } catch (NumberFormatException e) {
-//                        Toast.makeText(ChiTietSanPham_Activity.this, "Mã sản phẩm không hợp lệ!", Toast.LENGTH_SHORT).show();
-//                    }
-//                } else {
-//                    Toast.makeText(ChiTietSanPham_Activity.this, "Không có mã sản phẩm!", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
+        tvXemDanhGia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (masp != null && !masp.isEmpty()) {
+                    try {
+                        int id = Integer.parseInt(masp);
+                        Intent intent = new Intent(ChiTietSanPham_Activity.this, XemDanhGiaActivity.class);
+                        intent.putExtra("masp", id);
+                        startActivity(intent);
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(ChiTietSanPham_Activity.this, "Mã sản phẩm không hợp lệ!", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(ChiTietSanPham_Activity.this, "Không có mã sản phẩm!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
 
         // Khởi tạo các thành phần giao diện

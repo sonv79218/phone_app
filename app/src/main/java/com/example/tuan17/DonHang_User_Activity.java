@@ -12,25 +12,32 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.tuan17.adapter.DonHang_Adapter;
 import com.example.tuan17.database.DonHangDB;
 import com.example.tuan17.helper.BottomBar_Helper;
 import com.example.tuan17.helper.SharedPrefHelper;
 import com.example.tuan17.models.Order;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class DonHang_User_Activity extends AppCompatActivity {
 //    private Database database;
     private ListView listView;
     private DonHang_Adapter donHangAdapter;
-    private DonHangDB donHangDB;
+//    private DonHangDB donHangDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_don_hang_user);
-        donHangDB = new DonHangDB(this);
+//        donHangDB = new DonHangDB(this);
         // Khởi tạo các thành phần
         listView = findViewById(R.id.listViewChiTiet);
 
@@ -81,22 +88,62 @@ if( tenDN == null){
 
 BottomBar_Helper.setupBottomBar(this);
     }
-    private void loadDonHang(int id) {
-        // Kiểm tra tên khách hàng trước khi truy vấn
-        if (id == -1 ) {
-            Toast.makeText(this, "không hợp lệ!", Toast.LENGTH_SHORT).show();
-            return; // Dừng lại nếu tên khách hàng là null hoặc rỗng
-        }
+//    private void loadDonHang(int id) {
+//        // Kiểm tra tên khách hàng trước khi truy vấn
+//        if (id == -1 ) {
+//            Toast.makeText(this, "không hợp lệ!", Toast.LENGTH_SHORT).show();
+//            return; // Dừng lại nếu tên khách hàng là null hoặc rỗng
+//        }
+//
+//        // Lấy danh sách đơn hàng từ cơ sở dữ liệu
+//        List<Order> orders = donHangDB.getDonHangById(id);
+//        Log.d(TAG, "loadDonHang: "+ orders);
+//        if (orders.isEmpty()) {
+//            Toast.makeText(this, "Không tìm thấy đơn hàng cho khách hàng này!", Toast.LENGTH_SHORT).show();
+//        } else {
+//            // Sử dụng DonHangAdapter để hiển thị danh sách đơn hàng
+//            donHangAdapter = new DonHang_Adapter(this, orders);
+//            listView.setAdapter(donHangAdapter); // Gán adapter cho ListView
+//        }
+//    }
+private void loadDonHang(int userId) {
+    String url = "http://10.0.2.2:3000/dathang/user/" + userId;
+//    Log.d("abc", "userId" + userId);
+    JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
+            response -> {
+                List<Order> orders = new ArrayList<>();
 
-        // Lấy danh sách đơn hàng từ cơ sở dữ liệu
-        List<Order> orders = donHangDB.getDonHangById(id);
-        Log.d(TAG, "loadDonHang: "+ orders);
-        if (orders.isEmpty()) {
-            Toast.makeText(this, "Không tìm thấy đơn hàng cho khách hàng này!", Toast.LENGTH_SHORT).show();
-        } else {
-            // Sử dụng DonHangAdapter để hiển thị danh sách đơn hàng
-            donHangAdapter = new DonHang_Adapter(this, orders);
-            listView.setAdapter(donHangAdapter); // Gán adapter cho ListView
-        }
-    }
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        JSONObject obj = response.getJSONObject(i);
+
+                        int idDatHang = obj.getInt("id_dathang");
+                        String tenkh = obj.getString("tenkh");
+                        String diachi = obj.getString("diachi");
+                        String sdt = obj.getString("sdt");
+                        float tong = (float) obj.getDouble("tongthanhtoan");
+                        String ngaydat = obj.getString("ngaydathang");
+//                        Log.d(TAG, "loadDonHang: " + tenkh);
+                        orders.add(new Order(idDatHang, tenkh, diachi, sdt, tong, ngaydat));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (orders.isEmpty()) {
+                    Toast.makeText(this, "Không tìm thấy đơn hàng!", Toast.LENGTH_SHORT).show();
+                } else {
+                    donHangAdapter = new DonHang_Adapter(this, orders);
+                    listView.setAdapter(donHangAdapter);
+                }
+            },
+            error -> {
+                Toast.makeText(this, "Lỗi kết nối hoặc không có đơn hàng", Toast.LENGTH_SHORT).show();
+                error.printStackTrace();
+            }
+    );
+
+    Volley.newRequestQueue(this).add(request);
+}
+
 }
