@@ -18,7 +18,11 @@ public class DanhGia {
         this.comment = comment;
         this.ngayDanhGia = ngayDanhGia;
     }
-
+    public DanhGia(int rating, String comment, String ngayDanhGia) {
+        this.rating = rating;
+        this.comment = comment;
+        this.ngayDanhGia = ngayDanhGia;
+    }
     // Nếu bạn muốn sử dụng setId từ SQLite tự động tạo id
     public void setId(int id) {
         this.id = id;

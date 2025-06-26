@@ -1,4 +1,4 @@
 package com.example.tuan17.helper;
 
-public class DataLoader {
+public class VolleyHelper {
 }

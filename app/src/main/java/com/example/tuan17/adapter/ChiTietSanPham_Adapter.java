@@ -88,11 +88,11 @@ public class ChiTietSanPham_Adapter extends BaseAdapter {
         soluongkho.setText(String.valueOf(tt.getSoluongkho())); // Chuyển đổi Integer thành String
         manhomsanpham.setText(tt.getMansp());
 
-        // Hiển thị ảnh bác sĩ
+        // Hiển thị ảnh
         byte[] anhByteArray = tt.getAnh();
         if (anhByteArray != null && anhByteArray.length > 0) {
-            Bitmap imganhbs = BitmapFactory.decodeByteArray(anhByteArray, 0, anhByteArray.length);
-            anh.setImageBitmap(imganhbs);
+            Bitmap imganh = BitmapFactory.decodeByteArray(anhByteArray, 0, anhByteArray.length);
+            anh.setImageBitmap(imganh);
         } else {
             anh.setImageResource(R.drawable.vest);
         }

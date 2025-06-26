@@ -98,6 +98,9 @@
             android:name=".DanhMucSanPham_Admin_Activity"
             android:exported="false" />
         <activity
+            android:name=".DanhSachDanhGiaActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

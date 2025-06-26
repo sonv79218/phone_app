@@ -19,11 +19,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.tuan17.database.DanhGiaDB;
 import com.example.tuan17.models.ChiTietSanPham;
 import com.example.tuan17.models.DanhGia;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class ChiTietSanPham_Activity extends AppCompatActivity {
 
@@ -46,7 +52,7 @@ public class ChiTietSanPham_Activity extends AppCompatActivity {
                 if (masp != null && !masp.isEmpty()) {
                     try {
                         int id = Integer.parseInt(masp);
-                        Intent intent = new Intent(ChiTietSanPham_Activity.this, XemDanhGiaActivity.class);
+                        Intent intent = new Intent(ChiTietSanPham_Activity.this, DanhSachDanhGiaActivity.class);
                         intent.putExtra("masp", id);
                         startActivity(intent);
                     } catch (NumberFormatException e) {
@@ -117,9 +123,14 @@ public class ChiTietSanPham_Activity extends AppCompatActivity {
 
                 // Lấy điểm trung bình sao (float)
                 int maSpInt = Integer.parseInt(masp);
-                float avgRating = danhGiaDB.tinhTrungBinhSoSao(maSpInt);
+//                float avgRating = danhGiaDB.tinhTrungBinhSoSao(maSpInt);
+//                float avgRating = tinhTrungBinhSoSao(maSpInt);
                 // Hàm hiển thị sao
-                displayStarRating(avgRating, star1, star2, star3, star4, star5);
+//                displayStarRating(avgRating, star1, star2, star3, star4, star5);
+                tinhTrungBinhSoSao(maSpInt, avgRating -> {
+                    displayStarRating(avgRating, star1, star2, star3, star4, star5);
+                });
+
                 tensp.setText(chiTietSanPham.getTensp());
                 ghichu.setText(chiTietSanPham.getGhichu());
                 dongia.setText(chiTietSanPham.getDongia() != null ? String.valueOf(chiTietSanPham.getDongia()) : "Không có dữ liệu");
@@ -256,5 +267,30 @@ btntimkiem.setOnClickListener(new View.OnClickListener() {
             }
         }
     }
+    public void tinhTrungBinhSoSao(int masp, final Consumer<Float> callback) {
+        String url = "http://10.0.2.2:3000/danhgia/trungbinh?masp=" + masp;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                response -> {
+                    try {
+                        if (response.getBoolean("success")) {
+                            float avg = (float) response.getDouble("avgRating");
+                            callback.accept(avg);
+                        } else {
+                            callback.accept(0f); // không có đánh giá
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        callback.accept(0f);
+                    }
+                },
+                error -> {
+                    error.printStackTrace();
+                    callback.accept(0f);
+                });
+
+        Volley.newRequestQueue(this).add(request);
+    }
+
 
 }

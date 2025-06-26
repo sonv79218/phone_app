@@ -1,5 +1,6 @@
 package com.example.tuan17.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,43 +15,45 @@ import com.example.tuan17.models.DanhGia;
 
 import java.util.List;
 
-public class DanhGiaAdapter extends RecyclerView.Adapter<DanhGiaAdapter.ViewHolder> {
+public class DanhGiaAdapter extends RecyclerView.Adapter<DanhGiaAdapter.DanhGiaViewHolder> {
+
+    private Context context;
     private List<DanhGia> danhGiaList;
 
-    public DanhGiaAdapter(List<DanhGia> danhGiaList) {
+    public DanhGiaAdapter(Context context, List<DanhGia> danhGiaList) {
+        this.context = context;
         this.danhGiaList = danhGiaList;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView txtUserId, txtComment, txtRating, txtNgay;
-
-        public ViewHolder(View view) {
-            super(view);
-            txtUserId = view.findViewById(R.id.txtUserId);
-            txtComment = view.findViewById(R.id.txtComment);
-            txtRating = view.findViewById(R.id.txtRating);
-            txtNgay = view.findViewById(R.id.txtNgayDanhGia);
-        }
+    @NonNull
+    @Override
+    public DanhGiaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.item_danhgia, parent, false);
+        return new DanhGiaViewHolder(view);
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_danhgia, parent, false);
-        return new ViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        DanhGia dg = danhGiaList.get(position);
-        holder.txtUserId.setText("Người dùng ID: " + dg.getUserId());
-        holder.txtComment.setText("Nhận xét: " + dg.getComment());
-        holder.txtRating.setText("Số sao: " + dg.getRating());
-        holder.txtNgay.setText("Ngày: " + dg.getNgayDanhGia());
+    public void onBindViewHolder(@NonNull DanhGiaViewHolder holder, int position) {
+        DanhGia danhGia = danhGiaList.get(position);
+        holder.ratingBar.setRating(danhGia.getRating());
+        holder.tvComment.setText(danhGia.getComment());
+        holder.tvNgay.setText("Ngày đánh giá: " + danhGia.getNgayDanhGia());
     }
 
     @Override
     public int getItemCount() {
         return danhGiaList.size();
+    }
+
+    static class DanhGiaViewHolder extends RecyclerView.ViewHolder {
+        RatingBar ratingBar;
+        TextView tvComment, tvNgay;
+
+        public DanhGiaViewHolder(@NonNull View itemView) {
+            super(itemView);
+            ratingBar = itemView.findViewById(R.id.ratingBarItem);
+            tvComment = itemView.findViewById(R.id.tvCommentItem);
+            tvNgay = itemView.findViewById(R.id.tvNgayItem);
+        }
     }
 }
