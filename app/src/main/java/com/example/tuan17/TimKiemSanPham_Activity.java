@@ -5,18 +5,26 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.tuan17.adapter.SanPham_TimKiem_Adapter;
 import com.example.tuan17.database.DatabaseHelper;
 import com.example.tuan17.database.SanPhamDB;
 import com.example.tuan17.helper.BottomBar_Helper;
 import com.example.tuan17.helper.SharedPrefHelper;
 import com.example.tuan17.models.SanPham;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -59,27 +67,87 @@ public class TimKiemSanPham_Activity extends AppCompatActivity {
             return;
         }
 BottomBar_Helper.setupBottomBar(this);
-
-        timkiem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String query = timkiem.getText().toString().trim();
-                if (!query.isEmpty()) {
-                    // Gọi phương thức tìm kiếm trong DatabaseHelper
-                    productList.clear(); // Xóa danh sách trước khi thêm kết quả mới
-                    ArrayList<SanPham> foundProducts = dbHelper.searchSanPhamByName(query);
-//                    ArrayList<SanPham> foundProducts = sanPhamDB.searchSanPhamByName(query);
-                    if (foundProducts.isEmpty()) {
-                        Toast.makeText(TimKiemSanPham_Activity.this, "Không tìm thấy sản phẩm", Toast.LENGTH_SHORT).show();
-                    } else {
-                        productList.addAll(foundProducts);
-                    }
-                    productAdapter.notifyDataSetChanged(); // Cập nhật adapter
-                } else {
-                    Toast.makeText(TimKiemSanPham_Activity.this, "Vui lòng nhập tên sản phẩm", Toast.LENGTH_SHORT).show();
-                }
+        timkiem.setOnClickListener(v -> {
+            String query = timkiem.getText().toString().trim();
+            if (!query.isEmpty()) {
+                timKiemSanPham(query); // gọi API thay vì SQLite
+            } else {
+                Toast.makeText(this, "Vui lòng nhập tên sản phẩm", Toast.LENGTH_SHORT).show();
             }
         });
 
+//        timkiem.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String query = timkiem.getText().toString().trim();
+//                if (!query.isEmpty()) {
+//                    // Gọi phương thức tìm kiếm trong DatabaseHelper
+//                    productList.clear(); // Xóa danh sách trước khi thêm kết quả mới
+////                    ArrayList<SanPham> foundProducts = dbHelper.searchSanPhamByName(query);
+////                    ArrayList<SanPham> foundProducts = sanPhamDB.searchSanPhamByName(query);
+//                    if (foundProducts.isEmpty()) {
+//                        Toast.makeText(TimKiemSanPham_Activity.this, "Không tìm thấy sản phẩm", Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        productList.addAll(foundProducts);
+//                    }
+//                    productAdapter.notifyDataSetChanged(); // Cập nhật adapter
+//                } else {
+//                    Toast.makeText(TimKiemSanPham_Activity.this, "Vui lòng nhập tên sản phẩm", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+
     }
+    private void timKiemSanPham(String keyword) {
+        String url = "http://10.0.2.2:3000/sanpham/search?name=" + keyword;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                response -> {
+                    productList.clear();
+                    try {
+                        if (response.getBoolean("success")) {
+                            JSONArray data = response.getJSONArray("data");
+
+                            for (int i = 0; i < data.length(); i++) {
+                                JSONObject obj = data.getJSONObject(i);
+                                int masp = obj.getInt("masp");
+                                String tensp = obj.getString("tensp");
+                                float dongia = (float) obj.getDouble("dongia");
+                                String mota = obj.optString("mota", "");
+                                String ghichu = obj.optString("ghichu", "");
+                                int soluongkho = obj.optInt("soluongkho", 0);
+                                int maso = obj.optInt("maso", 0);
+                                byte[] anh = null;
+
+//                                if (obj.has("anh") && !obj.isNull("anh")) {
+//                                    String anhBase64 = obj.getString("anh");
+//                                    anh = android.util.Base64.decode(anhBase64, android.util.Base64.DEFAULT);
+//                                }
+                                if (obj.has("anh") && !obj.isNull("anh")) {
+                                    String anhBase64 = obj.getString("anh");
+                                    anh = Base64.decode(anhBase64, Base64.DEFAULT);  // ✅ Bây giờ decode an toàn
+                                }
+
+                                SanPham sp = new SanPham( String.valueOf(masp), tensp, dongia, mota, ghichu, soluongkho,  String.valueOf(maso), anh);
+                                productList.add(sp);
+                            }
+
+                            productAdapter.notifyDataSetChanged();
+                        } else {
+                            Toast.makeText(this, "Không tìm thấy sản phẩm!", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(this, "Lỗi xử lý phản hồi từ máy chủ!", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                error -> {
+                    error.printStackTrace();
+                    Toast.makeText(this, "Lỗi kết nối đến máy chủ", Toast.LENGTH_SHORT).show();
+                });
+
+        Volley.newRequestQueue(this).add(request);
+    }
+
+
 }
