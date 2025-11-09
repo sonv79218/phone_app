@@ -52,7 +52,7 @@
             android:name=".TrangchuAdmin_Activity"
             android:exported="false" />
         <activity
-            android:name=".DangKiTaiKhoan_Activity"
+            android:name=".Signup_Activity"
             android:exported="false" />
         <activity
             android:name=".DanhGiaActivity"
@@ -99,6 +99,9 @@
             android:exported="false" />
         <activity
             android:name=".DanhSachDanhGiaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ChinhSuaThongTin_Activity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

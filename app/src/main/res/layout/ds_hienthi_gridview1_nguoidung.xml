@@ -67,7 +67,7 @@ android:gravity="center"
             />
     <TextView
 
-        android:text="VNĐ"
+        android:text="USD"
         android:textColor="#FF1616"
         android:textSize="10sp"
 android:layout_marginLeft="2dp"

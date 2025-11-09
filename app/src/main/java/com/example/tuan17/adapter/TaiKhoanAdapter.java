@@ -22,6 +22,9 @@ import com.example.tuan17.R;
 import com.example.tuan17.database.TaiKhoanDB;
 import com.example.tuan17.models.TaiKhoan;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,70 +69,34 @@ public class TaiKhoanAdapter extends BaseAdapter {
         TextView tendn = viewtemp.findViewById(R.id.tdn1);
         TextView matkhau = viewtemp.findViewById(R.id.mk1);
         TextView quyenhang = viewtemp.findViewById(R.id.quyen1);
-        ImageButton sua = viewtemp.findViewById(R.id.imgsua);
-        ImageButton xoa = viewtemp.findViewById(R.id.imgxoa);
+        TextView trangthai = viewtemp.findViewById(R.id.trangthai1);
+        TextView sua = viewtemp.findViewById(R.id.imgsua);
+        TextView xoa = viewtemp.findViewById(R.id.imgxoa);
         tendn.setText(tt.getTdn());
-        matkhau.setText(tt.getMk());
+       // matkhau.setText(tt.getMk());
         quyenhang.setText(tt.getQuyen());
-        // Xử lý sự kiện cho ImageButton "Sửa"
-//        sua.setOnClickListener(v -> {
-//            AlertDialog.Builder builder = new AlertDialog.Builder(viewGroup.getContext());
-//
-//            View dialogView = LayoutInflater.from(viewGroup.getContext())
-//                    .inflate(R.layout.activity_sua_tai_khoan, null);
-//
-//            EditText editTdn = dialogView.findViewById(R.id.tdn);
-//            EditText editMk = dialogView.findViewById(R.id.mk);
-//            RadioButton user = dialogView.findViewById(R.id.user);
-//            RadioButton admin = dialogView.findViewById(R.id.admin);
-//
-//            editTdn.setText(tt.getTdn());
-//            editMk.setText(tt.getMk());
-//
-//            // Đặt quyền hiện tại cho RadioButton
-//            if ("admin".equals(tt.getQuyen())) {
-//                admin.setChecked(true);
-//            } else {
-//                user.setChecked(true);
-//            }
-//
-//            builder.setView(dialogView)
-//                    .setPositiveButton("Lưu", (dialog, which) -> {
-//                        String newTdn = editTdn.getText().toString().trim();
-//                        String newMk = editMk.getText().toString().trim();
-//                        String quyen = user.isChecked() ? "user" : "admin";
-//
-//                        // Sử dụng class DB riêng
-////                        taiKhoanDB = new TaiKhoanDB(viewGroup.getContext());
-//                        boolean success = taiKhoanDB.suaTaiKhoan(tt.getTdn(), newMk, quyen); // sửa theo tên cũ
-//
-//                        if (success) {
-//                            tt.setTdn(newTdn); // Nếu cho phép đổi tên đăng nhập, cần xử lý thêm
-//                            tt.setMk(newMk);
-//                            tt.setQuyen(quyen);
-//                            notifyDataSetChanged();
-//                            Toast.makeText(viewGroup.getContext(), "Cập nhật thành công", Toast.LENGTH_SHORT).show();
-//                        } else {
-//                            Toast.makeText(viewGroup.getContext(), "Cập nhật không thành công", Toast.LENGTH_SHORT).show();
-//                        }
-//                    })
-//                    .setNegativeButton("Hủy", (dialog, which) -> dialog.dismiss());
-//
-//            builder.show();
-//        });
+        // Hiển thị trạng thái người dùng
+        if (tt.getTrangthai() == 1) {
+            trangthai.setText("Hoạt động");
+            xoa.setText("Chặn");
+        } else {
+            trangthai.setText("Bị chặn");
+            xoa.setText("Mở khóa");
+        }
+
         sua.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(viewGroup.getContext());
 
             View dialogView = LayoutInflater.from(viewGroup.getContext())
                     .inflate(R.layout.activity_sua_tai_khoan, null);
 
-            EditText editTdn = dialogView.findViewById(R.id.tdn);
-            EditText editMk = dialogView.findViewById(R.id.mk);
+       //     EditText editTdn = dialogView.findViewById(R.id.tdn);
+         //   EditText editMk = dialogView.findViewById(R.id.mk);
             RadioButton user = dialogView.findViewById(R.id.user);
             RadioButton admin = dialogView.findViewById(R.id.admin);
 
-            editTdn.setText(tt.getTdn());
-            editMk.setText(tt.getMk());
+          //  editTdn.setText(tt.getTdn());
+          //  editMk.setText(tt.getMk());
 
             if ("admin".equals(tt.getQuyen())) {
                 admin.setChecked(true);
@@ -137,20 +104,21 @@ public class TaiKhoanAdapter extends BaseAdapter {
                 user.setChecked(true);
             }
 
+
             builder.setView(dialogView)
                     .setPositiveButton("Lưu", (dialog, which) -> {
-                        String newTdn = editTdn.getText().toString().trim();
-                        String newMk = editMk.getText().toString().trim();
+                       // String newTdn = editTdn.getText().toString().trim();
+                      //  String newMk = editMk.getText().toString().trim();
                         String quyen = user.isChecked() ? "user" : "admin";
-
+                        String thangthai;
                         // Gọi API cập nhật tài khoản
                         String url = "http://10.0.2.2:3000/taikhoan/" + tt.getTdn(); // dùng tdn cũ để update
 
                         StringRequest request = new StringRequest(Request.Method.PUT, url,
                                 response -> {
                                     // Cập nhật trong danh sách
-                                    tt.setTdn(newTdn); // nếu muốn cho phép đổi tên đăng nhập
-                                    tt.setMk(newMk);
+                                   // tt.setTdn(newTdn); // nếu muốn cho phép đổi tên đăng nhập
+                                  //  tt.setMk(newMk);
                                     tt.setQuyen(quyen);
                                     notifyDataSetChanged();
                                     Toast.makeText(viewGroup.getContext(), "Cập nhật thành công", Toast.LENGTH_SHORT).show();
@@ -162,8 +130,8 @@ public class TaiKhoanAdapter extends BaseAdapter {
                             @Override
                             protected Map<String, String> getParams() {
                                 Map<String, String> params = new HashMap<>();
-                                params.put("tdn", newTdn); // nếu đổi tên đăng nhập
-                                params.put("matkhau", newMk);
+                               // params.put("tdn", newTdn); // nếu đổi tên đăng nhập
+                             //   params.put("matkhau", newMk);
                                 params.put("quyen", quyen);
                                 return params;
                             }
@@ -176,49 +144,51 @@ public class TaiKhoanAdapter extends BaseAdapter {
             builder.show();
         });
 
-        // Xử lý sự kiện cho ImageButton "Xóa"
-//        xoa.setOnClickListener(v -> {
-//            new AlertDialog.Builder(viewGroup.getContext())
-//                    .setTitle("Xác nhận")
-//                    .setMessage("Bạn có chắc chắn muốn xóa tài khoản này?")
-//                    .setPositiveButton("Có", (dialog, which) -> {
-//                        taiKhoanDB = new TaiKhoanDB(viewGroup.getContext());
-//                        boolean success = taiKhoanDB.xoaTaiKhoan(tt.getTdn());
-//
-//                        if (success) {
-//                            taiKhoanList.remove(i);
-//                            notifyDataSetChanged();
-//                            Toast.makeText(viewGroup.getContext(), "Xóa tài khoản thành công", Toast.LENGTH_SHORT).show();
-//                        } else {
-//                            Toast.makeText(viewGroup.getContext(), "Không tìm thấy tài khoản để xóa", Toast.LENGTH_SHORT).show();
-//                        }
-//                    })
-//                    .setNegativeButton("Không", (dialog, which) -> dialog.dismiss())
-//                    .show();
-//        });
         xoa.setOnClickListener(v -> {
+            String action = tt.getTrangthai() == 1 ? "chặn" : "mở khóa";
+            int newStatus = tt.getTrangthai() == 1 ? 0 : 1;
+
             new AlertDialog.Builder(viewGroup.getContext())
                     .setTitle("Xác nhận")
-                    .setMessage("Bạn có chắc chắn muốn xóa tài khoản này?")
+                    .setMessage("Bạn có chắc chắn muốn " + action + " tài khoản này?")
                     .setPositiveButton("Có", (dialog, which) -> {
-                        String url = "http://10.0.2.2:3000/taikhoan/" + tt.getTdn(); // tt.getTdn() là tên đăng nhập
+                        String url = "http://10.0.2.2:3000/taikhoan/khoataikhoan";
 
-                        StringRequest request = new StringRequest(Request.Method.DELETE, url,
+                        StringRequest request = new StringRequest(Request.Method.POST, url,
                                 response -> {
-                                    taiKhoanList.remove(i);
-                                    notifyDataSetChanged();
-                                    Toast.makeText(viewGroup.getContext(), "Xóa tài khoản thành công", Toast.LENGTH_SHORT).show();
+                                    try {
+                                        JSONObject obj = new JSONObject(response);
+                                        if (obj.getBoolean("success")) {
+                                            tt.setTrangthai(newStatus); // cập nhật trạng thái mới
+                                            notifyDataSetChanged();
+                                            Toast.makeText(viewGroup.getContext(), "Đã " + action + " tài khoản", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(viewGroup.getContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                        Toast.makeText(viewGroup.getContext(), "Lỗi phản hồi JSON", Toast.LENGTH_SHORT).show();
+                                    }
                                 },
                                 error -> {
                                     error.printStackTrace();
-                                    Toast.makeText(viewGroup.getContext(), "Lỗi khi xóa tài khoản", Toast.LENGTH_SHORT).show();
-                                });
+                                    Toast.makeText(viewGroup.getContext(), "Lỗi server", Toast.LENGTH_SHORT).show();
+                                }) {
+                            @Override
+                            protected Map<String, String> getParams() {
+                                Map<String, String> params = new HashMap<>();
+                                params.put("id", String.valueOf(tt.getId()));
+                                params.put("newStatus", String.valueOf(newStatus));
+                                return params;
+                            }
+                        };
 
                         Volley.newRequestQueue(viewGroup.getContext()).add(request);
                     })
                     .setNegativeButton("Không", (dialog, which) -> dialog.dismiss())
                     .show();
         });
+
 
         return viewtemp;
     }

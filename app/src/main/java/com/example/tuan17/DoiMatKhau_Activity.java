@@ -3,10 +3,12 @@ package com.example.tuan17;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.tuan17.adapter.TaiKhoanAdapter;
@@ -18,95 +20,74 @@ import org.json.JSONObject;
 import java.util.*;
 
 public class DoiMatKhau_Activity extends AppCompatActivity {
-
-    ArrayList<TaiKhoan> mangTK;
-    TaiKhoanAdapter adapter;
-    String spn;
+    EditText edtCu, edtMoi, edtLai;
+    Button btnDoi;
+    int userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doi_mat_khau);
 
-        Button btndoimk = findViewById(R.id.btnDoi);
-        EditText tendn = findViewById(R.id.tdn);
-        EditText matkhau = findViewById(R.id.mk);
-        EditText nhaplaimatkhau = findViewById(R.id.mk2);
-        Spinner spinner = findViewById(R.id.quyen);
-        TextView ql = findViewById(R.id.ql);
+        edtCu = findViewById(R.id.edtMatKhauCu);
+        edtMoi = findViewById(R.id.edtMatKhauMoi);
+        edtLai = findViewById(R.id.edtNhapLai);
+        btnDoi = findViewById(R.id.btnDoiMatKhau);
 
-        // Chuyển về Login
-        ql.setOnClickListener(v -> {
-            Intent a = new Intent(DoiMatKhau_Activity.this, Login_Activity.class);
-            startActivity(a);
-        });
+        SharedPreferences sp = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        userId = sp.getInt("user_id", -1);
 
-        // Chỉ có 1 quyền "user"
-        ArrayList<String> ar = new ArrayList<>();
-        ar.add("user");
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getApplicationContext(), androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, ar);
-        spinner.setAdapter(arrayAdapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                spn = ar.get(i);
-            }
+        btnDoi.setOnClickListener(v -> {
+            String cu = edtCu.getText().toString().trim();
+            String moi = edtMoi.getText().toString().trim();
+            String lai = edtLai.getText().toString().trim();
 
-            public void onNothingSelected(AdapterView<?> adapterView) {}
-        });
-
-        // Danh sách tài khoản (nếu cần)
-        mangTK = new ArrayList<>();
-        adapter = new TaiKhoanAdapter(getApplicationContext(), R.layout.ds_taikhoan, mangTK);
-
-        // Xử lý đổi mật khẩu
-        btndoimk.setOnClickListener(view -> {
-            String username = tendn.getText().toString().trim();
-            String password = matkhau.getText().toString().trim();
-            String nhaplaimk = nhaplaimatkhau.getText().toString().trim();
-
-            if (username.isEmpty() || password.isEmpty() || nhaplaimk.isEmpty()) {
-                Toast.makeText(DoiMatKhau_Activity.this, "Không được để trống", Toast.LENGTH_SHORT).show();
+            if (cu.isEmpty() || moi.isEmpty() || lai.isEmpty()) {
+                Toast.makeText(this, "Không được bỏ trống", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            if (!password.equals(nhaplaimk)) {
-                Toast.makeText(DoiMatKhau_Activity.this, "Mật khẩu không khớp", Toast.LENGTH_SHORT).show();
+            if (!moi.equals(lai)) {
+                Toast.makeText(this, "Mật khẩu mới không khớp", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // Gọi API đổi mật khẩu
-            String url = "http://10.0.2.2:3000/taikhoan/doimatkhau"; // Thay đổi IP nếu cần
+            doiMatKhau(userId, cu, moi);
+        });
+    }
 
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                    response -> {
-                        try {
-                            JSONObject json = new JSONObject(response);
-                            if (json.getBoolean("success")) {
-                                Toast.makeText(DoiMatKhau_Activity.this, "Đổi mật khẩu thành công", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(getApplicationContext(), Login_Activity.class));
-                            } else {
-                                Toast.makeText(DoiMatKhau_Activity.this, json.getString("message"), Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            Toast.makeText(DoiMatKhau_Activity.this, "Lỗi xử lý JSON", Toast.LENGTH_SHORT).show();
+    private void doiMatKhau(int id, String cu, String moi) {
+        String url = "http://10.0.2.2:3000/taikhoan/doimatkhau";
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        StringRequest request = new StringRequest(Request.Method.POST, url,
+                response -> {
+                    try {
+                        JSONObject json = new JSONObject(response);
+                        if (json.getBoolean("success")) {
+                            Toast.makeText(this, "Đổi mật khẩu thành công", Toast.LENGTH_SHORT).show();
+                            finish();
+                        } else {
+                            Toast.makeText(this, json.getString("message"), Toast.LENGTH_SHORT).show();
                         }
-                    },
-                    error -> {
-                        error.printStackTrace();
-                        Toast.makeText(DoiMatKhau_Activity.this, "Không kết nối được server", Toast.LENGTH_SHORT).show();
-                    }) {
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    error.printStackTrace();
+                    Toast.makeText(this, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> m = new HashMap<>();
+                m.put("id", String.valueOf(id));
+                m.put("matkhau_cu", cu);
+                m.put("matkhau_moi", moi);
+                return m;
+            }
+        };
 
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<>();
-                    params.put("username", username);
-                    params.put("password", password);
-                    return params;
-                }
-            };
-
-            Volley.newRequestQueue(getApplicationContext()).add(stringRequest);
-        });
+        queue.add(request);
     }
 }

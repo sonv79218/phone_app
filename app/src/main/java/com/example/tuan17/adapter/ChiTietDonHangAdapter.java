@@ -1,5 +1,7 @@
 package com.example.tuan17.adapter;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -155,9 +157,11 @@ public class ChiTietDonHangAdapter extends ArrayAdapter<ChiTietDonHang> {
         tvDonGia.setText(String.valueOf(detail.getDonGia()));
 
         // Tải ảnh từ byte[]
+        Log.d(TAG, "getView: "+detail.getAnh());
         if (detail.getAnh() != null) {
             Bitmap bitmap = BitmapFactory.decodeByteArray(detail.getAnh(), 0, detail.getAnh().length);
             ivAnh.setImageBitmap(bitmap);
+            Log.d(TAG, "getView: "+bitmap);
         } else {
             ivAnh.setImageResource(R.drawable.vest); // Hình ảnh mặc định nếu không có
         }

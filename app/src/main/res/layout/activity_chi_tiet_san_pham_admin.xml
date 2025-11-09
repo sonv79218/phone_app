@@ -88,7 +88,7 @@
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="(VNĐ)"
+                    android:text="(USD)"
                     android:textColor="#FF0000"
                     android:textSize="15sp"
                     android:textStyle="bold"

@@ -35,6 +35,10 @@ import com.example.tuan17.R;
 import com.example.tuan17.models.ChiTietSanPham;
 import com.example.tuan17.models.SanPham;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -87,7 +91,7 @@ public  class SanPhamAdapter extends BaseAdapter {
     }
 
 
-
+//hiển thị toàn bộ sản phẩm
 
     public View getViewWith8Properties(int i, View view, ViewGroup parent) {
         View viewtemp;
@@ -130,25 +134,7 @@ public  class SanPhamAdapter extends BaseAdapter {
         // Sự kiện cho nút "Sửa"
         sua.setOnClickListener(view1 -> showEditDialog(tt));
 
-        // Sự kiện cho nút "Xóa"
-//        xoa.setOnClickListener(v -> {
-//            new AlertDialog.Builder(parent.getContext())
-//                    .setTitle("Xác nhận")
-//                    .setMessage("Bạn có chắc chắn muốn xóa ?")
-//                    .setPositiveButton("Có", (dialog, which) -> {
-//                        SQLiteDatabase db = database.getWritableDatabase();
-//                        int rowsAffected = db.delete("sanpham", "masp = ?", new String[]{tt.getMasp()});
-//                        if (rowsAffected > 0) {
-//                            spList.remove(i);
-//                            notifyDataSetChanged(); // Cập nhật giao diện
-//                            Toast.makeText(parent.getContext(), "Xóa sản phẩm thành công", Toast.LENGTH_SHORT).show();
-//                        } else {
-//                            Toast.makeText(parent.getContext(), "Không tìm thấy sản phẩm để xóa", Toast.LENGTH_SHORT).show();
-//                        }
-//                    })
-//                    .setNegativeButton("Không", (dialog, which) -> dialog.dismiss())
-//                    .show();
-//        });
+
         xoa.setOnClickListener(v -> {
             new AlertDialog.Builder(parent.getContext())
                     .setTitle("Xác nhận")
@@ -200,7 +186,7 @@ public  class SanPhamAdapter extends BaseAdapter {
         tensp.setText(tt.getTensp());
         dongia.setText(String.valueOf(tt.getDongia())); // Chuyển đổi Float thành String
         mota.setText(tt.getMota());
-        ghichu.setText(tt.getGhichu());
+        ghichu.setText(String.valueOf(tt.getGhichu()));
         soluongkho.setText(String.valueOf(tt.getSoluongkho())); // Chuyển đổi Integer thành String
         manhomsanpham.setText(tt.getMansp());
 
@@ -249,7 +235,7 @@ public  class SanPhamAdapter extends BaseAdapter {
         ImageView imgsp = dialogView.findViewById(R.id.imgsp);
 
         // Load danh sách nhóm sản phẩm
-//        loadTenNhomSanPham(mansp);
+           loadTenNhomSanPham(mansp);
 
         // Điền dữ liệu hiện tại vào các trường
         editMasp.setText(tt.getMasp());
@@ -293,53 +279,6 @@ public  class SanPhamAdapter extends BaseAdapter {
         builder.show();
     }
 
-    // Phương thức cập nhật thông tin sản phẩm
-//    private void updateSanPham(SanPham tt, EditText editMasp, EditText editTensp, EditText editDongia, EditText editMota, EditText editGhichu, EditText editSoluongkho, Spinner editMansp) {
-//        String newMasp = editMasp.getText().toString().trim();
-//        String newTensp = editTensp.getText().toString().trim();
-//        float newDongia = Float.parseFloat(editDongia.getText().toString().trim());
-//        String newMota = editMota.getText().toString().trim();
-//        String newGhichu = editGhichu.getText().toString().trim();
-//        int newSoluongkho = Integer.parseInt(editSoluongkho.getText().toString().trim());
-//
-//        // Lấy maso từ spinner
-//        String newMansp = ((NhomSanPham) editMansp.getSelectedItem()).getMa(); // Lấy maso thay vì tennhom
-//
-//        // Cập nhật ảnh nếu có
-//        byte[] newAnh = selectedImageUri != null ? getBytesFromUri(selectedImageUri) : null;
-//
-//        // Cập nhật vào cơ sở dữ liệu
-//        SQLiteDatabase db = database.getWritableDatabase();
-//        ContentValues values = new ContentValues();
-//        values.put("masp", newMasp);
-//        values.put("tensp", newTensp);
-//        values.put("dongia", newDongia);
-//        values.put("mota", newMota);
-//        values.put("ghichu", newGhichu);
-//        values.put("soluongkho", newSoluongkho);
-//        values.put("maso", newMansp); // Lưu maso
-//
-//        if (newAnh != null) {
-//            values.put("anh", newAnh); // Cập nhật ảnh nếu có
-//        }
-//
-//        // Cập nhật dữ liệu
-//        db.update("sanpham", values, "masp = ?", new String[]{tt.getMasp()});
-//
-//        // Cập nhật đối tượng SanPham
-//        tt.setMasp(newMasp);
-//        tt.setTensp(newTensp);
-//        tt.setDongia(newDongia);
-//        tt.setMota(newMota);
-//        tt.setGhichu(newGhichu);
-//        tt.setSoluongkho(newSoluongkho);
-//        tt.setMansp(newMansp);
-//        if (newAnh != null) {
-//            tt.setAnh(newAnh); // Cập nhật ảnh nếu có
-//        }
-//
-//        notifyDataSetChanged(); // Cập nhật giao diện
-//    }
     private void updateSanPham(SanPham tt, EditText editMasp, EditText editTensp, EditText editDongia, EditText editMota,
                                EditText editGhichu, EditText editSoluongkho, Spinner editMansp) {
         String newMasp = editMasp.getText().toString().trim(); // Có thể bỏ nếu masp không được sửa
@@ -428,22 +367,7 @@ public  class SanPhamAdapter extends BaseAdapter {
     }
 
     private ArrayList<NhomSanPham> mangNSPList;
-
-//    private void loadTenNhomSanPham(Spinner mansp) {
-//        mangNSPList = new ArrayList<>();
-//        Cursor cursor = database.GetData("SELECT maso, tennsp FROM nhomsanpham"); // Lấy maso và tennsp
-//
-//        while (cursor.moveToNext()) {
-//            String maso = cursor.getString(0); // Cột 0
-//            String tennhom = cursor.getString(1); // Cột 1
-//            mangNSPList.add(new NhomSanPham(maso,tennhom,null)); // Thêm vào danh sách
-//        }
-//
-//        // Tạo adapter cho Spinner
-//        ArrayAdapter<NhomSanPham> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, mangNSPList);
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        mansp.setAdapter(adapter);
-//    }
+    private ArrayList<SanPham> mangSPList;
 
     // Chuyển đổi URI thành mảng byte
     private byte[] getBytesFromUri(Uri uri) {
@@ -464,4 +388,37 @@ public  class SanPhamAdapter extends BaseAdapter {
             return null;
         }
     }
+    private void loadTenNhomSanPham(Spinner mansp) {
+        mangNSPList = new ArrayList<>();
+        String url = "http://10.0.2.2:3000/nhomsanpham";
+
+        StringRequest request = new StringRequest(Request.Method.GET, url,
+                response -> {
+                    try {
+                        JSONArray array = new JSONArray(response);
+                        for (int i = 0; i < array.length(); i++) {
+                            JSONObject obj = array.getJSONObject(i);
+                            String maso = obj.getString("maso");
+                            String tennsp = obj.getString("tennsp");
+                            mangNSPList.add(new NhomSanPham(maso, tennsp, null));
+                        }
+
+                        // Tạo adapter
+                        ArrayAdapter<NhomSanPham> adapter = new ArrayAdapter<>(context,
+                                android.R.layout.simple_spinner_item, mangNSPList);
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        mansp.setAdapter(adapter);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(context, "Lỗi phân tích JSON", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                error -> {
+                    error.printStackTrace();
+                    Toast.makeText(context, "Lỗi kết nối máy chủ", Toast.LENGTH_SHORT).show();
+                });
+
+        Volley.newRequestQueue(context).add(request);
+    }
+
 }

@@ -29,7 +29,7 @@ import java.util.List;
 
 public class Taikhoan_admin_Activity extends AppCompatActivity {
 
-    TaiKhoanDB taiKhoanDB;
+//    TaiKhoanDB taiKhoanDB;
     ListView lv;
     List<TaiKhoan> mangTK;
     TaiKhoanAdapter adapter;
@@ -40,7 +40,7 @@ public class Taikhoan_admin_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_taikhoan_admin);
 
-        taiKhoanDB = new TaiKhoanDB(this);
+//        taiKhoanDB = new TaiKhoanDB(this);
         lv = findViewById(R.id.listtk);
         dauconggocphai = findViewById(R.id.btnthem);
         BottomBar_Admin_Helper.setupBottomBar(this);
@@ -78,8 +78,9 @@ public class Taikhoan_admin_Activity extends AppCompatActivity {
                             String diachi = obj.optString("diachi", "");
                             String quyen = obj.getString("quyen");
                             String ngaytao = obj.optString("ngaytao", "");
+                            int trangthai = obj.getInt("trangthai");
 
-                            TaiKhoan tk = new TaiKhoan(id, tendn, matkhau, email, sdt, hoten, diachi, quyen, ngaytao);
+                            TaiKhoan tk = new TaiKhoan(id, tendn, matkhau, email, sdt, hoten, diachi, quyen, ngaytao, trangthai);
                             mangTK.add(tk);
                         }
 

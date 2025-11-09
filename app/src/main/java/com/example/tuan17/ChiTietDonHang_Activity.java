@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -54,24 +55,6 @@ public class ChiTietDonHang_Activity extends AppCompatActivity {
                 Toast.makeText(this, "ID đơn hàng không hợp lệ!", Toast.LENGTH_SHORT).show();
             }
         }
-//        if (donHangIdStr != null) {
-//            try {
-//                // Chuyển đổi chuỗi donHangId thành kiểu int
-//                int donHangId = Integer.parseInt(donHangIdStr);
-//                List<ChiTietDonHang> chiTietList = chiTietDonHangDB.getChiTietByOrderId(donHangId);
-//
-//                // Kiểm tra danh sách chi tiết
-//                if (chiTietList != null && !chiTietList.isEmpty()) {
-//                    // Sử dụng adapter để hiển thị chi tiết đơn hàng
-//                    chiTietAdapter = new ChiTietDonHangAdapter(this, chiTietList);
-//                    listViewChiTiet.setAdapter(chiTietAdapter); // Gán adapter cho ListView
-//                } else {
-//                    Toast.makeText(this, "Không tìm thấy chi tiết cho đơn hàng!", Toast.LENGTH_SHORT).show();
-//                }
-//            } catch (NumberFormatException e) {
-//                Toast.makeText(this, "ID đơn hàng không hợp lệ!", Toast.LENGTH_SHORT).show();
-//            }
-//        }
 
     }
     private void loadChiTietDonHangFromAPI(int orderId) {
@@ -96,7 +79,7 @@ public class ChiTietDonHang_Activity extends AppCompatActivity {
                             }
 
                             chiTietList.add(new ChiTietDonHang(id_chitiet, masp, soluong, dongia, anh));
-
+                            Log.d("abc","mes " +anh);// đã có ảnh
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

@@ -17,11 +17,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.tuan17.adapter.NhomSanPhamAdapter;
 import com.example.tuan17.adapter.SanPhamAdapter;
-import com.example.tuan17.database.Database;
-import com.example.tuan17.database.NhomSanPhamDB;
-import com.example.tuan17.database.SanPhamDB;
 import com.example.tuan17.helper.BottomBar_Helper;
-import com.example.tuan17.helper.SharedPrefHelper;
 import com.example.tuan17.models.NhomSanPham;
 import com.example.tuan17.models.SanPham;
 
@@ -38,34 +34,16 @@ public class TrangchuNgdung_Activity extends AppCompatActivity {
     NhomSanPhamAdapter adapterGrv2;
     SanPhamAdapter adapterGrv1;
     String serverUrl = "http://10.0.2.2:3000"; // hoặc IP máy thật khi dùng điện thoại
-//    SanPhamDB sanPhamDB;
-//    NhomSanPhamDB nhomSanPhamDB;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trangchu_ngdung);
-        // khai bao
-//        sanPhamDB = new SanPhamDB(this);
-//        nhomSanPhamDB = new NhomSanPhamDB(this);
 
         EditText timkiem = findViewById(R.id.timkiem);
-        TextView textTendn = findViewById(R.id.tendn); // TextView hiển thị tên đăng nhập
         grv2 = findViewById(R.id.grv2);
         grv1 = findViewById(R.id.grv1);
-
-        String tendn = SharedPrefHelper.getUsername(this);
-
-        // Kiểm tra tên đăng nhập
-        if (tendn != null) {
-            textTendn.setText(tendn);
-        }
-        else {
-            Intent intent = new Intent(TrangchuNgdung_Activity.this, Login_Activity.class);
-            startActivity(intent);
-            finish(); // Kết thúc activity nếu chưa đăng nhập
-            return;
-        }
 
         grv2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -88,7 +66,7 @@ public class TrangchuNgdung_Activity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(TrangchuNgdung_Activity.this, TimKiemSanPham_Activity.class);
                 // Gửi tên đăng nhập qua Intent
-                intent.putExtra("tendn", tendn); // Sử dụng biến tendn đã được lấy từ SharedPreferences
+//                intent.putExtra("tendn", tendn); // Sử dụng biến tendn đã được lấy từ SharedPreferences
                 startActivity(intent);
             }
         });

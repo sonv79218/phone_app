@@ -79,7 +79,8 @@ private void loadDonHang() {
                     try {
                         JSONObject obj = response.getJSONObject(i);
 
-                        int idDatHang = obj.getInt("id_dathang");
+//                        int idDatHang = obj.getInt("id_dathang");
+                        int idDatHang = obj.getInt("id");
                         String tenkh = obj.getString("tenkh");
                         String diachi = obj.getString("diachi");
                         String sdt = obj.getString("sdt");

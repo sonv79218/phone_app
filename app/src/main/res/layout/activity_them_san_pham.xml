@@ -67,7 +67,7 @@
                 android:layout_marginBottom="2dp"
                 android:drawablePadding="8dp"
                 android:inputType="number"
-                android:hint="Đon giá ( VNĐ)"
+                android:hint="Đon giá ( USD)"
                 android:textColorHint="#aaa"
                 android:padding="8dp"
                 android:textColor="@color/black"

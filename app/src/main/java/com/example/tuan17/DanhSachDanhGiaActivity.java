@@ -26,7 +26,7 @@ public class DanhSachDanhGiaActivity extends AppCompatActivity {
     private DanhGiaAdapter adapter;
     private ArrayList<DanhGia> danhGiaList = new ArrayList<>();
 
-    private int masp, chitietdonhangId;
+    private int masp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,47 +40,13 @@ public class DanhSachDanhGiaActivity extends AppCompatActivity {
 
         // Lấy dữ liệu
         masp = getIntent().getIntExtra("masp", -1);
-        chitietdonhangId = getIntent().getIntExtra("chitietdonhangId", -1);
-
-        if (chitietdonhangId != -1) {
-            loadDanhGiaTheoDonHang(chitietdonhangId);
-        } else if (masp != -1) {
+            if (masp != -1) {
             loadDanhSachDanhGiaTheoMasp(masp);
         } else {
-            Toast.makeText(this, "Không có mã sản phẩm hoặc chi tiết đơn hàng!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Không có mã sản phẩm!!!", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void loadDanhGiaTheoDonHang(int id) {
-        String url = "http://10.0.2.2:3000/danhgia/lay?id_chitietdonhang=" + id;
-
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
-                response -> {
-                    try {
-                        if (response.getBoolean("success")) {
-                            JSONObject data = response.getJSONObject("data");
-                            int rating = data.getInt("rating");
-                            String comment = data.getString("comment");
-                            String ngay = data.getString("ngay_danhgia");
-
-                            danhGiaList.clear();
-                            danhGiaList.add(new DanhGia(rating, comment, ngay));
-                            adapter.notifyDataSetChanged();
-                        } else {
-                            Toast.makeText(this, "Không có đánh giá!", Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        Toast.makeText(this, "Lỗi xử lý dữ liệu!", Toast.LENGTH_SHORT).show();
-                    }
-                },
-                error -> {
-                    error.printStackTrace();
-                    Toast.makeText(this, "Lỗi kết nối máy chủ!", Toast.LENGTH_SHORT).show();
-                });
-
-        Volley.newRequestQueue(this).add(request);
-    }
     private void loadDanhSachDanhGiaTheoMasp(int masp) {
         String url = "http://10.0.2.2:3000/danhgia/sanpham/" + masp;
 

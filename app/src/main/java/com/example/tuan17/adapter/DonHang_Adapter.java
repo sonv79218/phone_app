@@ -23,11 +23,9 @@ public class DonHang_Adapter extends ArrayAdapter<Order> {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.ds_donhang, parent, false);
             }
 
-
-
             Order order = getItem(position);
-        TaiKhoanDB taiKhoanDB = new TaiKhoanDB(getContext());
-        String tenKh = taiKhoanDB.getTenNguoiDung(order.getUserId()); // dùng để lấy tên khách hàng nhờ ID
+//        TaiKhoanDB taiKhoanDB = new TaiKhoanDB(getContext());
+//        String tenKh = taiKhoanDB.getTenNguoiDung(order.getUserId()); // dùng để lấy tên khách hàng nhờ ID
         TextView txtMadh = convertView.findViewById(R.id.txtMahd);
             TextView txtTenKh = convertView.findViewById(R.id.txtTenKh);
             TextView txtDiaChi = convertView.findViewById(R.id.txtDiaChi);

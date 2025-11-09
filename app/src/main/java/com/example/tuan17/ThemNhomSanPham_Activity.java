@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
@@ -48,13 +49,6 @@ public class ThemNhomSanPham_Activity extends AppCompatActivity {
         Button chonimgbs = findViewById(R.id.btnAddImg);
         Button btnthem = findViewById(R.id.btnadd);
 
-        // Thiết lập OnClickListener cho nút chọn ảnh
-        chonimgbs.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openDrawableImagePicker(); // Gọi hàm mở hình ảnh từ drawable
-            }
-        });
         mangNSP = new ArrayList<>();
         adapter = new NhomSanPhamAdapter(ThemNhomSanPham_Activity.this, mangNSP, true) {
         };
@@ -65,43 +59,9 @@ public class ThemNhomSanPham_Activity extends AppCompatActivity {
         chonimgbs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openDrawableImagePicker(); // Gọi hàm mở hình ảnh từ drawable
+                openImagePicker(); // Gọi hàm mở gallery để chọn ảnh từ điện thoại
             }
         });
-
-//        btnthem.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                // Lấy dữ liệu từ các trường
-//                String tenNsp = tennsp.getText().toString().trim();
-//
-//                // Kiểm tra dữ liệu không rỗng
-//                if (tenNsp.isEmpty() ) {
-//                    Toast.makeText(ThemNhomSanPham_Activity.this, "Vui lòng điền đầy đủ thông tin!", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
-//
-//                // Khởi tạo biến imageBytes
-//                byte[] imageBytes = null;
-//
-//                // Kiểm tra imageUri có khác null không
-//                if (imageUri != null) {
-//                    imageBytes = getBytesFromUri(imageUri);
-//                    if (imageBytes == null) {
-//                        Toast.makeText(ThemNhomSanPham_Activity.this, "Lỗi khi lấy ảnh!", Toast.LENGTH_SHORT).show();
-//                        return;
-//                    }
-//                }
-//
-//                database.QueryData("INSERT INTO nhomsanpham(tennsp, anh) VALUES ('"
-//                        + tenNsp + "', ?)", new Object[]{imageBytes}); // Sử dụng tham số để tránh lỗi SQL Injection   Toast.makeText(ThemNhomSanPham_Activity.this, "Thêm nhóm sản phẩm thành công!", Toast.LENGTH_LONG).show();
-//
-//                // Chuyển đến Activity thứ hai
-//                Intent intent = new Intent(getApplicationContext(), Nhomsanpham_admin_Actvity.class);
-//                startActivity(intent);
-//                finish(); // Đóng Activity hiện tại
-//            }
-//        });
 
         btnthem.setOnClickListener(view -> {
             String tenNsp = tennsp.getText().toString().trim();
@@ -148,27 +108,24 @@ public class ThemNhomSanPham_Activity extends AppCompatActivity {
 
     }
 
-    // Mở dialog chọn hình ảnh từ drawable
-    private void openDrawableImagePicker() {
-        final String[] imageNames = {"iphone", "nokia", "samsung", "lg", "huawei", "gionee", "oppo", "vivo"};
+    // Mở gallery để chọn ảnh từ điện thoại
+    private void openImagePicker() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Chọn ảnh từ drawable");
-        builder.setItems(imageNames, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Lấy tên hình ảnh đã chọn
-                String selectedImageName = imageNames[which];
-
-                // Lấy ID tài nguyên drawable
-                int resourceId = getResources().getIdentifier(selectedImageName, "drawable", getPackageName());
-
-                // Cập nhật ImageView
-                imgnsp.setImageResource(resourceId);
-                imageUri = Uri.parse("android.resource://" + getPackageName() + "/" + resourceId); // Cập nhật URI
+    // Xử lý kết quả khi người dùng chọn ảnh từ gallery
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
+            imageUri = data.getData();
+            if (imageUri != null) {
+                // Hiển thị ảnh đã chọn lên ImageView
+                imgnsp.setImageURI(imageUri);
             }
-        });
-        builder.show();
+        }
     }
     // Chuyển đổi URI thành mảng byte
     private byte[] getBytesFromUri(Uri uri) {

@@ -10,10 +10,20 @@ public class TaiKhoan {
     private String diachi;
     private String quyen;
     private String ngaytao;
+    private int trangthai;
+
+    public int getTrangthai() {
+        return trangthai;
+    }
+
+    public void setTrangthai(int trangthai) {
+        this.trangthai = trangthai;
+    }
 
     // Constructor đầy đủ
-    public TaiKhoan(int id, String tendn, String matkhau, String email, String sdt,
-                    String hoten, String diachi, String quyen, String ngaytao) {
+    public TaiKhoan(int id, String tendn, String matkhau, String email,
+                    String sdt, String hoten, String diachi,
+                    String quyen, String ngaytao, int trangthai) {
         this.id = id;
         this.tendn = tendn;
         this.matkhau = matkhau;
@@ -23,7 +33,9 @@ public class TaiKhoan {
         this.diachi = diachi;
         this.quyen = quyen;
         this.ngaytao = ngaytao;
+        this.trangthai = trangthai;
     }
+
     public TaiKhoan(String tendn, String matkhau, String quyen) {
         this.tendn = tendn;
         this.matkhau = matkhau;

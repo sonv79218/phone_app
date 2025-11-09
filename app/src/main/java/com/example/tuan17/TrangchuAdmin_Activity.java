@@ -78,9 +78,7 @@ public class TrangchuAdmin_Activity extends AppCompatActivity {
         grv1.setAdapter(adapterGrv1);
         loadNhomSanPhamAPI();
         loadSanPhamAPI();
-//
-//        Loaddulieugridview2();
-//        Loaddulieugridview1();
+
     }
 //    private void Loaddulieugridview2() {
 //        mangNSPgrv2.clear();

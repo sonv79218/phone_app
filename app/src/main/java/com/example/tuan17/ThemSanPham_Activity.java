@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Base64;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -78,7 +79,7 @@ public class ThemSanPham_Activity extends AppCompatActivity {
         chonimgbs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openDrawableImagePicker(); // Gọi hàm mở hình ảnh từ drawable
+                openImagePicker(); // Gọi hàm mở gallery để chọn ảnh từ điện thoại
             }
         });
 
@@ -212,27 +213,24 @@ public class ThemSanPham_Activity extends AppCompatActivity {
 //        finish();
     }
 
-    // Mở dialog chọn hình ảnh từ drawable
-    private void openDrawableImagePicker() {
-        final String[] imageNames = {"huawei1","huawei2","iphone1", "iphone2","iphone3","iphone4", "lg1","lg2","nokia1", "oppo1","oppo2","samsung1", "samsung2","samsung3","vivo1","vivo2"};
+    // Mở gallery để chọn ảnh từ điện thoại
+    private void openImagePicker() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Chọn ảnh từ drawable");
-        builder.setItems(imageNames, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Lấy tên hình ảnh đã chọn
-                String selectedImageName = imageNames[which];
-
-                // Lấy ID tài nguyên drawable
-                int resourceId = getResources().getIdentifier(selectedImageName, "drawable", getPackageName());
-
-                // Cập nhật ImageView
-                imgsp.setImageResource(resourceId);
-                imageUri = Uri.parse("android.resource://" + getPackageName() + "/" + resourceId); // Cập nhật URI
+    // Xử lý kết quả khi người dùng chọn ảnh từ gallery
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
+            imageUri = data.getData();
+            if (imageUri != null) {
+                // Hiển thị ảnh đã chọn lên ImageView
+                imgsp.setImageURI(imageUri);
             }
-        });
-        builder.show();
+        }
     }
 
     // Chuyển đổi URI thành mảng byte

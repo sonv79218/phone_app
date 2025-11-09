@@ -113,35 +113,6 @@ public class GioHang_Activity extends AppCompatActivity {
                     return;
                 }
 //
-//                if (orderManager != null) {
-//                    long orderId = orderManager.addOrder(tenKh, diaChi, sdt, tongThanhToan); // trả về id đơn hàng sau khi thực hiện
-//                    if (orderId > 0) {
-//                        // Lưu thông tin chi tiết đơn hàng
-//                        List<GioHang> gioHangList = gioHangManager.getGioHangList();
-//                        for (GioHang item : gioHangList) {
-//                            String masp = item.getSanPham().getMasp();
-//                            int soluong = item.getSoLuong();
-//                            float dongia = item.getSanPham().getDongia();
-//                            byte[] anhByteArray = item.getSanPham().getAnh();
-//
-//                            // Gọi phương thức addOrderDetails
-//                            orderManager.addOrderDetails((int) orderId, masp, soluong, dongia, anhByteArray);
-//                        }
-//
-//                        Toast.makeText(this, "Đặt hàng thành công!", Toast.LENGTH_SHORT).show();
-//                        gioHangManager.clearGioHang(); // Xóa giỏ hàng
-//                        txtTongTien.setText("0"); // Đặt tổng tiền về 0
-//
-//                        adapter.notifyDataSetChanged(); // Cập nhật lại giao diện
-//                        Intent a = new Intent(GioHang_Activity.this, TrangchuNgdung_Activity.class);
-//                        startActivity(a);
-//                    } else {
-//                        Toast.makeText(this, "Đặt hàng thất bại!", Toast.LENGTH_SHORT).show();
-//                    }
-//                } else {
-//                    Toast.makeText(this, "Không thể xử lý đơn hàng, hãy thử lại!", Toast.LENGTH_SHORT).show();
-//                }
-//                dialog.dismiss(); // Đóng dialog sau khi xử lý
                 int userId = SharedPrefHelper.getUserId(this); // Lấy user_id từ SharedPreferences
 
                 String urlOrder = "http://10.0.2.2:3000/dathang";
@@ -150,7 +121,6 @@ public class GioHang_Activity extends AppCompatActivity {
                             try {
                                 JSONObject obj = new JSONObject(response);
                                 int orderId = obj.getInt("id"); // ID đơn hàng trả về từ server
-
                                 // Sau khi thêm đơn hàng thành công, thêm chi tiết đơn hàng
                                 List<GioHang> gioHangList = gioHangManager.getGioHangList();
                                 for (GioHang item : gioHangList) {

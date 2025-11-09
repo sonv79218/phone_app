@@ -35,6 +35,7 @@ public class DonHang_User_Activity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_don_hang_user);
 //        donHangDB = new DonHangDB(this);
@@ -77,13 +78,14 @@ if( tenDN == null){
             finish(); // Kết thúc activity nếu không có tên đăng nhập
             return;
         }
+
 // Kiểm tra giá trị tenDN
 //        if (tenDN == null || tenDN.isEmpty()) {
 //            Toast.makeText(this, "Tên đăng nhập không hợp lệ!", Toast.LENGTH_SHORT).show();
 //            finish(); // Kết thúc activity nếu không có tên đăng nhập
 //            return;
 //        }
-
+        Log.d("abc", "userId" + user_id);
         loadDonHang(user_id); // Gọi phương thức loadDonHang với tenDN
 
 BottomBar_Helper.setupBottomBar(this);
@@ -108,16 +110,21 @@ BottomBar_Helper.setupBottomBar(this);
 //    }
 private void loadDonHang(int userId) {
     String url = "http://10.0.2.2:3000/dathang/user/" + userId;
-//    Log.d("abc", "userId" + userId);
+    Log.d("abc", "userId" + userId);
+
+
     JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
             response -> {
+                Log.d("API_Response", response.toString());
                 List<Order> orders = new ArrayList<>();
 
                 for (int i = 0; i < response.length(); i++) {
                     try {
+
                         JSONObject obj = response.getJSONObject(i);
 
-                        int idDatHang = obj.getInt("id_dathang");
+//                        int idDatHang = obj.getInt("id_dathang");
+                        int idDatHang = obj.getInt("id");
                         String tenkh = obj.getString("tenkh");
                         String diachi = obj.getString("diachi");
                         String sdt = obj.getString("sdt");

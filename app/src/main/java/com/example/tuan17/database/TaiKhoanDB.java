@@ -55,33 +55,33 @@ public class TaiKhoanDB {
 //        SQLiteDatabase database=getReadableDatabase();
         return db.rawQuery(sql,null);
     }
-
-    public List<TaiKhoan> getAllTaiKhoan() {
-        List<TaiKhoan> danhSach = new ArrayList<>();
-        Cursor cursor = db.rawQuery("SELECT * FROM taikhoan", null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                int id = getIntFromCursor(cursor, "id");
-                String tendn = getStringFromCursor(cursor, "tendn");
-                String matkhau = getStringFromCursor(cursor, "matkhau");
-                String email = getStringFromCursor(cursor, "email");
-                String sdt = getStringFromCursor(cursor, "sdt");
-                String hoten = getStringFromCursor(cursor, "hoten");
-                String diachi = getStringFromCursor(cursor, "diachi");
-                String quyen = getStringFromCursor(cursor, "quyen");
-                String ngaytao = getStringFromCursor(cursor, "ngaytao");
-
-
-                // Tạo đối tượng TaiKhoan, bạn cần có constructor phù hợp hoặc set các trường
-                TaiKhoan tk = new TaiKhoan(id, tendn, matkhau, email, sdt, hoten, diachi, quyen, ngaytao);
-
-                danhSach.add(tk);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return danhSach;
-    }
+//
+//    public List<TaiKhoan> getAllTaiKhoan() {
+//        List<TaiKhoan> danhSach = new ArrayList<>();
+//        Cursor cursor = db.rawQuery("SELECT * FROM taikhoan", null);
+//
+//        if (cursor.moveToFirst()) {
+//            do {
+//                int id = getIntFromCursor(cursor, "id");
+//                String tendn = getStringFromCursor(cursor, "tendn");
+//                String matkhau = getStringFromCursor(cursor, "matkhau");
+//                String email = getStringFromCursor(cursor, "email");
+//                String sdt = getStringFromCursor(cursor, "sdt");
+//                String hoten = getStringFromCursor(cursor, "hoten");
+//                String diachi = getStringFromCursor(cursor, "diachi");
+//                String quyen = getStringFromCursor(cursor, "quyen");
+//                String ngaytao = getStringFromCursor(cursor, "ngaytao");
+//
+//
+//                // Tạo đối tượng TaiKhoan, bạn cần có constructor phù hợp hoặc set các trường
+//                TaiKhoan tk = new TaiKhoan(id, tendn, matkhau, email, sdt, hoten, diachi, quyen, ngaytao);
+//
+//                danhSach.add(tk);
+//            } while (cursor.moveToNext());
+//        }
+//        cursor.close();
+//        return danhSach;
+//    }
 
 
     public boolean addTaiKhoan(String username, String password, String quyen){

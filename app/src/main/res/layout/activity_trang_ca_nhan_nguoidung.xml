@@ -85,71 +85,124 @@
                     android:textColor="#00B6FF"/>
 
             </LinearLayout>
-            <TextView
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:id="@+id/qd"
-                android:background="#DADADA"
-                android:textSize="18dp"
-                android:text="Quy định sử dụng"
-                android:drawablePadding="8dp"
-                android:hint="Họ và Tên"
-                android:textColorHint="#aaa"
-                android:padding="8dp"
-                android:layout_marginBottom="1dp"
-                android:drawableRight="@drawable/muitenphai"
-                android:textColor="@color/black"
-                android:textColorHighlight="@color/cardview_dark_background"
-                android:layout_marginTop="1dp"/>
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:id="@+id/cs"
-                android:background="#DADADA"
-                android:textSize="18dp"
-                android:text="Chính sách và bảo mật"
-                android:drawablePadding="8dp"
-                android:hint="Họ và Tên"
+                <TextView
+                    android:text="Họ tên:"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textColor="#072349"
+                    android:textSize="16sp" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvHoTen"
+                    android:text="Nguyễn Văn A"
+                    android:textSize="16sp" />
 
-                android:padding="8dp"
-                android:layout_marginBottom="1dp"
-                android:drawableRight="@drawable/muitenphai"
-                android:textColor="@color/black"
-                android:textColorHighlight="@color/cardview_dark_background"
-                android:layout_marginTop="1dp"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:id="@+id/dk"
-                android:background="#DADADA"
-                android:textSize="18dp"
-                android:text="Điều khoản và dịch vụ"
-                android:drawablePadding="8dp"
-                android:hint="Họ và Tên"
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Email:"
+                    android:textStyle="bold"
+                    android:textColor="#072349"
+                    android:textSize="16sp"
+                    android:layout_marginTop="8dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvEmail"
+                    android:text="example@gmail.com"
+                    android:textSize="16sp" />
 
-                android:padding="8dp"
-                android:layout_marginBottom="1dp"
-                android:drawableRight="@drawable/muitenphai"
-                android:textColor="@color/black"
-                android:textColorHighlight="@color/cardview_dark_background"
-                android:layout_marginTop="1dp"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:id="@+id/td"
-                android:background="#DADADA"
-                android:textSize="18dp"
-                android:text="Tổng đài CSKH 19002325"
-                android:drawablePadding="8dp"
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Số điện thoại:"
+                    android:textStyle="bold"
+                    android:textColor="#072349"
+                    android:textSize="16sp"
+                    android:layout_marginTop="8dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvSdt"
+                    android:text="0123456789"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Địa chỉ:"
+                    android:textStyle="bold"
+                    android:textColor="#072349"
+                    android:textSize="16sp"
+                    android:layout_marginTop="8dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvDiaChi"
+                    android:text="123 Lê Lợi, Hà Nội"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Ngày tạo:"
+                    android:textStyle="bold"
+                    android:textColor="#072349"
+                    android:textSize="16sp"
+                    android:layout_marginTop="8dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvNgayTao"
+                    android:text="2025-06-01"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Quyền tài khoản:"
+                    android:textStyle="bold"
+                    android:textColor="#072349"
+                    android:textSize="16sp"
+                    android:layout_marginTop="8dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvQuyen"
+                    android:text="Người dùng"
+                    android:textSize="16sp" />
+
+                <!-- Nút chỉnh sửa và đổi mật khẩu -->
+                <Button
+                    android:id="@+id/btnChinhSua"
+                    android:text="Chỉnh sửa thông tin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:backgroundTint="#4CAF50"
+                    android:textColor="#FFFFFF"/>
+
+                <Button
+                    android:id="@+id/btnDoiMatKhau"
+                    android:text="Đổi mật khẩu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:backgroundTint="#03A9F4"
+                    android:textColor="#FFFFFF"/>
+
+            </LinearLayout>
 
 
-                android:padding="8dp"
-                android:layout_marginBottom="202dp"
-                android:drawableRight="@drawable/muitenphai"
-                android:textColor="@color/black"
-                android:textColorHighlight="@color/cardview_dark_background"
-                android:layout_marginTop="1dp"/>
 
             <Button
                 android:textColor="#000000"
