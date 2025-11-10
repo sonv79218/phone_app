@@ -61,53 +61,21 @@ public class DonHang_User_Activity extends AppCompatActivity {
 
         });
 
-
-        // Tạo bảng nếu chưa tồn tại
-//        createTableIfNotExists();
 String tenDN = SharedPrefHelper.getUsername(this);
 if( tenDN == null){
-    // Lấy tên đăng nhập từ Intent
     tenDN = getIntent().getStringExtra("tendn");
 }
 // lấy userId
  int user_id = SharedPrefHelper.getUserId(getApplicationContext());
-//        Log.d(TAG, "onCreate: "+ user_id);
-
         if (user_id == -1) {
             Toast.makeText(this, "không hợp lệ!", Toast.LENGTH_SHORT).show();
             finish(); // Kết thúc activity nếu không có tên đăng nhập
             return;
         }
-
-// Kiểm tra giá trị tenDN
-//        if (tenDN == null || tenDN.isEmpty()) {
-//            Toast.makeText(this, "Tên đăng nhập không hợp lệ!", Toast.LENGTH_SHORT).show();
-//            finish(); // Kết thúc activity nếu không có tên đăng nhập
-//            return;
-//        }
-        Log.d("abc", "userId" + user_id);
         loadDonHang(user_id); // Gọi phương thức loadDonHang với tenDN
-
 BottomBar_Helper.setupBottomBar(this);
     }
-//    private void loadDonHang(int id) {
-//        // Kiểm tra tên khách hàng trước khi truy vấn
-//        if (id == -1 ) {
-//            Toast.makeText(this, "không hợp lệ!", Toast.LENGTH_SHORT).show();
-//            return; // Dừng lại nếu tên khách hàng là null hoặc rỗng
-//        }
-//
-//        // Lấy danh sách đơn hàng từ cơ sở dữ liệu
-//        List<Order> orders = donHangDB.getDonHangById(id);
-//        Log.d(TAG, "loadDonHang: "+ orders);
-//        if (orders.isEmpty()) {
-//            Toast.makeText(this, "Không tìm thấy đơn hàng cho khách hàng này!", Toast.LENGTH_SHORT).show();
-//        } else {
-//            // Sử dụng DonHangAdapter để hiển thị danh sách đơn hàng
-//            donHangAdapter = new DonHang_Adapter(this, orders);
-//            listView.setAdapter(donHangAdapter); // Gán adapter cho ListView
-//        }
-//    }
+
 private void loadDonHang(int userId) {
     String url = "http://10.0.2.2:3000/dathang/user/" + userId;
     Log.d("abc", "userId" + userId);

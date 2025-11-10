@@ -41,15 +41,12 @@ public class NhomSanPhamAdapter extends BaseAdapter {
     private Context context;
     private ArrayList<NhomSanPham> nhomSanPhamList;
     private boolean showFullDetails;
-//    private Database database;
     private Uri selectedImageUri;
     private static final int REQUEST_CODE_PICK_IMAGE = 1;
-
     public NhomSanPhamAdapter(Activity context, ArrayList<NhomSanPham> nhomSanPhamList, boolean showFullDetails) {
         this.context = context;
         this.nhomSanPhamList = nhomSanPhamList;
         this.showFullDetails = showFullDetails;
-//        this.database = new Database(context, "banhang.db", null, 1);
     }
 
     @Override
@@ -81,7 +78,6 @@ public class NhomSanPhamAdapter extends BaseAdapter {
         if (view == null) {
             view = LayoutInflater.from(context).inflate(R.layout.ds_nhomsanpham, parent, false);
         }
-
         NhomSanPham nhomSanPham = nhomSanPhamList.get(position);
         TextView ten = view.findViewById(R.id.ten);
         TextView id = view.findViewById(R.id.idma);
@@ -94,8 +90,8 @@ public class NhomSanPhamAdapter extends BaseAdapter {
 
         byte[] anhByteArray = nhomSanPham.getAnh();
         if (anhByteArray != null && anhByteArray.length > 0) {
-            Bitmap imganhbs = BitmapFactory.decodeByteArray(anhByteArray, 0, anhByteArray.length);
-            anh.setImageBitmap(imganhbs);
+            Bitmap img = BitmapFactory.decodeByteArray(anhByteArray, 0, anhByteArray.length);
+            anh.setImageBitmap(img);
         } else {
             anh.setImageResource(R.drawable.vest);
         }
@@ -103,10 +99,8 @@ public class NhomSanPhamAdapter extends BaseAdapter {
         sua.setOnClickListener(v -> showEditDialog(nhomSanPham));
         xoa.setOnClickListener(v -> {
             String maso = nhomSanPham.getMa(); // lấy mã nhóm
-
             // Gọi API DELETE
             String url = "http://10.0.2.2:3000/nhomsanpham/" + maso;
-
             StringRequest request = new StringRequest(Request.Method.DELETE, url,
                     response -> {
                         // Xóa khỏi danh sách và cập nhật UI
@@ -119,7 +113,6 @@ public class NhomSanPhamAdapter extends BaseAdapter {
                         Toast.makeText(context, "Lỗi xóa nhóm sản phẩm", Toast.LENGTH_SHORT).show();
                     }
             );
-
             Volley.newRequestQueue(context).add(request);
         });
 

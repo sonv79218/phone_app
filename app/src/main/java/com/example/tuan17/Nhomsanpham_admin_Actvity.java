@@ -28,26 +28,19 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 public class Nhomsanpham_admin_Actvity extends AppCompatActivity {
-//    private Database database;
     private ListView lv;
     private FloatingActionButton addButton;
     private ArrayList<NhomSanPham> mangNSP;
     private NhomSanPhamAdapter adapter;
     String url = "http://10.0.2.2:3000/nhomsanpham";
-
-//    private NhomSanPhamDB nhomSanPhamDB;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nhomsanpham_admin_actvity);
-//        nhomSanPhamDB = new NhomSanPhamDB(this);
         lv = findViewById(R.id.listtk);
         addButton = findViewById(R.id.btnthem);
         mangNSP = new ArrayList<>();
         adapter = new NhomSanPhamAdapter(Nhomsanpham_admin_Actvity.this, mangNSP, true);
-
         lv.setAdapter(adapter);
         loadData();
         BottomBar_Admin_Helper.setupBottomBar(this);
@@ -56,8 +49,6 @@ public class Nhomsanpham_admin_Actvity extends AppCompatActivity {
             startActivity(intent);
         });
     }
-
-
     private void loadData() {
         String url = "http://10.0.2.2:3000/nhomsanpham/all";
         StringRequest request = new StringRequest(Request.Method.GET, url,
@@ -65,20 +56,15 @@ public class Nhomsanpham_admin_Actvity extends AppCompatActivity {
                     try {
                         JSONArray jsonArray = new JSONArray(response);
                         mangNSP.clear();
-
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject obj = jsonArray.getJSONObject(i);
-
                             String maso = obj.getString("maso");
                             String tennsp = obj.getString("tennsp");
                             String base64Image = obj.getString("anh");
-
                             byte[] imageBytes = Base64.decode(base64Image, Base64.DEFAULT);
-
                             NhomSanPham nsp = new NhomSanPham(maso, tennsp, imageBytes);
                             mangNSP.add(nsp);
                         }
-
                         adapter.notifyDataSetChanged();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -91,15 +77,5 @@ public class Nhomsanpham_admin_Actvity extends AppCompatActivity {
                 });
         Volley.newRequestQueue(this).add(request);
 
-
-//        mangNSP.clear();
-//        mangNSP.addAll(nhomSanPhamDB.getAllNhomSanPham());
-//        adapter.notifyDataSetChanged();
-    }
-    private byte[] convertBitmapToByteArray(int resourceId) {
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), resourceId);
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        return stream.toByteArray();
     }
 }

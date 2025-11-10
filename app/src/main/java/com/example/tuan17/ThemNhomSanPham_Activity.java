@@ -33,7 +33,6 @@ import java.util.Map;
 public class ThemNhomSanPham_Activity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1; // Mã yêu cầu cho việc chọn ảnh
     EditText tennsp;
-//    Database database;
     ImageView imgnsp;
     ArrayList<NhomSanPham> mangNSP;
   NhomSanPhamAdapter adapter;
@@ -43,20 +42,15 @@ public class ThemNhomSanPham_Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_them_nhom_san_pham);
-
-      tennsp= findViewById(R.id.ten);
+        tennsp= findViewById(R.id.ten);
         imgnsp = findViewById(R.id.imgnsp);
-        Button chonimgbs = findViewById(R.id.btnAddImg);
+        Button chonimg = findViewById(R.id.btnAddImg);
         Button btnthem = findViewById(R.id.btnadd);
-
         mangNSP = new ArrayList<>();
         adapter = new NhomSanPhamAdapter(ThemNhomSanPham_Activity.this, mangNSP, true) {
         };
-//        database = new Database(this, "banhang.db", null, 1);
-//        database.QueryData("CREATE TABLE IF NOT EXISTS nhomsanpham(maso INTEGER PRIMARY KEY AUTOINCREMENT, tennsp NVARCHAR(200), anh BLOB)");
-
         // Thiết lập OnClickListener cho nút chọn ảnh
-        chonimgbs.setOnClickListener(new View.OnClickListener() {
+        chonimg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openImagePicker(); // Gọi hàm mở gallery để chọn ảnh từ điện thoại
@@ -69,7 +63,6 @@ public class ThemNhomSanPham_Activity extends AppCompatActivity {
                 Toast.makeText(this, "Vui lòng điền đầy đủ thông tin!", Toast.LENGTH_SHORT).show();
                 return;
             }
-
             byte[] imageBytes = null;
             if (imageUri != null) {
                 imageBytes = getBytesFromUri(imageUri);
@@ -105,7 +98,6 @@ public class ThemNhomSanPham_Activity extends AppCompatActivity {
 
             Volley.newRequestQueue(this).add(request);
         });
-
     }
 
     // Mở gallery để chọn ảnh từ điện thoại

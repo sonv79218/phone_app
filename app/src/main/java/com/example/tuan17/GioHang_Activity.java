@@ -1,11 +1,14 @@
 package com.example.tuan17;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,9 +41,7 @@ public class GioHang_Activity extends AppCompatActivity {
     private GioHangAdapter adapter;
     private GioHangManager gioHangManager;
     private Button thanhtoan;
-    private OrderManager orderManager;
     private TextView txtTongTien; // Khai báo TextView cho tổng tiền
-    private DonHangDB donHangDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +51,7 @@ public class GioHang_Activity extends AppCompatActivity {
         listView = findViewById(R.id.listtk);
         TextView textTendn = findViewById(R.id.tendn);
 
-        // Lấy tendn từ SharedPreferences
+
         String tendn = SharedPrefHelper.getUsername(this);
 
         if (tendn != null) {
@@ -66,7 +67,7 @@ public class GioHang_Activity extends AppCompatActivity {
 
 
         gioHangManager = GioHangManager.getInstance();
-        orderManager = new OrderManager(this);
+//        orderManager = new OrderManager(this);
 
         // Lấy danh sách giỏ hàng và cập nhật giao diện
         List<GioHang> gioHangList = gioHangManager.getGioHangList();
@@ -129,7 +130,7 @@ public class GioHang_Activity extends AppCompatActivity {
                                     float dongia = item.getSanPham().getDongia();
                                     byte[] anhByte = item.getSanPham().getAnh();
                                     String base64Image = Base64.encodeToString(anhByte, Base64.DEFAULT);
-
+//                                    Log.d(TAG, "123: "+ base64Image);
                                     // Gọi API thêm chi tiết
                                     themChiTietDonHang(orderId, masp, soluong, dongia, base64Image);
                                 }

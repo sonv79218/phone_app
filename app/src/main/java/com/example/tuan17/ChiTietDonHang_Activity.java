@@ -71,15 +71,37 @@ public class ChiTietDonHang_Activity extends AppCompatActivity {
                             int masp = obj.getInt("masp");
                             int soluong = obj.getInt("soluong");
                             float dongia = (float) obj.getDouble("dongia");
-                            byte[] anh = null;
+                            String base64Image = obj.getString("anh");
+                            byte[] imageBytes = Base64.decode(base64Image, Base64.DEFAULT);
+                            ChiTietDonHang ct = new ChiTietDonHang(id_chitiet, masp, soluong, dongia, imageBytes);
+                            //
 
-                            if (!obj.isNull("anh")) {
-                                String base64Image = obj.getString("anh");
-                                anh = Base64.decode(base64Image, Base64.DEFAULT);
-                            }
+//                            mangNSP.add(nsp);
+////                            String tennsp = obj.getString("tennsp");
+//                            String base64Image = obj.getString("anh");
+//                            byte[] imageBytes = Base64.decode(base64Image, Base64.DEFAULT);
+//                            NhomSanPham nsp = new NhomSanPham(maso, tennsp, imageBytes);
+//                            byte[] anh = null;
 
-                            chiTietList.add(new ChiTietDonHang(id_chitiet, masp, soluong, dongia, anh));
-                            Log.d("abc","mes " +anh);// đã có ảnh
+//                            if (!obj.isNull("anh")) {
+//                                String base64Image = obj.getString("anh");
+//                                anh = Base64.decode(base64Image, Base64.DEFAULT);
+//                            }
+//                            if (!obj.isNull("anh")) {
+//                                Toast.makeText(this, "có ảnh nha!", Toast.LENGTH_SHORT).show();
+//                                String base64Image = obj.getString("anh")
+//                                        .replace("\n", "")  // loại bỏ xuống dòng
+//                                        .replace("\r", ""); // loại bỏ ký tự thừa
+//                                try {
+//                                    anh = Base64.decode(base64Image, Base64.DEFAULT);
+//                                } catch (IllegalArgumentException e) {
+//                                    Log.e("DecodeError", "Ảnh Base64 không hợp lệ: " + e.getMessage());
+//                                }
+//                            }
+
+
+                            chiTietList.add(ct);
+//                            Log.d("abc","mes " +anh);// đã có ảnh
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
