@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bottomToolbar"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/bottomToolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="#FFFFFF"
-        android:padding="1dp">
+    android:layout_height="70dp"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:background="#FFFFFF"
+    android:elevation="6dp"
+    android:paddingVertical="6dp">
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -24,7 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:background="#FFFFFF"
-                android:src="@drawable/tc" />
+                android:src="@drawable/home_24dp_1f1f1f_fill0_wght400_grad0_opsz24" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -47,7 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:background="#FFFFFF"
-                android:src="@drawable/nhomsp" />
+                android:src="@drawable/category_24dp_1f1f1f_fill0_wght400_grad0_opsz24" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -57,7 +54,6 @@
                 android:text="Nhóm SP"
                 android:gravity="center" />
         </LinearLayout>
-
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -71,7 +67,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:background="#FFFFFF"
-                android:src="@drawable/sp" />
+                android:src="@drawable/package_2_24dp_1f1f1f_fill0_wght400_grad0_opsz24" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -81,7 +77,6 @@
                 android:textColor="#000000"
                 android:gravity="center" />
         </LinearLayout>
-
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -95,7 +90,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:background="#FFFFFF"
-                android:src="@drawable/donhang" />
+                android:src="@drawable/order_approve_24dp_1f1f1f_fill0_wght400_grad0_opsz24" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -105,7 +100,6 @@
                 android:text="Đơn Hàng"
                 android:gravity="center" />
         </LinearLayout>
-
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -119,14 +113,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:background="#FFFFFF"
-                android:src="@drawable/taikhoan" />
+                android:src="@drawable/manage_accounts_24dp_1f1f1f_fill0_wght400_grad0_opsz24" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="9sp"
                 android:textColor="#000000"
-                android:text="Tài Khoản"
+                android:text="Quản Lý"
                 android:gravity="center" />
         </LinearLayout>
         <LinearLayout
@@ -141,7 +135,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:background="#FFFFFF"
-                android:src="@drawable/nd" />
+                android:src="@drawable/account_circle_24dp_1f1f1f_fill0_wght400_grad0_opsz24" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -151,6 +145,4 @@
                 android:textSize="9sp"
                 android:gravity="center" />
         </LinearLayout>
-    </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

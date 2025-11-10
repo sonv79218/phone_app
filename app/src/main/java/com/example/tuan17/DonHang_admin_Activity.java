@@ -27,14 +27,11 @@ public class DonHang_admin_Activity extends AppCompatActivity {
 
     private ListView listView;
     private DonHang_Adapter donHangAdapter;
-    // khai báo đối tượng donHangDB
-//    private DonHangDB donHangDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_don_hang_admin);
-//        donHangDB = new DonHangDB(this); // gán giá trị cho biến donhang đã được khai báo bên ngoài - làm việc tại activity này
         // Khởi tạo các thành phần
         listView = findViewById(R.id.listViewChiTiet);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -57,17 +54,6 @@ public class DonHang_admin_Activity extends AppCompatActivity {
         loadDonHang(); // Gọi phương thức loadDonHang
     }
 
-//    private void loadDonHang() {
-        // Lấy danh sách đơn hàng từ cơ sở dữ liệu
-//        List<Order> orders = donHangDB.getAllDonHang(); // lưu vào mảng đối tượng
-//        if (orders.isEmpty()) {
-//            Toast.makeText(this, "Không tìm thấy đơn hàng nào!", Toast.LENGTH_SHORT).show();
-//        } else {
-//            // Sử dụng DonHangAdapter để hiển thị danh sách đơn hàng
-//            donHangAdapter = new DonHang_Adapter(this, orders);
-//            listView.setAdapter(donHangAdapter); // Gán adapter cho ListView
-//        }
-//    }
 private void loadDonHang() {
     String url = "http://10.0.2.2:3000/dathang/all";
 //    Log.d("abc", "userId" + userId);

@@ -1,43 +1,29 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:background="#faeabf"
+    android:background="#FFFFFF"
     android:layout_height="match_parent">
-
     <LinearLayout
         android:id="@+id/bo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-
         android:background="#072349"
         android:layout_alignParentTop="true"
-
         android:padding="1dp">
-
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="60dp">
-            <ImageView
-
-                android:layout_marginLeft="10dp"
-                android:layout_weight="1"
-                android:id="@+id/logo"
-                android:src="@drawable/logo1"
-                android:layout_width="50dp"
-                android:layout_height="60dp" />
-
             <TextView
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_gravity="center"
-                android:layout_marginLeft="0dp"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="11dp"
                 android:layout_weight="9"
-android:textAllCaps="true"
+                android:textAllCaps="true"
                 android:fontFamily="sans-serif-condensed-light"
                 android:paddingTop="20dp"
+                android:gravity="center_horizontal"
                 android:text="xin chao quy khach "
                 android:textColor="#FFFFFF"
                 android:textSize="20dp"
@@ -45,33 +31,35 @@ android:textAllCaps="true"
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-               android:id="@+id/tendn"
-
+                android:id="@+id/tendn"
                 />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="12dp">
 
+            <EditText
+                android:id="@+id/timkiem"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_search_bar"
+                android:backgroundTint="@null"
+                android:maxLines="1"
+                android:drawablePadding="8dp"
+                android:hint="Search"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textColor="#000"
+                android:textColorHint="#999"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:clickable="true"/>
 
         </LinearLayout>
-
-        <EditText
-            android:focusableInTouchMode="false"
-            android:id="@+id/timkiem"
-            android:paddingRight="10dp"
-            android:textColorHint="#aaa"
-            android:hint="Search..."
-            android:paddingLeft="15dp"
-            android:textColor="#000000"
-            android:drawableRight="@drawable/tk"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/thanhtimkiem"
-            android:layout_width="match_parent"
-            android:layout_height="37dp"
-            android:scrollHorizontally="true"
-            android:maxLines="1"
-            android:inputType="text"
-            android:ellipsize="end"
-android:layout_marginBottom="10dp"
-            android:layout_weight="1" />
     </LinearLayout>
 
     <!-- Nội dung ứng dụng -->
