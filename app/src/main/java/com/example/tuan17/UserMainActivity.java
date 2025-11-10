@@ -5,21 +5,22 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import com.example.tuan17.fragments.AdminHomeFragment;
-import com.example.tuan17.helper.BottomBar_Admin_Helper;
+import com.example.tuan17.fragments.HomeFragment;
+import com.example.tuan17.helper.BottomBar_Helper;
 
-public class AdminActivity extends AppCompatActivity {
+public class UserMainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admin);
+        setContentView(R.layout.activity_main_user);
         
         // Load mặc định: Trang chủ
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.admin_fragment_container, new AdminHomeFragment())
+                .replace(R.id.fragment_container, new HomeFragment())
                 .commit();
         
-        BottomBar_Admin_Helper.setupBottomBar(this);
+        BottomBar_Helper.setupBottomBar(this);
     }
 }
+

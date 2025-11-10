@@ -113,7 +113,7 @@ public class DanhGiaActivity extends AppCompatActivity {
                             JSONObject res = new JSONObject(response);
                             if (res.getBoolean("success")) {
                                 Toast.makeText(this, "Đánh giá đã được gửi!", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(this, TrangchuNgdung_Activity.class);
+                                Intent intent = new Intent(this, UserMainActivity.class);
                                 startActivity(intent);
                                 finish();
                             } else {

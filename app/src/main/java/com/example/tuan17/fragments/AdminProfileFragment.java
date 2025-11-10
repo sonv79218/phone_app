@@ -1,22 +1,27 @@
-package com.example.tuan17;
+package com.example.tuan17.fragments;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.tuan17.helper.BottomBar_Admin_Helper;
-import com.example.tuan17.helper.BottomBar_Helper;
+import com.example.tuan17.ChinhSuaThongTin_Activity;
+import com.example.tuan17.DoiMatKhau_Activity;
+import com.example.tuan17.Login_Activity;
+import com.example.tuan17.R;
 
 import org.json.JSONObject;
 
@@ -25,50 +30,55 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class TrangCaNhan_admin_Activity extends AppCompatActivity {
+public class AdminProfileFragment extends Fragment {
     String tendn;
     Integer id;
-    ActivityResultLauncher<Intent> chinhSuaLauncher;
+
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trang_ca_nhan_admin);
-        TextView tvHoten = findViewById(R.id.tvHoTen);
-        TextView tvEmail = findViewById(R.id.tvEmail);
-        TextView tvSdt = findViewById(R.id.tvSdt);
-        TextView tvDiachi = findViewById(R.id.tvDiaChi);
-        TextView tvQuyen = findViewById(R.id.tvQuyen);
-        TextView tvNgaytao = findViewById(R.id.tvNgayTao);
-        Button dangxuat = findViewById(R.id.btndangxuat);
-        TextView textTendn = findViewById(R.id.tendn); // TextView hiển thị tên đăng nhập
-        Button doimk = findViewById(R.id.btnDoiMatKhau);
-        Button suatt = findViewById(R.id.btnChinhSua);
-        // Lấy giá trị tendn từ SharedPreferences
-        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.activity_trang_ca_nhan_admin, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        TextView tvHoten = view.findViewById(R.id.tvHoTen);
+        TextView tvEmail = view.findViewById(R.id.tvEmail);
+        TextView tvSdt = view.findViewById(R.id.tvSdt);
+        TextView tvDiachi = view.findViewById(R.id.tvDiaChi);
+        TextView tvQuyen = view.findViewById(R.id.tvQuyen);
+        TextView tvNgaytao = view.findViewById(R.id.tvNgayTao);
+        Button dangxuat = view.findViewById(R.id.btndangxuat);
+        TextView textTendn = view.findViewById(R.id.tendn);
+        Button doimk = view.findViewById(R.id.btnDoiMatKhau);
+        Button suatt = view.findViewById(R.id.btnChinhSua);
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MyPrefs", getActivity().MODE_PRIVATE);
         tendn = sharedPreferences.getString("tendn", null);
-        id = sharedPreferences.getInt("user_id",-1);
-        // Nếu SharedPreferences không có, lấy từ Intent
+        id = sharedPreferences.getInt("user_id", -1);
+
         if (tendn == null) {
-            tendn = getIntent().getStringExtra("tendn");
+            tendn = getArguments() != null ? getArguments().getString("tendn") : null;
         }
 
-        // Kiểm tra giá trị tendn
         if (tendn != null) {
             textTendn.setText(tendn);
         } else {
-            // Chưa đăng nhập, chuyển đến trang login
-            Intent intent = new Intent(TrangCaNhan_admin_Activity.this, Login_Activity.class);
+            Intent intent = new Intent(getActivity(), Login_Activity.class);
             startActivity(intent);
-            finish(); // Kết thúc activity nếu chưa đăng nhập
+            getActivity().finish();
             return;
         }
 
         String url = "http://10.0.2.2:3000/taikhoan/thongtin?id=" + id;
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET,url,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 response -> {
                     try {
-                        JSONObject json = new JSONObject(response);//pasrse chuỗi response
+                        JSONObject json = new JSONObject(response);
                         if (json.getBoolean("success")) {
                             JSONObject user = json.getJSONObject("user");
                             tvHoten.setText(getSafe(user, "hoten"));
@@ -77,59 +87,46 @@ public class TrangCaNhan_admin_Activity extends AppCompatActivity {
                             tvDiachi.setText(getSafe(user, "diachi"));
                             tvQuyen.setText(getSafe(user, "quyen"));
                             tvNgaytao.setText(formatDate(user.optString("ngaytao")));
-
-
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                    }},
+                    }
+                },
                 error -> {
                     error.printStackTrace();
-                    Toast.makeText(this, "Lỗi tải thông tin người dùng", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Lỗi tải thông tin người dùng", Toast.LENGTH_SHORT).show();
                 }
         );
-        Volley.newRequestQueue(getApplicationContext()).add(stringRequest);
-
-
-        BottomBar_Admin_Helper.setupBottomBar(this);
+        Volley.newRequestQueue(getActivity()).add(stringRequest);
 
         dangxuat.setOnClickListener(v -> {
-            new AlertDialog.Builder(TrangCaNhan_admin_Activity.this)
+            new AlertDialog.Builder(getActivity())
                     .setTitle("Đăng Xuất")
                     .setMessage("Bạn có chắc chắn muốn đăng xuất?")
                     .setPositiveButton("Có", (dialog, which) -> {
-                        // Xóa trạng thái đăng nhập
                         SharedPreferences.Editor editor = sharedPreferences.edit();
-//                        editor.putBoolean("isLoggedIn", false);
-//                        editor.putString("tendn", null);
                         editor.clear();
                         editor.apply();
 
-                        // Quay lại Activity chính
-                        Intent intent = new Intent(getApplicationContext(), Login_Activity.class);
+                        Intent intent = new Intent(getActivity(), Login_Activity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
-//                        finish(); // Kết thúc activity
-                        finishAffinity();
+                        getActivity().finishAffinity();
                     })
                     .setNegativeButton("Không", null)
                     .show();
         });
-        doimk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), DoiMatKhau_Activity.class);
-                startActivity(intent);
-            }
+
+        doimk.setOnClickListener(viewdmk -> {
+            Intent intent = new Intent(getActivity(), DoiMatKhau_Activity.class);
+            startActivity(intent);
         });
 
         suatt.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), ChinhSuaThongTin_Activity.class);
+            Intent intent = new Intent(getActivity(), ChinhSuaThongTin_Activity.class);
             startActivity(intent);
         });
     }
-
-
 
     private String getSafe(JSONObject obj, String key) {
         try {
@@ -157,6 +154,5 @@ public class TrangCaNhan_admin_Activity extends AppCompatActivity {
             return "Không có thông tin";
         }
     }
-
-
 }
+

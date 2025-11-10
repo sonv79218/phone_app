@@ -5,15 +5,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.widget.ImageButton;
 
-import com.example.tuan17.DonHang_User_Activity;
-import com.example.tuan17.DonHang_admin_Activity;
-import com.example.tuan17.GioHang_Activity;
 import com.example.tuan17.Login_Activity;
 import com.example.tuan17.R;
-import com.example.tuan17.TimKiemSanPham_Activity;
-import com.example.tuan17.TrangCaNhan_admin_Activity;
-import com.example.tuan17.TrangCaNhan_nguoidung_Activity;
-import com.example.tuan17.TrangchuNgdung_Activity;
+import com.example.tuan17.fragments.SearchFragment;
+import com.example.tuan17.UserMainActivity;
+import com.example.tuan17.fragments.CartFragment;
+import com.example.tuan17.fragments.HomeFragment;
+import com.example.tuan17.fragments.OrderFragment;
+import com.example.tuan17.fragments.ProfileFragment;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 public class BottomBar_Helper {
     public static void setupBottomBar(Activity activity) {
@@ -21,39 +23,61 @@ public class BottomBar_Helper {
         ImageButton btnDonHang = activity.findViewById(R.id.btndonhang);
         ImageButton btnGioHang = activity.findViewById(R.id.btncart);
         ImageButton btnCaNhan = activity.findViewById(R.id.btncanhan);
-        ImageButton btnTimKiem = activity.findViewById(R.id.btntimkiem); // nếu có
+        ImageButton btnTimKiem = activity.findViewById(R.id.btntimkiem);
 
-        btnTrangChu.setOnClickListener(view -> {
-            Intent intent = new Intent(activity, TrangchuNgdung_Activity.class);
-            activity.startActivity(intent);
-        });
+        if (activity instanceof UserMainActivity) {
+            FragmentManager fragmentManager = ((UserMainActivity) activity).getSupportFragmentManager();
 
-        btnDonHang.setOnClickListener(view -> {
-            Intent intent = new Intent(activity, DonHang_User_Activity.class);
-            activity.startActivity(intent);
-        });
-
-        btnGioHang.setOnClickListener(view -> {
-            Intent intent = new Intent(activity, GioHang_Activity.class);
-            activity.startActivity(intent);
-        });
-
-        btnCaNhan.setOnClickListener(view -> {
-            SharedPreferences sharedPreferences = activity.getSharedPreferences("MyPrefs", activity.MODE_PRIVATE);
-            boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
-
-            Intent intent = isLoggedIn
-                    ? new Intent(activity, TrangCaNhan_nguoidung_Activity.class)
-                    : new Intent(activity, Login_Activity.class);
-
-            activity.startActivity(intent);
-        });
-
-        if (btnTimKiem != null) {
-            btnTimKiem.setOnClickListener(view -> {
-                Intent intent = new Intent(activity, TimKiemSanPham_Activity.class);
-                activity.startActivity(intent);
+            btnTrangChu.setOnClickListener(view -> {
+                Fragment fragment = new HomeFragment();
+                fragmentManager.beginTransaction()
+                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                        .replace(R.id.fragment_container, fragment)
+                        .commit();
             });
+
+            btnDonHang.setOnClickListener(view -> {
+                Fragment fragment = new OrderFragment();
+                fragmentManager.beginTransaction()
+                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                        .replace(R.id.fragment_container, fragment)
+                        .commit();
+            });
+
+            btnGioHang.setOnClickListener(view -> {
+                Fragment fragment = new CartFragment();
+                fragmentManager.beginTransaction()
+                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                        .replace(R.id.fragment_container, fragment)
+                        .commit();
+            });
+
+            btnCaNhan.setOnClickListener(view -> {
+                SharedPreferences sharedPreferences = activity.getSharedPreferences("MyPrefs", activity.MODE_PRIVATE);
+                boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
+
+                if (isLoggedIn) {
+                    Fragment fragment = new ProfileFragment();
+                    fragmentManager.beginTransaction()
+                            .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                            .replace(R.id.fragment_container, fragment)
+                            .commit();
+                } else {
+                    Intent intent = new Intent(activity, Login_Activity.class);
+                    activity.startActivity(intent);
+                }
+            });
+
+            if (btnTimKiem != null) {
+                btnTimKiem.setOnClickListener(view -> {
+                    Fragment fragment = new SearchFragment();
+                    fragmentManager.beginTransaction()
+                            .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                            .replace(R.id.fragment_container, fragment)
+                            .addToBackStack(null)
+                            .commit();
+                });
+            }
         }
     }
 }

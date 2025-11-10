@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.Request;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.tuan17.fragments.AdminProfileFragment;
 
 import org.json.JSONObject;
 
@@ -87,7 +88,7 @@ public class ChinhSuaThongTin_Activity extends AppCompatActivity {
                         JSONObject json = new JSONObject(response);
                         if (json.getBoolean("success")) {
                             Toast.makeText(this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(this, TrangCaNhan_admin_Activity.class);
+                            Intent intent = new Intent(this, UserMainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
                             finish();

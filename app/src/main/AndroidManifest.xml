@@ -46,11 +46,12 @@
             android:name=".GioHang_Activity"
             android:exported="false" />
         <activity
-            android:name=".ChiTietSanPham_Activity"
+            android:name=".Checkout_Activity"
             android:exported="false" />
         <activity
-            android:name=".TrangchuAdmin_Activity"
+            android:name=".ChiTietSanPham_Activity"
             android:exported="false" />
+        
         <activity
             android:name=".Signup_Activity"
             android:exported="false" />
@@ -79,9 +80,7 @@
         <activity
             android:name=".SuaNhomsanpham_Activity"
             android:exported="false" />
-        <activity
-            android:name=".TrangchuNgdung_Activity"
-            android:exported="false" />
+        
         <activity
             android:name=".Nhomsanpham_admin_Actvity"
             android:exported="false" />
@@ -102,6 +101,12 @@
             android:exported="false" />
         <activity
             android:name=".ChinhSuaThongTin_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".UserMainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

@@ -56,6 +56,17 @@ public class GioHangManager {
         }
         return tong;
     }
+
+    public void removeByProductIds(java.util.Set<String> productIds) {
+        if (productIds == null || productIds.isEmpty()) return;
+        java.util.Iterator<GioHang> it = items.iterator();
+        while (it.hasNext()) {
+            GioHang gh = it.next();
+            if (productIds.contains(gh.getSanPham().getMasp())) {
+                it.remove();
+            }
+        }
+    }
     public void resetTongTien() {
         // Không cần làm gì ở đây, tổng tiền sẽ tự động trở về 0
         // khi giỏ hàng trống, nhưng có thể dùng để thông báo nếu cần.

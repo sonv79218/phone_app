@@ -11,36 +11,11 @@
         android:layout_alignParentTop="true"
         android:padding="1dp">
         <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="60dp">
-            <TextView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="11dp"
-                android:layout_weight="9"
-                android:textAllCaps="true"
-                android:fontFamily="sans-serif-condensed-light"
-                android:paddingTop="20dp"
-                android:gravity="center_horizontal"
-                android:text="xin chao quy khach "
-                android:textColor="#FFFFFF"
-                android:textSize="20dp"
-                android:textStyle="bold" />
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:id="@+id/tendn"
-                />
-        </LinearLayout>
-        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:padding="12dp">
-
             <EditText
                 android:id="@+id/timkiem"
                 android:layout_width="0dp"
@@ -72,22 +47,31 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/bannerPager"
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp" />
+
+                <!--                 Chấm tròn chỉ trang -->
+                <!--                <com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator-->
+                <!--                    android:id="@+id/bannerDots"-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_gravity="bottom|center_horizontal"-->
+                <!--                    android:layout_marginBottom="8dp"/>-->
+            </FrameLayout>
 
 
-            >
-
-<ImageView
-    android:layout_width="match_parent"
-    android:background="@drawable/img_2"
-
-    android:layout_height="180dp">
-
-</ImageView>
-     <TextView
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-              android:layout_marginLeft="10dp"
+                android:layout_marginLeft="10dp"
                 android:fontFamily="sans-serif-condensed"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
@@ -98,26 +82,23 @@
 
             <GridView
                 android:id="@+id/grv2"
-                android:layout_marginLeft="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="110dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
+                android:columnCount="2"
                 android:horizontalSpacing="5dp"
                 android:numColumns="4"
-                android:columnCount="2"
-
                 android:stretchMode="columnWidth"
                 android:verticalSpacing="5dp" />
 
 
-
-
             <!-- Nội dung chính của ứng dụng -->
             <TextView
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
                 android:fontFamily="sans-serif-condensed"
                 android:paddingBottom="10dp"
                 android:text="Đề xuất sản phẩm"
@@ -128,13 +109,13 @@
             <!-- GridView với 5cột -->
             <GridView
                 android:id="@+id/grv1"
-                android:layout_marginLeft="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="730dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
+                android:columnCount="4"
                 android:horizontalSpacing="5dp"
                 android:numColumns="2"
-                android:columnCount="4"
                 android:stretchMode="columnWidth"
                 android:verticalSpacing="5dp" />
 
@@ -143,11 +124,5 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Toolbar ở cuối màn hình -->
-    <include
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        layout="@layout/bottom_toolbar_user" />
 
 </RelativeLayout>

@@ -10,6 +10,12 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
+        <CheckBox
+            android:id="@+id/cbChon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"/>
+
         <ImageView
             android:id="@+id/imgsp"
             android:layout_width="80dp"
@@ -68,14 +74,16 @@
                     android:background="#D8D8D8"
                     android:src="@drawable/tru" />
 
-                <TextView
+                <EditText
                     android:id="@+id/soluongdat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="20dp"
+                    android:layout_width="60dp"
+                    android:layout_height="36dp"
+                    android:inputType="number"
+                    android:gravity="center"
+                    android:textSize="18sp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:text="0" />
+                    android:text="1" />
 
                 <ImageButton
                     android:id="@+id/btnCong"

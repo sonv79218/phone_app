@@ -80,10 +80,10 @@ public class Login_Activity extends AppCompatActivity {
                                 String quyen = json.getString("role");
                                 Intent intent;
                                 if (quyen.equals("admin")) {
-                                    intent = new Intent(Login_Activity.this, TrangchuAdmin_Activity.class);
+                                    intent = new Intent(Login_Activity.this, AdminActivity.class);
                                     Toast.makeText(this, "Đăng nhập Admin", Toast.LENGTH_SHORT).show();
                                 } else if (quyen.equals("user")) {
-                                    intent = new Intent(Login_Activity.this, TrangchuNgdung_Activity.class);
+                                    intent = new Intent(Login_Activity.this, UserMainActivity.class);
                                     Toast.makeText(this, "Đăng nhập User", Toast.LENGTH_SHORT).show();
                                 } else {
                                     Toast.makeText(this, "Quyền không xác định", Toast.LENGTH_SHORT).show();
@@ -139,9 +139,9 @@ public class Login_Activity extends AppCompatActivity {
 
                             Intent intent;
                             if (role.equals("admin")) {
-                                intent = new Intent(Login_Activity.this, TrangchuAdmin_Activity.class);
+                                intent = new Intent(Login_Activity.this, AdminActivity.class);
                             } else {
-                                intent = new Intent(Login_Activity.this, TrangchuNgdung_Activity.class);
+                                intent = new Intent(Login_Activity.this, UserMainActivity.class);
                             }
 
                             startActivity(intent);
