@@ -5,6 +5,7 @@ import static android.content.ContentValues.TAG;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import com.example.tuan17.GioHangManager;
 import com.example.tuan17.R;
 import com.example.tuan17.models.GioHang;
+import com.example.tuan17.util.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -82,7 +84,7 @@ public class GioHangAdapter extends ArrayAdapter<GioHang> {
         }
 
         TextView tensp = convertView.findViewById(R.id.tensp);
-        ImageView imgSanPham = convertView.findViewById(R.id.imgsp);
+        ImageView anh = convertView.findViewById(R.id.imgsp);
         TextView masp = convertView.findViewById(R.id.masp);
         TextView dongia = convertView.findViewById(R.id.dongia);
         EditText soLuong = convertView.findViewById(R.id.soluongdat);
@@ -97,13 +99,10 @@ public class GioHangAdapter extends ArrayAdapter<GioHang> {
         soLuong.setText(String.valueOf(item.getSoLuong()));
         masp.setText(item.getSanPham().getMasp());
 
-        byte[] anhByteArray = item.getSanPham().getAnh();
-        if (anhByteArray != null && anhByteArray.length > 0) {
-            Bitmap imganh = BitmapFactory.decodeByteArray(anhByteArray, 0, anhByteArray.length);
-            imgSanPham.setImageBitmap(imganh);
-        } else {
-            imgSanPham.setImageResource(R.drawable.vest);
-        }
+        // Load ảnh từ file path
+        String imagePath = item.getSanPham().getAnh();
+        ImageLoader.loadFromFile(anh, imagePath, R.drawable.vest);
+
 
         // Checkbox state
         cbChon.setOnCheckedChangeListener(null);

@@ -1,5 +1,6 @@
 package com.example.tuan17.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,8 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.tuan17.ChiTietSanPham_Activity;
+import com.example.tuan17.DanhMucSanPham_Admin_Activity;
 import com.example.tuan17.R;
 import com.example.tuan17.SanPham_TrangChuAdmin_Adapter;
 import com.example.tuan17.adapter.BannerAdapter;
@@ -88,20 +91,24 @@ public class AdminHomeFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 NhomSanPham nhomSanPham = mangNSPgrv2.get(position);
-                if (nhomSanPham != null) {
-                    AdminCategoryFragment fragment = new AdminCategoryFragment();
-                    Bundle args = new Bundle();
-                    args.putString("nhomSpId", nhomSanPham.getMa());
-                    fragment.setArguments(args);
+                Intent intent = new Intent(getContext(), DanhMucSanPham_Admin_Activity.class);
+                intent.putExtra("nhomSpId", nhomSanPham.getMa());
+                startActivity(intent);
 
-                    if (getActivity() != null) {
-                        getActivity().getSupportFragmentManager().beginTransaction()
-                                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                                .replace(R.id.fragment_container, fragment)
-                                .addToBackStack(null)
-                                .commit();
-                    }
-                }
+//                if (nhomSanPham != null) {
+//                    AdminCategoryFragment fragment = new AdminCategoryFragment();
+//                    Bundle args = new Bundle();
+//                    args.putString("nhomSpId", nhomSanPham.getMa());
+//                    fragment.setArguments(args);
+//
+//                    if (getActivity() != null) {
+//                        getActivity().getSupportFragmentManager().beginTransaction()
+//                                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+//                                .replace(R.id.fragment_container, fragment)
+//                                .addToBackStack(null)
+//                                .commit();
+//                    }
+//                }
             }
         });
 
@@ -132,10 +139,14 @@ public class AdminHomeFragment extends Fragment {
                     for (int i = 0; i < response.length(); i++) {
                         try {
                             JSONObject obj = response.getJSONObject(i);
-                            String ma = obj.getString("maso");
-                            String ten = obj.getString("tennsp");
-                            byte[] anh = android.util.Base64.decode(obj.getString("anh"), android.util.Base64.DEFAULT);
-                            mangNSPgrv2.add(new NhomSanPham(ma, ten, anh));
+                            String ma = obj.optString("maso", "");
+                            String ten = obj.optString("tennsp", "");
+                            // Xử lý picurl có thể null
+                            String picurl = obj.optString("picurl", null);
+                            if (picurl != null && (picurl.equals("null") || picurl.isEmpty())) {
+                                picurl = null;
+                            }
+                            mangNSPgrv2.add(new NhomSanPham(ma, ten, picurl));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -155,17 +166,43 @@ public class AdminHomeFragment extends Fragment {
                     for (int i = 0; i < response.length(); i++) {
                         try {
                             JSONObject obj = response.getJSONObject(i);
-                            String masp = obj.getString("masp");
-                            String tensp = obj.getString("tensp");
-                            float dongia = (float) obj.getDouble("dongia");
-                            String mota = obj.getString("mota");
-                            String ghichu = obj.getString("ghichu");
-                            int soluongkho = obj.getInt("soluongkho");
-                            String maso = obj.getString("maso");
-                            byte[] anh = android.util.Base64.decode(obj.getString("anh"), android.util.Base64.DEFAULT);
+                            // Xử lý masp: nếu không có thì dùng maso, nếu maso cũng null thì dùng index
+                            String masp = obj.optString("masp", null);
+                            if (masp == null || masp.equals("null")) {
+                                Object masoObj = obj.opt("maso");
+                                if (masoObj != null && !masoObj.toString().equals("null")) {
+                                    masp = String.valueOf(masoObj);
+                                } else {
+                                    masp = "SP" + i;
+                                }
+                            }
+                            
+                            String tensp = obj.optString("tensp", "");
+                            // Xử lý dongia: có thể là string hoặc number
+                            float dongia = 0;
+                            if (obj.has("dongia") && !obj.isNull("dongia")) {
+                                if (obj.get("dongia") instanceof String) {
+                                    dongia = Float.parseFloat(obj.getString("dongia"));
+                                } else {
+                                    dongia = (float) obj.getDouble("dongia");
+                                }
+                            }
+                            String mota = obj.optString("mota", "");
+                            String ghichu = obj.optString("ghichu", "");
+                            int soluongkho = obj.optInt("soluongkho", 0);
+                            // Xử lý maso có thể null
+                            Object masoObj = obj.opt("maso");
+                            String maso = (masoObj != null && !masoObj.toString().equals("null")) ? String.valueOf(masoObj) : null;
+                            // Xử lý picurl có thể null
+                            String anh = obj.optString("picurl", null);
+                            if (anh != null && (anh.equals("null") || anh.isEmpty())) {
+                                anh = null;
+                            }
 
                             mangSPgrv1.add(new SanPham(masp, tensp, dongia, mota, ghichu, soluongkho, maso, anh));
                         } catch (JSONException e) {
+                            e.printStackTrace();
+                        } catch (NumberFormatException e) {
                             e.printStackTrace();
                         }
                     }
@@ -186,7 +223,7 @@ public class AdminHomeFragment extends Fragment {
         args.putString("ghichu", sanPham.getGhichu());
         args.putInt("soluongkho", sanPham.getSoluongkho());
         args.putString("maso", sanPham.getMansp());
-        args.putByteArray("anh", sanPham.getAnh());
+        args.putString("anh", sanPham.getAnh());
         fragment.setArguments(args);
 
         if (getActivity() != null) {

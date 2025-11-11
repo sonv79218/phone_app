@@ -40,7 +40,7 @@
     <ListView
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"
-        android:id="@+id/listtk"
+        android:id="@+id/productGroupList"
         android:layout_below="@+id/bo"
         android:layout_marginLeft="10dp"
         android:layout_marginBottom="50dp"

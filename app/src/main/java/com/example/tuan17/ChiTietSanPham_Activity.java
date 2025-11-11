@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,10 +23,11 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.tuan17.database.DanhGiaDB;
+//import com.example.tuan17.database.DanhGiaDB;
 import com.example.tuan17.helper.BottomBar_Helper;
 import com.example.tuan17.models.ChiTietSanPham;
 import com.example.tuan17.models.DanhGia;
+import com.example.tuan17.util.ImageLoader;
 
 import org.json.JSONException;
 
@@ -44,7 +46,7 @@ public class ChiTietSanPham_Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chi_tiet_san_pham);
-        DanhGiaDB danhGiaDB = new DanhGiaDB(this);
+//        DanhGiaDB danhGiaDB = new DanhGiaDB(this);
         TextView tvXemDanhGia = findViewById(R.id.tv_danhgia_title);
 
         tvXemDanhGia.setOnClickListener(new View.OnClickListener() {
@@ -79,7 +81,7 @@ public class ChiTietSanPham_Activity extends AppCompatActivity {
         ImageView star5 = findViewById(R.id.star5);
 
         TextView tensp = findViewById(R.id.tensp);
-        ImageView imgsp = findViewById(R.id.imgsp);
+        ImageView anh = findViewById(R.id.imgsp);
         TextView dongia = findViewById(R.id.dongia);
         TextView mota = findViewById(R.id.mota);
         TextView ghichu = findViewById(R.id.ghichu);
@@ -109,13 +111,10 @@ public class ChiTietSanPham_Activity extends AppCompatActivity {
                 dongia.setText(chiTietSanPham.getDongia() != null ? String.valueOf(chiTietSanPham.getDongia()) : "Không có dữ liệu");
                 mota.setText(chiTietSanPham.getMota() != null ? chiTietSanPham.getMota() : "Không có dữ liệu");
                 soluongkho.setText(String.valueOf(chiTietSanPham.getSoluongkho()));
-                byte[] anhByteArray = chiTietSanPham.getAnh();
-                if (anhByteArray != null && anhByteArray.length > 0) {
-                    Bitmap imganhbs = BitmapFactory.decodeByteArray(anhByteArray, 0, anhByteArray.length);
-                    imgsp.setImageBitmap(imganhbs);
-                } else {
-                    imgsp.setImageResource(R.drawable.vest); // Ảnh mặc định
-                }
+                // Load ảnh từ file path
+                String imagePath = chiTietSanPham.getAnh();
+                ImageLoader.loadFromFile(anh, imagePath, R.drawable.vest);
+
             } else {
                 tensp.setText("Không có dữ liệu");
             }

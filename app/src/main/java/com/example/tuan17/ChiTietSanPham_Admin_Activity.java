@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.tuan17.helper.BottomBar_Admin_Helper;
 import com.example.tuan17.models.ChiTietSanPham;
+import com.example.tuan17.util.ImageLoader;
 
 public class ChiTietSanPham_Admin_Activity extends AppCompatActivity {
 
@@ -34,7 +36,7 @@ public class ChiTietSanPham_Admin_Activity extends AppCompatActivity {
 //        btnaddcart = findViewById(R.id.btnaddcart);
         BottomBar_Admin_Helper.setupBottomBar(this);
         TextView tensp = findViewById(R.id.tensp);
-        ImageView imgsp = findViewById(R.id.imgsp);
+        ImageView anh = findViewById(R.id.imgsp);
         TextView dongia = findViewById(R.id.dongia);
         TextView mota = findViewById(R.id.mota);
         TextView soluongkho = findViewById(R.id.soluongkho);
@@ -68,13 +70,10 @@ public class ChiTietSanPham_Admin_Activity extends AppCompatActivity {
                 dongia.setText(chiTietSanPham.getDongia() != null ? String.valueOf(chiTietSanPham.getDongia()) : "Không có dữ liệu");
                 mota.setText(chiTietSanPham.getMota() != null ? chiTietSanPham.getMota() : "Không có dữ liệu");
                 soluongkho.setText(String.valueOf(chiTietSanPham.getSoluongkho()));
-                byte[] anhByteArray = chiTietSanPham.getAnh();
-                if (anhByteArray != null && anhByteArray.length > 0) {
-                    Bitmap imganhbs = BitmapFactory.decodeByteArray(anhByteArray, 0, anhByteArray.length);
-                    imgsp.setImageBitmap(imganhbs);
-                } else {
-                    imgsp.setImageResource(R.drawable.vest); // Ảnh mặc định
-                }
+                // Load ảnh từ file path
+                String imagePath = chiTietSanPham.getAnh();
+                ImageLoader.loadFromFile(anh, imagePath, R.drawable.vest);
+
             } else {
                 tensp.setText("Không có dữ liệu");
             }}

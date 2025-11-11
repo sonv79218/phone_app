@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.example.tuan17.database.Database;
 import com.example.tuan17.models.ChiTietSanPham;
 import com.example.tuan17.models.SanPham;
+import com.example.tuan17.util.ImageLoader;
 
 import java.util.ArrayList;
 
@@ -30,7 +32,6 @@ public class SanPham_TrangChuAdmin_Adapter extends BaseAdapter {
         this.context = context;
         this.spList = spList;
         this.showFullDetails = showFullDetails;
-//        this.database = new Database(context, "banhang.db", null, 1);
     }
 
     @Override
@@ -83,14 +84,11 @@ public class SanPham_TrangChuAdmin_Adapter extends BaseAdapter {
         ghichu.setText(tt.getGhichu());
         soluongkho.setText(String.valueOf(tt.getSoluongkho()));
         manhomsanpham.setText(tt.getMansp());
+        // Load ảnh từ file path
+        String imagePath = tt.getAnh();
+        Log.d("ImageLoader", "🧩 Đang load ảnh: " + imagePath);
+        ImageLoader.loadFromFile(anh, imagePath, R.drawable.vest);
 
-        byte[] anhByteArray = tt.getAnh();
-        if (anhByteArray != null && anhByteArray.length > 0) {
-            Bitmap imganhbs = BitmapFactory.decodeByteArray(anhByteArray, 0, anhByteArray.length);
-            anh.setImageBitmap(imganhbs);
-        } else {
-            anh.setImageResource(R.drawable.vest);
-        }
 
 
         return viewtemp;
@@ -124,13 +122,10 @@ public class SanPham_TrangChuAdmin_Adapter extends BaseAdapter {
         manhomsanpham.setText(tt.getMansp());
 
         // Hiển thị ảnh sản phẩm
-        byte[] anhByteArray = tt.getAnh();
-        if (anhByteArray != null && anhByteArray.length > 0) {
-            Bitmap imganhbs = BitmapFactory.decodeByteArray(anhByteArray, 0, anhByteArray.length);
-            anh.setImageBitmap(imganhbs);
-        } else {
-            anh.setImageResource(R.drawable.vest);
-        }
+        // Load ảnh từ file path
+        String imagePath = tt.getAnh();
+        ImageLoader.loadFromFile(anh, imagePath, R.drawable.vest);
+
 
         // Thêm sự kiện click để chuyển đến trang chi tiết
         viewtemp.setOnClickListener(v -> {

@@ -1,15 +1,11 @@
 package com.example.tuan17.adapter;
 
 import android.app.AlertDialog;
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,9 +13,7 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.tuan17.database.Database;
 import com.example.tuan17.R;
-import com.example.tuan17.database.TaiKhoanDB;
 import com.example.tuan17.models.TaiKhoan;
 
 import org.json.JSONException;
@@ -70,8 +64,8 @@ public class TaiKhoanAdapter extends BaseAdapter {
         TextView matkhau = viewtemp.findViewById(R.id.mk1);
         TextView quyenhang = viewtemp.findViewById(R.id.quyen1);
         TextView trangthai = viewtemp.findViewById(R.id.trangthai1);
-        TextView sua = viewtemp.findViewById(R.id.imgsua);
-        TextView xoa = viewtemp.findViewById(R.id.imgxoa);
+        TextView sua = viewtemp.findViewById(R.id.edit_product_group_button);
+        TextView xoa = viewtemp.findViewById(R.id.delete_product_group_button);
         tendn.setText(tt.getTdn());
        // matkhau.setText(tt.getMk());
         quyenhang.setText(tt.getQuyen());

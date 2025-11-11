@@ -96,7 +96,7 @@
 <!--        android:layout_marginEnd="80dp"-->
 <!--        android:layout_marginTop="8dp" />-->
     <TextView
-        android:id="@+id/imgsua"
+        android:id="@+id/edit_product_group_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Sửa"
@@ -109,7 +109,7 @@
         android:padding="8dp" />
 
     <TextView
-        android:id="@+id/imgxoa"
+        android:id="@+id/delete_product_group_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Chặn"

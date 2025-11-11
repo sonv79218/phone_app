@@ -21,9 +21,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.tuan17.DanhGiaActivity;
 import com.example.tuan17.XemDanhGiaActivity;
-import com.example.tuan17.database.DatabaseHelper;
 import com.example.tuan17.R;
-import com.example.tuan17.database.SanPhamDB;
 import com.example.tuan17.models.ChiTietDonHang;
 
 import org.json.JSONException;

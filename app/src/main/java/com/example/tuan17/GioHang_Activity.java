@@ -1,20 +1,13 @@
 package com.example.tuan17;
 
-import static android.content.ContentValues.TAG;
-
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Base64;
-import android.util.Log;
 import android.view.Gravity;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,8 +16,7 @@ import com.android.volley.Request;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.tuan17.adapter.GioHangAdapter;
-import com.example.tuan17.database.Database;
-import com.example.tuan17.database.DonHangDB;
+//import com.example.tuan17.database.DonHangDB;
 import com.example.tuan17.helper.BottomBar_Helper;
 import com.example.tuan17.helper.SharedPrefHelper;
 import com.example.tuan17.models.GioHang;
@@ -48,7 +40,7 @@ public class GioHang_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gio_hang);
         thanhtoan = findViewById(R.id.btnthanhtoan);
-        listView = findViewById(R.id.listtk);
+        listView = findViewById(R.id.productGroupList);
         TextView textTendn = findViewById(R.id.tendn);
 
 
@@ -128,11 +120,12 @@ public class GioHang_Activity extends AppCompatActivity {
                                     String masp = item.getSanPham().getMasp();
                                     int soluong = item.getSoLuong();
                                     float dongia = item.getSanPham().getDongia();
-                                    byte[] anhByte = item.getSanPham().getAnh();
-                                    String base64Image = Base64.encodeToString(anhByte, Base64.DEFAULT);
+                                    String anh = item.getSanPham().getAnh();
+//                                    byte[] anhByte = item.getSanPham().getAnh();
+//                                    String base64Image = Base64.encodeToString(anhByte, Base64.DEFAULT);
 //                                    Log.d(TAG, "123: "+ base64Image);
                                     // Gọi API thêm chi tiết
-                                    themChiTietDonHang(orderId, masp, soluong, dongia, base64Image);
+                                    themChiTietDonHang(orderId, masp, soluong, dongia, anh);
                                 }
 
                                 Toast.makeText(this, "Đặt hàng thành công!", Toast.LENGTH_SHORT).show();

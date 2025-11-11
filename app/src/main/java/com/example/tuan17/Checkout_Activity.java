@@ -2,7 +2,6 @@ package com.example.tuan17;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Base64;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -84,21 +83,22 @@ public class Checkout_Activity extends AppCompatActivity {
 
                             int orderId = obj.getInt("id");
 
-                            // Gửi chi tiết từng sản phẩm
                             for (GioHang item : selectedItems) {
                                 String masp = item.getSanPham().getMasp();
                                 int soluong = item.getSoLuong();
                                 float dongia = item.getSanPham().getDongia();
-                                byte[] anhByte = item.getSanPham().getAnh();
-                                String base64Image = (anhByte != null)
-                                        ? Base64.encodeToString(anhByte, Base64.DEFAULT)
-                                        : "";
-                                themChiTietDonHang(orderId, masp, soluong, dongia, base64Image);
+                                String imageUrl = null;
+                                try {
+                                    // prefer URL if available on model
+                                    java.lang.reflect.Method m = item.getSanPham().getClass().getMethod("getAnhUrl");
+                                    Object url = m.invoke(item.getSanPham());
+                                    imageUrl = url != null ? url.toString() : "";
+                                } catch (Exception ignored) {}
+                                themChiTietDonHang(orderId, masp, soluong, dongia, imageUrl != null ? imageUrl : "");
                             }
 
                             Toast.makeText(this, "Đặt hàng thành công!", Toast.LENGTH_SHORT).show();
 
-                            // Xóa hàng đã chọn khỏi giỏ
                             Set<String> ids = new HashSet<>();
                             for (GioHang g : selectedItems) ids.add(g.getSanPham().getMasp());
                             gioHangManager.removeByProductIds(ids);
@@ -131,7 +131,7 @@ public class Checkout_Activity extends AppCompatActivity {
         });
     }
 
-    private void themChiTietDonHang(int idDonHang, String masp, int soluong, float dongia, String base64Anh) {
+    private void themChiTietDonHang(int idDonHang, String masp, int soluong, float dongia, String imageUrl) {
         String url = "http://10.0.2.2:3000/chitietdathang";
 
         StringRequest request = new StringRequest(Request.Method.POST, url,
@@ -144,7 +144,7 @@ public class Checkout_Activity extends AppCompatActivity {
                 params.put("masp", masp);
                 params.put("soluong", String.valueOf(soluong));
                 params.put("dongia", String.valueOf(dongia));
-                params.put("anh", base64Anh);
+                params.put("picurl", imageUrl != null ? imageUrl : "");
                 return params;
             }
         };

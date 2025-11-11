@@ -45,8 +45,8 @@ public class AdminAccountManagementFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        lv = view.findViewById(R.id.listtk);
-        dauconggocphai = view.findViewById(R.id.btnthem);
+        lv = view.findViewById(R.id.productGroupList);
+        dauconggocphai = view.findViewById(R.id.addProductGroupButton);
 
         mangTK = new ArrayList<>();
         adapter = new TaiKhoanAdapter(getActivity(), R.layout.ds_taikhoan, mangTK);

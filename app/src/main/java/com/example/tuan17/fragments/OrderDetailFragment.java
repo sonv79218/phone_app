@@ -40,7 +40,7 @@ public class OrderDetailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        listViewChiTiet = view.findViewById(R.id.listtk);
+        listViewChiTiet = view.findViewById(R.id.productGroupList);
 
         Bundle args = getArguments();
         String donHangIdStr = args != null ? args.getString("donHangId") : null;

@@ -11,9 +11,9 @@ public class ChiTietSanPham implements Parcelable {
     int soluongkho;
 
     String mansp;
-    byte[] anh;
-
-    public ChiTietSanPham(String masp, String tensp, Float dongia, String mota, String ghichu, int soluongkho, String mansp, byte[] anh) {
+//    byte[] anh;
+String anh;
+    public ChiTietSanPham(String masp, String tensp, Float dongia, String mota, String ghichu, int soluongkho, String mansp, String anh) {
         this.masp = masp;
         this.tensp = tensp;
         this.dongia = dongia;
@@ -80,11 +80,11 @@ public class ChiTietSanPham implements Parcelable {
         this.mansp = ma;
     }
 
-    public byte[] getAnh() {
+    public String getAnh() {
         return anh;
     }
 
-    public void setAnh(byte[] anh) {
+    public void setAnh(String anh) {
         this.anh = anh;
     }
 
@@ -99,8 +99,8 @@ public class ChiTietSanPham implements Parcelable {
         mota = in.readString();
         ghichu = in.readString();
         soluongkho = in.readInt();
-       mansp = in.readString();
-        anh = in.createByteArray();
+        mansp = in.readString();
+          anh = in.readString();
     }
     public static final Creator<ChiTietSanPham> CREATOR = new Creator<ChiTietSanPham>   () {
         @Override
@@ -121,7 +121,7 @@ public class ChiTietSanPham implements Parcelable {
         dest.writeString(ghichu);
         dest.writeInt(soluongkho);
         dest.writeString(mansp);
-        dest.writeByteArray(anh);
+        dest.writeString(anh);
     }
 
 }

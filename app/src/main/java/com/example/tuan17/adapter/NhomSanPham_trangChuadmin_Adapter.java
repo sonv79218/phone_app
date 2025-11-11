@@ -2,8 +2,6 @@ package com.example.tuan17.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.tuan17.R;
-import com.example.tuan17.database.Database;
 import com.example.tuan17.models.NhomSanPham;
+import com.example.tuan17.util.ImageLoader;
 
 import java.util.ArrayList;
 
@@ -23,13 +21,10 @@ public class NhomSanPham_trangChuadmin_Adapter  extends BaseAdapter {
     private ArrayList<NhomSanPham> nhomSanPhamList;
     private boolean showFullDetails;
 
-//  Database database;
-
     public NhomSanPham_trangChuadmin_Adapter(Activity context, ArrayList<NhomSanPham> nhomSanPhamList, boolean showFullDetails) {
         this.context = context;
         this.nhomSanPhamList = nhomSanPhamList;
         this.showFullDetails = showFullDetails;
-//        this.database = new Database(context, "banhang.db", null, 1);
     }
 
     @Override
@@ -63,25 +58,18 @@ public class NhomSanPham_trangChuadmin_Adapter  extends BaseAdapter {
         }
 
         NhomSanPham nhomSanPham = nhomSanPhamList.get(position);
-        TextView ten = view.findViewById(R.id.ten);
-        TextView id = view.findViewById(R.id.idma);
-        ImageView anh = view.findViewById(R.id.imgnsp);
-        ImageButton xoa = view.findViewById(R.id.imgxoa);
-        ImageButton sua = view.findViewById(R.id.imgsua);
+        TextView ten = view.findViewById(R.id.product_group_name);
+        TextView id = view.findViewById(R.id.product_group_id);
+        ImageView imgnsp = view.findViewById(R.id.product_group_img);
+        ImageButton xoa = view.findViewById(R.id.delete_product_group_button);
+        ImageButton sua = view.findViewById(R.id.edit_product_group_button);
 
         id.setText(nhomSanPham.getMa());
         ten.setText(nhomSanPham.getTennhom());
 
-        byte[] anhByteArray = nhomSanPham.getAnh();
-        if (anhByteArray != null && anhByteArray.length > 0) {
-            Bitmap imganhbs = BitmapFactory.decodeByteArray(anhByteArray, 0, anhByteArray.length);
-            anh.setImageBitmap(imganhbs);
-        } else {
-            anh.setImageResource(R.drawable.vest);
-        }
-
-
-
+        // Load ảnh từ file path
+        String imagePath = nhomSanPham.getAnh();
+        ImageLoader.loadFromFile(imgnsp, imagePath, R.drawable.vest);
         return view;
     }
 
@@ -92,20 +80,16 @@ public class NhomSanPham_trangChuadmin_Adapter  extends BaseAdapter {
         }
 
         NhomSanPham nhomSanPham = nhomSanPhamList.get(position);
-        TextView ten = view.findViewById(R.id.ten);
-        TextView id = view.findViewById(R.id.idma);
-        ImageView anh = view.findViewById(R.id.imgnsp);
+        TextView ten = view.findViewById(R.id.product_group_name);
+        TextView id = view.findViewById(R.id.product_group_id);
+        ImageView imgnsp = view.findViewById(R.id.product_group_img);
 
         id.setText(nhomSanPham.getMa());
         ten.setText(nhomSanPham.getTennhom());
 
-        byte[] anhByteArray = nhomSanPham.getAnh();
-        if (anhByteArray != null && anhByteArray.length > 0) {
-            Bitmap imganhbs = BitmapFactory.decodeByteArray(anhByteArray, 0, anhByteArray.length);
-            anh.setImageBitmap(imganhbs);
-        } else {
-            anh.setImageResource(R.drawable.vest);
-        }
+        // Load ảnh từ file path
+        String imagePath = nhomSanPham.getAnh();
+        ImageLoader.loadFromFile(imgnsp, imagePath, R.drawable.vest);
 
         return view;
     }

@@ -4,9 +4,9 @@ public class NhomSanPham {
 
     String ma;
     String tennhom;
-    byte[] anh;
+    String anh;
 
-    public NhomSanPham(String ma, String tennhom, byte[] anh) {
+    public NhomSanPham(String ma, String tennhom, String anh) {
         this.ma = ma;
         this.tennhom = tennhom;
         this.anh = anh;
@@ -19,20 +19,16 @@ public class NhomSanPham {
     public void setMa(String ma) {
         this.ma = ma;
     }
-
     public String getTennhom() {
         return tennhom;
     }
-
     public void setTennhom(String tennhom) {
         this.tennhom = tennhom;
     }
-
-    public byte[] getAnh() {
+    public String getAnh() {
         return anh;
     }
-
-    public void setAnh(byte[] anh) {
+    public void setAnh(String anh) {
         this.anh = anh;
     }
     public String toString() {

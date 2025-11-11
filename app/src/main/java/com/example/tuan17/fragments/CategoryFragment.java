@@ -70,17 +70,40 @@ public class CategoryFragment extends Fragment {
 
                         for (int i = 0; i < dataArray.length(); i++) {
                             JSONObject obj = dataArray.getJSONObject(i);
-                            String masp = obj.getString("masp");
-                            String tensp = obj.getString("tensp");
-                            float dongia = (float) obj.getDouble("dongia");
-                            String mota = obj.getString("mota");
-                            String ghichu = obj.getString("ghichu");
-                            int soluongkho = obj.getInt("soluongkho");
-                            String masoSp = obj.getString("maso");
-                            String anhBase64 = obj.optString("anh", null);
-                            byte[] anhBytes = (anhBase64 != null) ? android.util.Base64.decode(anhBase64, android.util.Base64.DEFAULT) : null;
+                            // Xử lý masp: nếu không có thì dùng maso, nếu maso cũng null thì dùng index
+                            String masp = obj.optString("masp", null);
+                            if (masp == null || masp.equals("null")) {
+                                Object masoObj = obj.opt("maso");
+                                if (masoObj != null && !masoObj.toString().equals("null")) {
+                                    masp = String.valueOf(masoObj);
+                                } else {
+                                    masp = "SP" + i;
+                                }
+                            }
+                            
+                            String tensp = obj.optString("tensp", "");
+                            // Xử lý dongia: có thể là string hoặc number
+                            float dongia = 0;
+                            if (obj.has("dongia") && !obj.isNull("dongia")) {
+                                if (obj.get("dongia") instanceof String) {
+                                    dongia = Float.parseFloat(obj.getString("dongia"));
+                                } else {
+                                    dongia = (float) obj.getDouble("dongia");
+                                }
+                            }
+                            String mota = obj.optString("mota", "");
+                            String ghichu = obj.optString("ghichu", "");
+                            int soluongkho = obj.optInt("soluongkho", 0);
+                            // Xử lý maso có thể null
+                            Object masoObj = obj.opt("maso");
+                            String masoSp = (masoObj != null && !masoObj.toString().equals("null")) ? String.valueOf(masoObj) : null;
+                            // Xử lý picurl có thể null
+                            String anh = obj.optString("picurl", null);
+                            if (anh != null && (anh.equals("null") || anh.isEmpty())) {
+                                anh = null;
+                            }
 
-                            SanPham sp = new SanPham(masp, tensp, dongia, mota, ghichu, soluongkho, masoSp, anhBytes);
+                            SanPham sp = new SanPham(masp, tensp, dongia, mota, ghichu, soluongkho, masoSp, anh);
                             productList.add(sp);
                         }
 
@@ -110,7 +133,7 @@ public class CategoryFragment extends Fragment {
         args.putString("ghichu", sanPham.getGhichu());
         args.putInt("soluongkho", sanPham.getSoluongkho());
         args.putString("maso", sanPham.getMansp());
-        args.putByteArray("anh", sanPham.getAnh());
+        args.putString("picurl", sanPham.getAnh());
         fragment.setArguments(args);
 
         if (getActivity() != null) {

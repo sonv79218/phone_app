@@ -174,7 +174,7 @@
     </TableLayout>
 
     <ImageButton
-        android:id="@+id/imgsua"
+        android:id="@+id/edit_product_group_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/edit"
@@ -182,7 +182,7 @@
         android:layout_marginLeft="290dp" />
 
     <ImageButton
-        android:id="@+id/imgxoa"
+        android:id="@+id/delete_product_group_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/xoa1"

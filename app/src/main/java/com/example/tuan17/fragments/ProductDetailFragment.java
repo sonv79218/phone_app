@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,9 +26,11 @@ import com.example.tuan17.GioHangManager;
 import com.example.tuan17.Login_Activity;
 import com.example.tuan17.R;
 import com.example.tuan17.models.ChiTietSanPham;
+import com.example.tuan17.util.ImageLoader;
 
 import org.json.JSONException;
 
+import java.io.File;
 import java.util.function.Consumer;
 
 public class ProductDetailFragment extends Fragment {
@@ -58,7 +61,7 @@ public class ProductDetailFragment extends Fragment {
         star5 = view.findViewById(R.id.star5);
 
         TextView tensp = view.findViewById(R.id.tensp);
-        ImageView imgsp = view.findViewById(R.id.imgsp);
+        ImageView anh = view.findViewById(R.id.imgsp);
         TextView dongia = view.findViewById(R.id.dongia);
         TextView mota = view.findViewById(R.id.mota);
         TextView ghichu = view.findViewById(R.id.ghichu);
@@ -75,9 +78,10 @@ public class ProductDetailFragment extends Fragment {
             String ghichuStr = args.getString("ghichu");
             int soluongkhoInt = args.getInt("soluongkho");
             String maso = args.getString("maso");
-            byte[] anh = args.getByteArray("anh");
+//            byte[] anh = args.getByteArray("anh");
+String imagePath = args.getString("picurl");
 
-            chiTietSanPham = new ChiTietSanPham(masp, tenspStr, dongiaFloat, motaStr, ghichuStr, soluongkhoInt, maso, anh);
+            chiTietSanPham = new ChiTietSanPham(masp, tenspStr, dongiaFloat, motaStr, ghichuStr, soluongkhoInt, maso, imagePath);
 
             tensp.setText(tenspStr);
             ghichu.setText(ghichuStr);
@@ -85,12 +89,9 @@ public class ProductDetailFragment extends Fragment {
             mota.setText(motaStr != null ? motaStr : "Không có dữ liệu");
             soluongkho.setText(String.valueOf(soluongkhoInt));
 
-            if (anh != null && anh.length > 0) {
-                Bitmap imganhbs = BitmapFactory.decodeByteArray(anh, 0, anh.length);
-                imgsp.setImageBitmap(imganhbs);
-            } else {
-                imgsp.setImageResource(R.drawable.vest);
-            }
+            // Load ảnh từ file path
+            ImageLoader.loadFromFile(anh, imagePath, R.drawable.vest);
+
 
             if (masp != null) {
                 try {

@@ -45,7 +45,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:id="@+id/ten"
+                android:id="@+id/product_group_name"
                 android:background="@drawable/edittext"
 
                 android:drawablePadding="8dp"
@@ -64,7 +64,7 @@
                 <ImageView
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:id="@+id/imgnsp"
+                    android:id="@+id/product_group_img"
                     android:background="@drawable/edittext"
 
                     android:drawablePadding="8dp"

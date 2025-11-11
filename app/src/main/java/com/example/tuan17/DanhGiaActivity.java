@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.tuan17.database.DanhGiaDB;
+//import com.example.tuan17.database.DanhGiaDB;
 import com.example.tuan17.models.DanhGia;
 
 import java.text.SimpleDateFormat;
@@ -28,7 +28,7 @@ public class DanhGiaActivity extends AppCompatActivity {
     private RatingBar ratingBar;
     private EditText editTextNoiDung;
     private Button btnGui;
-    private DanhGiaDB danhGiaDB;
+//    private DanhGiaDB danhGiaDB;
     private int sanPhamId;  // bạn truyền vào khi gọi Activity
     private int userId;     // truyền
     private int ChitietDonhangId; // truyền
@@ -43,7 +43,7 @@ public class DanhGiaActivity extends AppCompatActivity {
 
 
         btnGui = findViewById(R.id.btnGuiDanhGia);
-        danhGiaDB = new DanhGiaDB(this);
+//        danhGiaDB = new DanhGiaDB(this);
 
         ChitietDonhangId = getIntent().getIntExtra("chitietdonhangId", -1);
         sanPhamId = getIntent().getIntExtra("sanPhamId", -1);

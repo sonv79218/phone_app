@@ -3,14 +3,9 @@ package com.example.tuan17;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Base64;
-import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -18,8 +13,7 @@ import com.android.volley.Request;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.tuan17.adapter.SanPhamAdapter;
-import com.example.tuan17.database.Database;
-import com.example.tuan17.database.SanPhamDB;
+
 import com.example.tuan17.helper.BottomBar_Admin_Helper;
 import com.example.tuan17.models.SanPham;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -37,18 +31,12 @@ public class Sanpham_admin_Activity extends AppCompatActivity {
     private FloatingActionButton addButton;
     private ArrayList<SanPham> mangSP;
     private SanPhamAdapter adapter;
-
-//    private SanPhamDB sanPhamDB;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sanpham_admin);
-//        sanPhamDB = new SanPhamDB(this);
-
-        lv = findViewById(R.id.listtk);
-        addButton = findViewById(R.id.btnthem);
-
+        lv = findViewById(R.id.productGroupList);
+        addButton = findViewById(R.id.addProductGroupButton);
         mangSP = new ArrayList<>();
         adapter = new SanPhamAdapter(Sanpham_admin_Activity.this, mangSP, true);
         lv.setAdapter(adapter);
@@ -59,34 +47,6 @@ public class Sanpham_admin_Activity extends AppCompatActivity {
         });
         BottomBar_Admin_Helper.setupBottomBar(this);
     }
-
-
-//    private void loadData() {
-//        String url = "http://10.0.2.2:3000/sanpham/all";
-//        StringRequest request = new StringRequest(Request.Method.GET, url,
-//                response -> {
-//            try{
-//                JSONArray jsonArray = new JSONArray(response);
-//                mangSP.clear();
-//                for( int i = 0; i< jsonArray.length(); i++){
-//                    JSONObject obj = jsonArray.getJSONObject(i);
-//                    String maso = obj.getString("maso");
-//                    String tensp = obj.getString("tensp");
-//                    String ghichu = obj.getString("ghichu");
-//                    String dongia = obj.getString("dongia");
-//                    String soluongkho = obj.getString("soluongkho");
-//                    String anh = obj.getString("anh");
-//                    byte[] imageBytes = Base64.decode(base64Image, Base64.DEFAULT);
-//                    SanPham sp = new SanPham()
-//                }
-//            }
-//                },
-//                error -> {})
-//
-//        mangSP.clear();
-//        mangSP.addAll(sanPhamDB.getAllSanPham());
-//        adapter.notifyDataSetChanged();
-//    }
 private void loadData() {
     String url = "http://10.0.2.2:3000/sanpham/all";
 
@@ -94,29 +54,58 @@ private void loadData() {
             response -> {
                 try {
                     JSONArray jsonArray = new JSONArray(response);
-                    mangSP.clear(); // xóa dữ liệu cũ nếu có
+                    mangSP.clear();
 
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject obj = jsonArray.getJSONObject(i);
 
-                        String masp = obj.getString("masp");
-                        String tensp = obj.getString("tensp");
-                        String dongiaStr = obj.getString("dongia");
-                        String mota = obj.getString("mota");
-                        String ghichu = obj.getString("ghichu");
-                        String soluongkhoStr = obj.getString("soluongkho");
-                        String maso = obj.getString("maso");
-                        String anhBase64 = obj.getString("anh");
+                        // Xử lý masp: nếu không có thì dùng maso, nếu maso cũng null thì dùng index
+                        String masp = obj.optString("masp", null);
+                        if (masp == null || masp.equals("null")) {
+                            Object masoObj = obj.opt("maso");
+                            if (masoObj != null && !masoObj.toString().equals("null")) {
+                                masp = String.valueOf(masoObj);
+                            } else {
+                                masp = "SP" + i;
+                            }
+                        }
+                        
+                        String tensp = obj.optString("tensp", "");
+                        // Xử lý dongia: có thể là string hoặc number
+                        float dongia = 0;
+                        if (obj.has("dongia") && !obj.isNull("dongia")) {
+                            if (obj.get("dongia") instanceof String) {
+                                dongia = Float.parseFloat(obj.getString("dongia"));
+                            } else {
+                                dongia = (float) obj.getDouble("dongia");
+                            }
+                        }
+                        String mota = obj.optString("mota", "");
+                        String ghichu = obj.optString("ghichu", "");
+                        // Xử lý soluongkho: có thể là string hoặc number
+                        int soluongkho = 0;
+                        if (obj.has("soluongkho") && !obj.isNull("soluongkho")) {
+                            if (obj.get("soluongkho") instanceof String) {
+                                soluongkho = Integer.parseInt(obj.getString("soluongkho"));
+                            } else {
+                                soluongkho = obj.getInt("soluongkho");
+                            }
+                        }
+                        // Xử lý maso có thể null
+                        Object masoObj = obj.opt("maso");
+                        String maso = (masoObj != null && !masoObj.toString().equals("null")) ? String.valueOf(masoObj) : null;
+                        // Xử lý picurl có thể null
+                        String anh = obj.optString("picurl", null);
+                        if (anh != null && (anh.equals("null") || anh.isEmpty())) {
+                            anh = null;
+                        }
 
-                        // Parse dữ liệu
-                        float dongia = Float.parseFloat(dongiaStr);
-                        int soluongkho = Integer.parseInt(soluongkhoStr);
-                        byte[] imageBytes = Base64.decode(anhBase64, Base64.DEFAULT);
+//                        byte[] imageBytes = Base64.decode(anhBase64, Base64.DEFAULT);
 
                         // Tạo sản phẩm theo constructor đầy đủ
                         SanPham sp = new SanPham(
                                 masp, tensp, dongia, mota, ghichu,
-                                soluongkho, maso, imageBytes
+                                soluongkho, maso, anh
                         );
 
                         mangSP.add(sp);

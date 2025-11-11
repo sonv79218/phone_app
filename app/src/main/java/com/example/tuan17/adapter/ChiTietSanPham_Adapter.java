@@ -2,8 +2,6 @@ package com.example.tuan17.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +14,7 @@ import com.example.tuan17.ChiTietSanPham_Activity;
 import com.example.tuan17.R;
 import com.example.tuan17.models.ChiTietSanPham;
 import com.example.tuan17.models.SanPham;
+import com.example.tuan17.util.ImageLoader;
 
 import java.util.ArrayList;
 
@@ -76,8 +75,8 @@ public class ChiTietSanPham_Adapter extends BaseAdapter {
         TextView soluongkho = viewtemp.findViewById(R.id.soluongkho);
         TextView manhomsanpham = viewtemp.findViewById(R.id.manhomsanpham);
         ImageView anh = viewtemp.findViewById(R.id.imgsp);
-        ImageButton sua = viewtemp.findViewById(R.id.imgsua);
-        ImageButton xoa = viewtemp.findViewById(R.id.imgxoa);
+        ImageButton sua = viewtemp.findViewById(R.id.edit_product_group_button);
+        ImageButton xoa = viewtemp.findViewById(R.id.delete_product_group_button);
 
         // Hiển thị thông tin bác sĩ
         masp.setText(tt.getMasp());
@@ -89,13 +88,10 @@ public class ChiTietSanPham_Adapter extends BaseAdapter {
         manhomsanpham.setText(tt.getMansp());
 
         // Hiển thị ảnh
-        byte[] anhByteArray = tt.getAnh();
-        if (anhByteArray != null && anhByteArray.length > 0) {
-            Bitmap imganh = BitmapFactory.decodeByteArray(anhByteArray, 0, anhByteArray.length);
-            anh.setImageBitmap(imganh);
-        } else {
-            anh.setImageResource(R.drawable.vest);
-        }
+        // Load ảnh từ file path
+        String imagePath = tt.getAnh();
+        ImageLoader.loadFromFile(anh, imagePath, R.drawable.vest);
+
 
 
 
@@ -129,14 +125,10 @@ public class ChiTietSanPham_Adapter extends BaseAdapter {
         soluongkho.setText(String.valueOf(tt.getSoluongkho())); // Chuyển đổi Integer thành String
         manhomsanpham.setText(tt.getMansp());
 
-        // Hiển thị ảnh sản phẩm
-        byte[] anhByteArray = tt.getAnh();
-        if (anhByteArray != null && anhByteArray.length > 0) {
-            Bitmap imganhbs = BitmapFactory.decodeByteArray(anhByteArray, 0, anhByteArray.length);
-            anh.setImageBitmap(imganhbs);
-        } else {
-            anh.setImageResource(R.drawable.vest);
-        }
+        // Load ảnh từ file path
+        String imagePath = tt.getAnh();
+        ImageLoader.loadFromFile(anh, imagePath, R.drawable.vest);
+
 
         // Thêm sự kiện click để chuyển đến trang chi tiết
         viewtemp.setOnClickListener(v -> {

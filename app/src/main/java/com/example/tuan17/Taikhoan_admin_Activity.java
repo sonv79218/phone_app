@@ -3,19 +3,15 @@ package com.example.tuan17;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.tuan17.adapter.TaiKhoanAdapter;
-import com.example.tuan17.database.Database;
-import com.example.tuan17.database.TaiKhoanDB;
+//import com.example.tuan17.database.TaiKhoanDB;
 import com.example.tuan17.helper.BottomBar_Admin_Helper;
 import com.example.tuan17.models.TaiKhoan;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -41,8 +37,8 @@ public class Taikhoan_admin_Activity extends AppCompatActivity {
         setContentView(R.layout.activity_taikhoan_admin);
 
 //        taiKhoanDB = new TaiKhoanDB(this);
-        lv = findViewById(R.id.listtk);
-        dauconggocphai = findViewById(R.id.btnthem);
+        lv = findViewById(R.id.productGroupList);
+        dauconggocphai = findViewById(R.id.addProductGroupButton);
         BottomBar_Admin_Helper.setupBottomBar(this);
 
         mangTK = new ArrayList<>();

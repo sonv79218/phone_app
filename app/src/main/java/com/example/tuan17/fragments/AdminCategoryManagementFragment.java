@@ -1,14 +1,19 @@
 package com.example.tuan17.fragments;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -29,10 +34,15 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class AdminCategoryManagementFragment extends Fragment {
-    private ListView lv;
-    private FloatingActionButton addButton;
-    private ArrayList<NhomSanPham> mangNSP;
-    private NhomSanPhamAdapter adapter;
+
+    private ListView productGroupList;
+    private FloatingActionButton addProductGroupButton;
+    private ArrayList<NhomSanPham> productGroupArray;
+    private NhomSanPhamAdapter productGroupAdapter;
+    private ActivityResultLauncher<Intent> pickImageLauncher;
+    private Uri selectedImageUri;
+    private NhomSanPham currentEditingProductGroup;
+    private ImageView currentPreviewImage;
 
     @Nullable
     @Override
@@ -44,19 +54,49 @@ public class AdminCategoryManagementFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        productGroupList = view.findViewById(R.id.productGroupList);
+        addProductGroupButton = view.findViewById(R.id.addProductGroupButton);
+        productGroupArray = new ArrayList<>();
+        productGroupAdapter = new NhomSanPhamAdapter(getActivity(), productGroupArray, true);
+        productGroupList.setAdapter(productGroupAdapter);
 
-        lv = view.findViewById(R.id.listtk);
-        addButton = view.findViewById(R.id.btnthem);
-
-        mangNSP = new ArrayList<>();
-        adapter = new NhomSanPhamAdapter(getActivity(), mangNSP, true);
-        lv.setAdapter(adapter);
-        loadData();
-
-        addButton.setOnClickListener(v -> {
+        // Nút thêm nhóm sản phẩm
+        addProductGroupButton.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), ThemNhomSanPham_Activity.class);
             startActivity(intent);
         });
+
+        // ✅ Gắn callback chọn ảnh
+        productGroupAdapter.setOnImageSelectListener((nhomSanPham, previewImage) -> {
+            currentEditingProductGroup = nhomSanPham;
+            currentPreviewImage = previewImage;
+            Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            pickImageLauncher.launch(intent);
+        });
+
+        // ✅ Khởi tạo ActivityResultLauncher cho chọn ảnh
+        pickImageLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        selectedImageUri = result.getData().getData();
+
+                        if (selectedImageUri != null && currentPreviewImage != null && currentEditingProductGroup != null) {
+                            // Cập nhật ảnh hiển thị ngay trong dialog
+                            currentPreviewImage.setImageURI(selectedImageUri);
+
+                            // Lưu lại URI ảnh vào model và adapter
+                            currentEditingProductGroup.setAnh(selectedImageUri.toString());
+                            productGroupAdapter.setSelectedImageUri(selectedImageUri);
+                        }
+                    }
+                }
+        );
+
+        productGroupAdapter.setOnProductGroupUpdatedListener(() -> {
+            loadData(); // gọi lại API GET để load danh sách mới
+        });
+        loadData();
     }
 
     @Override
@@ -71,17 +111,16 @@ public class AdminCategoryManagementFragment extends Fragment {
                 response -> {
                     try {
                         JSONArray jsonArray = new JSONArray(response);
-                        mangNSP.clear();
+                        productGroupArray.clear();
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject obj = jsonArray.getJSONObject(i);
-                            String maso = obj.getString("maso");
-                            String tennsp = obj.getString("tennsp");
-                            String base64Image = obj.getString("anh");
-                            byte[] imageBytes = Base64.decode(base64Image, Base64.DEFAULT);
-                            NhomSanPham nsp = new NhomSanPham(maso, tennsp, imageBytes);
-                            mangNSP.add(nsp);
+                            String maso = obj.optString("maso", "");
+                            String tennsp = obj.optString("tennsp", "");
+                            String picurl = obj.optString("picurl", "");
+                            NhomSanPham nsp = new NhomSanPham(maso, tennsp, picurl);
+                            productGroupArray.add(nsp);
                         }
-                        adapter.notifyDataSetChanged();
+                        productGroupAdapter.notifyDataSetChanged();
                     } catch (JSONException e) {
                         e.printStackTrace();
                         Toast.makeText(getActivity(), "Lỗi xử lý dữ liệu", Toast.LENGTH_SHORT).show();
@@ -94,4 +133,3 @@ public class AdminCategoryManagementFragment extends Fragment {
         Volley.newRequestQueue(getActivity()).add(request);
     }
 }
-

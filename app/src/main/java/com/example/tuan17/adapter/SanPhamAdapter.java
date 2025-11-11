@@ -2,78 +2,86 @@ package com.example.tuan17.adapter;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
+
+import androidx.annotation.NonNull;
 
 import com.android.volley.Request;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.tuan17.ChiTietSanPham_Activity;
-import com.example.tuan17.database.Database;
-import com.example.tuan17.models.NhomSanPham;
 import com.example.tuan17.R;
 import com.example.tuan17.models.ChiTietSanPham;
+import com.example.tuan17.models.NhomSanPham;
 import com.example.tuan17.models.SanPham;
+import com.example.tuan17.util.ImageLoader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public  class SanPhamAdapter extends BaseAdapter {
-// format lai phan nay
-    private Context context;
-    private Uri selectedImageUri; // Biến lưu trữ URI đã chọn
-    private static final int REQUEST_CODE_PICK_IMAGE = 1; // Định nghĩa mã yêu cầu
-    private ArrayList<SanPham> spList;
-    private boolean showFullDetails; // Biến để xác định xem có hiển thị 7 thuộc tính hay không
-    private Database database;
+public class SanPhamAdapter extends BaseAdapter {
 
-    public SanPhamAdapter(Context context, ArrayList<SanPham> spList, boolean showFullDetails) {
+    private Context context;
+    private Uri selectedImageUri;
+    private static final int REQUEST_CODE_PICK_IMAGE = 1;
+    private ArrayList<SanPham> productList;
+    private boolean getViewAdminManagement;
+    private ArrayList<NhomSanPham> mangNSPList = new ArrayList<>();
+    //
+
+    public interface OnProductGroupUpdatedListener {
+        void onProductGroupUpdated();
+    }
+
+    private NhomSanPhamAdapter.OnProductGroupUpdatedListener updateListener;
+
+    public void setOnProductGroupUpdatedListener(NhomSanPhamAdapter.OnProductGroupUpdatedListener listener) {
+        this.updateListener = listener;
+    }
+
+    //
+    public interface OnImageSelectListener {
+        void onSelectImageRequested(SanPham product, ImageView previewImage);
+    }
+
+    private SanPhamAdapter.OnImageSelectListener onImageSelectListener;
+
+    public void setOnImageSelectListener(SanPhamAdapter.OnImageSelectListener listener) {
+        this.onImageSelectListener = listener;
+    }
+    //
+
+
+    public SanPhamAdapter(Context context, ArrayList<SanPham> productList, boolean getViewAdminManagement) {
         this.context = context;
-        this.spList = spList;
-        this.showFullDetails = showFullDetails; // Khởi tạo biến
-//        this.database = new Database(context, "banhang.db", null, 1);
+        this.productList = productList;
+        this.getViewAdminManagement = getViewAdminManagement;
     }
 
     @Override
     public int getCount() {
-        return spList.size();
+        return productList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return spList.get(position);
-    }
-
-    public void setSelectedImageUri(Uri uri) {
-        this.selectedImageUri = uri; // Setter để cập nhật URI
+        return productList.get(position);
     }
 
     @Override
@@ -81,247 +89,219 @@ public  class SanPhamAdapter extends BaseAdapter {
         return position;
     }
 
+    public void setSelectedImageUri(Uri uri) {
+        this.selectedImageUri = uri;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (showFullDetails) {
-            return getViewWith8Properties(position, convertView, parent);
-        } else {
-            return getViewWith4Properties(position, convertView, parent);
-        }
+        return getViewAdminManagement ?
+                getViewAdminManagement(position, convertView, parent) :
+                getViewHome(position, convertView, parent);
     }
 
+    private View getViewAdminManagement(int i, View view, ViewGroup parent) {
+        View viewtemp = (view == null)
+                ? LayoutInflater.from(parent.getContext()).inflate(R.layout.ds_sanpham, parent, false)
+                : view;
 
-//hiển thị toàn bộ sản phẩm
+        SanPham product = productList.get(i);
+        TextView productIdTextView = viewtemp.findViewById(R.id.masp);
+        TextView productNameTextView = viewtemp.findViewById(R.id.tensp);
+        TextView productPriceTextView = viewtemp.findViewById(R.id.dongia);
+        TextView productDescriptionTextView = viewtemp.findViewById(R.id.mota);
+        TextView productNoteTextView = viewtemp.findViewById(R.id.ghichu);
+        TextView productStockQuantityTextView = viewtemp.findViewById(R.id.soluongkho);
+        TextView productGroupIdTextView = viewtemp.findViewById(R.id.manhomsanpham);
+        ImageView productImageView = viewtemp.findViewById(R.id.imgsp);
+        ImageButton editProductButton = viewtemp.findViewById(R.id.edit_product_group_button);
+        ImageButton deleteProductButton = viewtemp.findViewById(R.id.delete_product_group_button);
 
-    public View getViewWith8Properties(int i, View view, ViewGroup parent) {
-        View viewtemp;
-        if (view == null) {
-            viewtemp = LayoutInflater.from(parent.getContext()).inflate(R.layout.ds_sanpham, parent, false);
-        } else {
-            viewtemp = view;
-        }
+        productIdTextView.setText(product.getMasp());
+        productNameTextView.setText(product.getTensp());
+        productPriceTextView.setText(String.valueOf(product.getDongia()));
+        productDescriptionTextView.setText(product.getMota());
+        productNoteTextView.setText(product.getGhichu());
+        productStockQuantityTextView.setText(String.valueOf(product.getSoluongkho()));
+        productGroupIdTextView.setText(product.getMansp());
+        // Load ảnh từ file path
+        String imagePath = product.getAnh();
+        ImageLoader.loadFromFile(productImageView, imagePath, R.drawable.vest);
 
-        SanPham tt = spList.get(i);
-        TextView masp = viewtemp.findViewById(R.id.masp);
-        TextView tensp = viewtemp.findViewById(R.id.tensp);
-        TextView dongia = viewtemp.findViewById(R.id.dongia);
-        TextView mota = viewtemp.findViewById(R.id.mota);
-        TextView ghichu = viewtemp.findViewById(R.id.ghichu);
-        TextView soluongkho = viewtemp.findViewById(R.id.soluongkho);
-        TextView manhomsanpham = viewtemp.findViewById(R.id.manhomsanpham);
-        ImageView anh = viewtemp.findViewById(R.id.imgsp);
-        ImageButton sua = viewtemp.findViewById(R.id.imgsua);
-        ImageButton xoa = viewtemp.findViewById(R.id.imgxoa);
-
-        // Hiển thị thông tin
-        masp.setText(tt.getMasp());
-        tensp.setText(tt.getTensp());
-        dongia.setText(String.valueOf(tt.getDongia())); // Chuyển đổi Float thành String
-        mota.setText(tt.getMota());
-        ghichu.setText(tt.getGhichu());
-        soluongkho.setText(String.valueOf(tt.getSoluongkho())); // Chuyển đổi Integer thành String
-        manhomsanpham.setText(tt.getMansp());
-
-        // Hiển thị ảnh
-        byte[] anhByteArray = tt.getAnh();
-        if (anhByteArray != null && anhByteArray.length > 0) {
-            Bitmap imganhbs = BitmapFactory.decodeByteArray(anhByteArray, 0, anhByteArray.length);
-            anh.setImageBitmap(imganhbs);
-        } else {
-            anh.setImageResource(R.drawable.vest);
-        }
-
-        // Sự kiện cho nút "Sửa"
-        sua.setOnClickListener(view1 -> showEditDialog(tt));
-
-
-        xoa.setOnClickListener(v -> {
-            new AlertDialog.Builder(parent.getContext())
-                    .setTitle("Xác nhận")
-                    .setMessage("Bạn có chắc chắn muốn xóa sản phẩm này?")
-                    .setPositiveButton("Có", (dialog, which) -> {
-                        String masp1 = tt.getMasp(); // mã sản phẩm cần xóa
-                        String url = "http://10.0.2.2:3000/sanpham/" + masp1;
-
-                        StringRequest request = new StringRequest(Request.Method.DELETE, url,
-                                response -> {
-                                    spList.remove(i);
-                                    notifyDataSetChanged(); // cập nhật giao diện
-                                    Toast.makeText(parent.getContext(), "Xóa sản phẩm thành công", Toast.LENGTH_SHORT).show();
-                                },
-                                error -> {
-                                    error.printStackTrace();
-                                    Toast.makeText(parent.getContext(), "Lỗi khi xóa sản phẩm", Toast.LENGTH_SHORT).show();
-                                });
-
-                        Volley.newRequestQueue(parent.getContext()).add(request);
-                    })
-                    .setNegativeButton("Không", (dialog, which) -> dialog.dismiss())
-                    .show();
-        });
-
-
+        editProductButton.setOnClickListener(view1 -> showEditDialog(product));
+        deleteProductButton.setOnClickListener(v -> confirmDelete(parent, i, product));
         return viewtemp;
     }
-    public View getViewWith4Properties(int i, View view, ViewGroup parent) {
-        View viewtemp;
-        if (view == null) {
-            viewtemp = LayoutInflater.from(parent.getContext()).inflate(R.layout.ds_hienthi_gridview1_nguoidung, parent, false);
-        } else {
-            viewtemp = view;
-        }
 
-        SanPham tt = spList.get(i);
-        TextView masp = viewtemp.findViewById(R.id.masp);
-        TextView tensp = viewtemp.findViewById(R.id.tensp);
-        TextView dongia = viewtemp.findViewById(R.id.dongia);
-        TextView mota = viewtemp.findViewById(R.id.mota);
-        TextView ghichu = viewtemp.findViewById(R.id.ghichu);
-        TextView soluongkho = viewtemp.findViewById(R.id.soluongkho);
-        TextView manhomsanpham = viewtemp.findViewById(R.id.manhomsanpham);
+    private void confirmDelete(ViewGroup parent, int i, SanPham tt) {
+        new AlertDialog.Builder(parent.getContext())
+                .setTitle("Xác nhận")
+                .setMessage("Bạn có chắc chắn muốn xóa sản phẩm này?")
+                .setPositiveButton("Có", (dialog, which) -> {
+                    String masp1 = tt.getMasp();
+                    String url = "http://10.0.2.2:3000/sanpham/" + masp1;
+
+                    StringRequest request = new StringRequest(Request.Method.DELETE, url,
+                            response -> {
+                                productList.remove(i);
+                                notifyDataSetChanged();
+                                Toast.makeText(parent.getContext(), "Xóa thành công", Toast.LENGTH_SHORT).show();
+                            },
+                            error -> Toast.makeText(parent.getContext(), "Lỗi xóa sản phẩm", Toast.LENGTH_SHORT).show());
+                    Volley.newRequestQueue(parent.getContext()).add(request);
+                })
+                .setNegativeButton("Không", (dialog, which) -> dialog.dismiss())
+                .show();
+    }
+
+
+    private View getViewHome(int i, View view, ViewGroup parent) {
+        View viewtemp = (view == null)
+                ? LayoutInflater.from(parent.getContext()).inflate(R.layout.ds_hienthi_gridview1_nguoidung, parent, false)
+                : view;
+
+        SanPham tt = productList.get(i);
+        ((TextView) viewtemp.findViewById(R.id.masp)).setText(tt.getMasp());
+        ((TextView) viewtemp.findViewById(R.id.tensp)).setText(tt.getTensp());
+        ((TextView) viewtemp.findViewById(R.id.dongia)).setText(String.valueOf(tt.getDongia()));
+
         ImageView anh = viewtemp.findViewById(R.id.imgsp);
+        // Load ảnh từ file path
+        String imagePath = tt.getAnh();
+        ImageLoader.loadFromFile(anh, imagePath, R.drawable.vest);
 
-        // Hiển thị thông tin sản phẩm
-        masp.setText(tt.getMasp());
-        tensp.setText(tt.getTensp());
-        dongia.setText(String.valueOf(tt.getDongia())); // Chuyển đổi Float thành String
-        mota.setText(tt.getMota());
-        ghichu.setText(String.valueOf(tt.getGhichu()));
-        soluongkho.setText(String.valueOf(tt.getSoluongkho())); // Chuyển đổi Integer thành String
-        manhomsanpham.setText(tt.getMansp());
-
-        // Hiển thị ảnh sản phẩm
-        byte[] anhByteArray = tt.getAnh();
-        if (anhByteArray != null && anhByteArray.length > 0) {
-            Bitmap imganhbs = BitmapFactory.decodeByteArray(anhByteArray, 0, anhByteArray.length);
-            anh.setImageBitmap(imganhbs);
-        } else {
-            anh.setImageResource(R.drawable.vest);
-        }
-
-        // Thêm sự kiện click để chuyển đến trang chi tiết
         viewtemp.setOnClickListener(v -> {
             Intent intent = new Intent(parent.getContext(), ChiTietSanPham_Activity.class);
             ChiTietSanPham chiTietSanPham = new ChiTietSanPham(
-                    tt.getMasp(),
-                    tt.getTensp(),
-                    tt.getDongia(),
-                    tt.getMota(),
-                    tt.getGhichu(),
-                    tt.getSoluongkho(),
-                    tt.getMansp(),
-                    tt.getAnh()
-            );
-            intent.putExtra("chitietsanpham", chiTietSanPham); // Truyền đối tượng ChiTietSanPham
+                    tt.getMasp(), tt.getTensp(), tt.getDongia(), tt.getMota(),
+                    tt.getGhichu(), tt.getSoluongkho(), tt.getMansp(), tt.getAnh());
+            intent.putExtra("chitietsanpham", chiTietSanPham);
             parent.getContext().startActivity(intent);
         });
-
         return viewtemp;
     }
-    // Hàm hiển thị dialog sửa thông tin
-    private void showEditDialog(SanPham tt) {
+
+
+    private void showEditDialog(SanPham product) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         View dialogView = LayoutInflater.from(context).inflate(R.layout.activity_sua_san_pham, null);
         builder.setView(dialogView);
 
-        // Các trường EditText và Spinner
-        EditText editMasp = dialogView.findViewById(R.id.masp);
-        EditText editTensp = dialogView.findViewById(R.id.tensp);
-        EditText editDongia = dialogView.findViewById(R.id.dongia);
-        EditText editMota = dialogView.findViewById(R.id.mota);
-        EditText editGhichu = dialogView.findViewById(R.id.ghichu);
-        EditText editSoluongkho = dialogView.findViewById(R.id.soluongkho);
-        Spinner mansp = dialogView.findViewById(R.id.manhomsanpham);
-        ImageView imgsp = dialogView.findViewById(R.id.imgsp);
+        EditText editProductIdEditText = dialogView.findViewById(R.id.masp);
+        EditText editProductNameEditText = dialogView.findViewById(R.id.tensp);
+        EditText editProductPriceEditText = dialogView.findViewById(R.id.dongia);
+        EditText editProductDescriptionEditText = dialogView.findViewById(R.id.mota);
+        EditText editProductNoteEditText = dialogView.findViewById(R.id.ghichu);
+        EditText editProductStockQuantityEditText = dialogView.findViewById(R.id.soluongkho);
+        Spinner editProductGroupSpinner = dialogView.findViewById(R.id.manhomsanpham);
+        ImageView editProductImagePreview = dialogView.findViewById(R.id.imgsp);
+        Button editSelectImageButton = dialogView.findViewById(R.id.btnAddImg);
 
-        // Load danh sách nhóm sản phẩm
-           loadTenNhomSanPham(mansp);
+        loadTenNhomSanPham(editProductGroupSpinner);
 
-        // Điền dữ liệu hiện tại vào các trường
-        editMasp.setText(tt.getMasp());
-        editTensp.setText(tt.getTensp());
-        editDongia.setText(String.valueOf(tt.getDongia()));
-        editMota.setText(tt.getMota());
-        editGhichu.setText(tt.getGhichu());
-        editSoluongkho.setText(String.valueOf(tt.getSoluongkho()));
+        editProductIdEditText.setText(product.getMasp());
+        editProductNameEditText.setText(product.getTensp());
+        editProductPriceEditText.setText(String.valueOf(product.getDongia()));
+        editProductDescriptionEditText.setText(product.getMota());
+        editProductNoteEditText.setText(product.getGhichu());
+        editProductStockQuantityEditText.setText(String.valueOf(product.getSoluongkho()));
+//        hiển thị ảnh có sẵn
+        ImageLoader.loadFromFile(editProductImagePreview, product.getAnh(), R.drawable.vest);
 
-        // Chọn nhóm sản phẩm hiện tại (dựa trên maso)
-        for (int i = 0; i < mangNSPList.size(); i++) {
-            if (mangNSPList.get(i).getMa().equals(tt.getMansp())) {
-                mansp.setSelection(i);
-                break;
+        // Khi bấm "Chọn ảnh" → gọi callback cho Activity
+        editSelectImageButton.setOnClickListener(v -> {
+            if (onImageSelectListener != null) {
+                onImageSelectListener.onSelectImageRequested(product, editProductImagePreview);
             }
-        }
-
-        // Hiển thị ảnh sản phẩm
-        byte[] anhByteArray = tt.getAnh();
-        if (anhByteArray != null && anhByteArray.length > 0) {
-            Bitmap imganhbs = BitmapFactory.decodeByteArray(anhByteArray, 0, anhByteArray.length);
-            imgsp.setImageBitmap(imganhbs);
-        } else {
-            imgsp.setImageResource(R.drawable.vest);
-        }
-        // Sự kiện chọn ảnh từ drawable
-        Button imgAddanh = dialogView.findViewById(R.id.btnAddImg);
-        imgAddanh.setOnClickListener(v1 -> openDrawableImagePicker(imgsp));
-        // Sự kiện chọn ảnh từ bộ nhớ
-        imgsp.setOnClickListener(imgView -> {
-            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            ((Activity) context).startActivityForResult(intent, REQUEST_CODE_PICK_IMAGE);
         });
-
-        builder.setPositiveButton("Lưu", (dialog, which) -> {
-            // Cập nhật thông tin sản phẩm
-            updateSanPham(tt, editMasp, editTensp, editDongia, editMota, editGhichu, editSoluongkho, mansp);
-        });
+        builder.setPositiveButton("Lưu", (dialog, which) ->
+                updateSanPham(product, editProductIdEditText, editProductNameEditText, editProductPriceEditText, editProductDescriptionEditText, editProductNoteEditText, editProductStockQuantityEditText, editProductGroupSpinner, editProductImagePreview));
 
         builder.setNegativeButton("Hủy", (dialog, which) -> dialog.dismiss());
         builder.show();
     }
 
-    private void updateSanPham(SanPham tt, EditText editMasp, EditText editTensp, EditText editDongia, EditText editMota,
-                               EditText editGhichu, EditText editSoluongkho, Spinner editMansp) {
-        String newMasp = editMasp.getText().toString().trim(); // Có thể bỏ nếu masp không được sửa
-        String newTensp = editTensp.getText().toString().trim();
-        String newDongiaStr = editDongia.getText().toString().trim();
-        String newMota = editMota.getText().toString().trim();
-        String newGhichu = editGhichu.getText().toString().trim();
-        String newSoluongStr = editSoluongkho.getText().toString().trim();
-        String newMansp = ((NhomSanPham) editMansp.getSelectedItem()).getMa(); // lấy maso
+    private void updateSanPham(
+            SanPham product,
+            @NonNull EditText editProductIdEditText,
+            EditText editProductNameEditText,
+            EditText editProductPriceEditText,
+            EditText editProductDescriptionEditText,
+            EditText editProductNoteEditText,
+            EditText editProductStockQuantityEditText,
+            Spinner editProductGroupSpinner,
+            ImageView editProductImagePreview
+    ) {
+        // 🔹 Lấy dữ liệu từ các EditText
+        String newProductId = editProductIdEditText.getText().toString().trim();
+        String newProductName = editProductNameEditText.getText().toString().trim();
+        String newDescription = editProductDescriptionEditText.getText().toString().trim();
+        String newNote = editProductNoteEditText.getText().toString().trim();
+        String newGroupId = ((NhomSanPham) editProductGroupSpinner.getSelectedItem()).getMa();
 
-        // Ảnh (base64)
-        byte[] newAnhBytes = selectedImageUri != null ? getBytesFromUri(selectedImageUri) : null;
-        String base64Image = (newAnhBytes != null) ? Base64.encodeToString(newAnhBytes, Base64.DEFAULT) : "";
-
-        // Kiểm tra định dạng
-        float newDongia;
-        int newSoluongkho;
+        // 🔹 Chuyển đổi giá & số lượng với kiểm tra lỗi
+        float newPrice;
+        int newStockQuantity;
         try {
-            newDongia = Float.parseFloat(newDongiaStr);
-            newSoluongkho = Integer.parseInt(newSoluongStr);
+            newPrice = Float.parseFloat(editProductPriceEditText.getText().toString().trim());
         } catch (NumberFormatException e) {
-            Toast.makeText(context, "Giá hoặc số lượng không hợp lệ", Toast.LENGTH_SHORT).show();
-            return;
+            newPrice = product.getDongia(); // giữ nguyên nếu lỗi
+        }
+        try {
+            newStockQuantity = Integer.parseInt(editProductStockQuantityEditText.getText().toString().trim());
+        } catch (NumberFormatException e) {
+            newStockQuantity = product.getSoluongkho(); // giữ nguyên nếu lỗi
         }
 
-        // Gọi API cập nhật
-        String url = "http://10.0.2.2:3000/sanpham/" + tt.getMasp(); // dùng mã gốc để cập nhật
+        // 🔹 Nếu không nhập tên mới thì giữ nguyên
+        if (newProductName.isEmpty()) {
+            newProductName = product.getTensp();
+        }
+        if (newDescription.isEmpty()) {
+            newDescription = product.getMota();
+        }
+        if (newNote.isEmpty()) {
+            newNote = product.getGhichu();
+        }
+
+        // 🔹 Xử lý ảnh (chọn ảnh mới thì copy lại, không thì giữ ảnh cũ)
+        String newImagePath = product.getAnh();
+        if (selectedImageUri != null) {
+            String copiedPath = copyImageToAppStorage(selectedImageUri);
+            if (copiedPath != null) {
+                newImagePath = copiedPath;
+            } else {
+                Toast.makeText(context, "Lỗi khi sao chép ảnh mới!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
+        // 🔹 URL API PUT
+        String url = "http://10.0.2.2:3000/sanpham/" + product.getMasp();
+
+        // 🔹 Gửi yêu cầu cập nhật
+        String finalNewProductName = newProductName;
+        String finalNewDescription = newDescription;
+        String finalNewNote = newNote;
+        String finalNewImagePath = newImagePath;
+        String finalNewGroupId = newGroupId;
+        float finalNewPrice = newPrice;
+        int finalNewStockQuantity = newStockQuantity;
 
         StringRequest request = new StringRequest(Request.Method.PUT, url,
                 response -> {
-                    // Cập nhật dữ liệu local nếu cần
-                    tt.setTensp(newTensp);
-                    tt.setDongia(newDongia);
-                    tt.setMota(newMota);
-                    tt.setGhichu(newGhichu);
-                    tt.setSoluongkho(newSoluongkho);
-                    tt.setMansp(newMansp);
-                    if (newAnhBytes != null) {
-                        tt.setAnh(newAnhBytes);
-                    }
+                    product.setTensp(finalNewProductName);
+                    product.setDongia(finalNewPrice);
+                    product.setSoluongkho(finalNewStockQuantity);
+                    product.setMansp(finalNewGroupId);
+                    product.setAnh(finalNewImagePath);
+                    product.setMota(finalNewDescription);
+                    product.setGhichu(finalNewNote);
 
-                    notifyDataSetChanged(); // cập nhật giao diện
-                    Toast.makeText(context, "Cập nhật sản phẩm thành công", Toast.LENGTH_SHORT).show();
+                    notifyDataSetChanged();
+                    Toast.makeText(context, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+
+                    if (updateListener != null) updateListener.onProductGroupUpdated();
                 },
                 error -> {
                     error.printStackTrace();
@@ -329,96 +309,85 @@ public  class SanPhamAdapter extends BaseAdapter {
                 }
         ) {
             @Override
-            protected Map<String, String> getParams() {
+            public byte[] getBody() {
                 Map<String, String> params = new HashMap<>();
-                params.put("tensp", newTensp);
-                params.put("dongia", String.valueOf(newDongia));
-                params.put("mota", newMota);
-                params.put("ghichu", newGhichu);
-                params.put("soluongkho", String.valueOf(newSoluongkho));
-                params.put("maso", newMansp); // nhóm sản phẩm
-                params.put("anh", base64Image); // có thể rỗng nếu không chọn ảnh mới
-                return params;
+                params.put("tensp", finalNewProductName);
+                params.put("dongia", String.valueOf(finalNewPrice));
+                params.put("mota", finalNewDescription);
+                params.put("ghichu", finalNewNote);
+                params.put("soluongkho", String.valueOf(finalNewStockQuantity));
+                params.put("maso", finalNewGroupId); // ⚠️ trùng tên với backend
+                params.put("picurl", finalNewImagePath != null ? finalNewImagePath : "");
+
+                StringBuilder body = new StringBuilder();
+                for (Map.Entry<String, String> entry : params.entrySet()) {
+                    if (body.length() != 0) body.append("&");
+                    body.append(entry.getKey())
+                            .append("=")
+                            .append(Uri.encode(entry.getValue()));
+                }
+
+                return body.toString().getBytes();
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded; charset=UTF-8";
             }
         };
+
 
         Volley.newRequestQueue(context).add(request);
     }
 
-    // Phương thức để mở hộp thoại chọn ảnh từ drawable
-    private void openDrawableImagePicker(ImageView imgBacSi) {
-        final String[] imageNames = {"huawei1","huawei2","iphone1", "iphone2","iphone3","iphone4", "lg1","lg2","nokia1", "oppo1","oppo2","samsung1", "samsung2","samsung3","vivo1","vivo2"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Chọn ảnh từ drawable");
-        builder.setItems(imageNames, (dialog, which) -> {
-            // Lấy tên hình ảnh đã chọn
-            String selectedImageName = imageNames[which];
-
-            // Lấy ID tài nguyên drawable
-            int resourceId = context.getResources().getIdentifier(selectedImageName, "drawable", context.getPackageName());
-
-            // Cập nhật ImageView
-            imgBacSi.setImageResource(resourceId);
-
-            // Cập nhật URI
-            selectedImageUri = Uri.parse("android.resource://" + context.getPackageName() + "/" + resourceId);
-        });
-        builder.show();
-    }
-
-    private ArrayList<NhomSanPham> mangNSPList;
-    private ArrayList<SanPham> mangSPList;
-
-    // Chuyển đổi URI thành mảng byte
-    private byte[] getBytesFromUri(Uri uri) {
-        if (uri == null) {
-            return null; // Trả về null nếu URI không hợp lệ
-        }
-        try {
-            InputStream inputStream = context.getContentResolver().openInputStream(uri);
-            ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024];
-            int len;
-            while ((len = inputStream.read(buffer)) != -1) {
-                byteBuffer.write(buffer, 0, len);
-            }
-            return byteBuffer.toByteArray(); // Trả về mảng byte của ảnh
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
     private void loadTenNhomSanPham(Spinner mansp) {
-        mangNSPList = new ArrayList<>();
         String url = "http://10.0.2.2:3000/nhomsanpham";
-
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 response -> {
                     try {
                         JSONArray array = new JSONArray(response);
+                        mangNSPList.clear();
                         for (int i = 0; i < array.length(); i++) {
                             JSONObject obj = array.getJSONObject(i);
-                            String maso = obj.getString("maso");
-                            String tennsp = obj.getString("tennsp");
-                            mangNSPList.add(new NhomSanPham(maso, tennsp, null));
+                            mangNSPList.add(new NhomSanPham(
+                                    obj.getString("maso"),
+                                    obj.getString("tennsp"), null));
                         }
-
-                        // Tạo adapter
                         ArrayAdapter<NhomSanPham> adapter = new ArrayAdapter<>(context,
                                 android.R.layout.simple_spinner_item, mangNSPList);
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         mansp.setAdapter(adapter);
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        Toast.makeText(context, "Lỗi phân tích JSON", Toast.LENGTH_SHORT).show();
                     }
                 },
-                error -> {
-                    error.printStackTrace();
-                    Toast.makeText(context, "Lỗi kết nối máy chủ", Toast.LENGTH_SHORT).show();
-                });
-
+                error -> Toast.makeText(context, "Lỗi kết nối máy chủ", Toast.LENGTH_SHORT).show());
         Volley.newRequestQueue(context).add(request);
     }
+    private String copyImageToAppStorage(Uri uri) {
+        try {
+            InputStream inputStream = context.getContentResolver().openInputStream(uri);
+            File directory = new File(context.getExternalFilesDir("images"), "");
+            if (!directory.exists()) directory.mkdirs();
 
+            String fileName = "img_" + System.currentTimeMillis() + ".png";
+            File newFile = new File(directory, fileName);
+
+            FileOutputStream outputStream = new FileOutputStream(newFile);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+
+            outputStream.close();
+            inputStream.close();
+            // In your API, you might host this file and return a URL; for now we keep local path
+            return newFile.getAbsolutePath();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(context, "Lỗi sao chép ảnh!", Toast.LENGTH_SHORT).show();
+            return null;
+        }
+    }
 }

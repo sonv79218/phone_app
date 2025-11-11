@@ -7,7 +7,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.tuan17.R;
-import com.example.tuan17.database.TaiKhoanDB;
 import com.example.tuan17.models.Order;
 
 import java.util.List;

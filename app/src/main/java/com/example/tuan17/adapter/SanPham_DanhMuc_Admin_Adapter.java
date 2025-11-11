@@ -17,6 +17,7 @@ import com.example.tuan17.database.Database;
 import com.example.tuan17.R;
 import com.example.tuan17.models.ChiTietSanPham;
 import com.example.tuan17.models.SanPham;
+import com.example.tuan17.util.ImageLoader;
 
 import java.util.ArrayList;
 
@@ -85,13 +86,10 @@ public class SanPham_DanhMuc_Admin_Adapter extends BaseAdapter {
         soluongkho.setText(String.valueOf(tt.getSoluongkho()));
         manhomsanpham.setText(tt.getMansp());
 
-        byte[] anhByteArray = tt.getAnh();
-        if (anhByteArray != null && anhByteArray.length > 0) {
-            Bitmap imganhbs = BitmapFactory.decodeByteArray(anhByteArray, 0, anhByteArray.length);
-            anh.setImageBitmap(imganhbs);
-        } else {
-            anh.setImageResource(R.drawable.vest);
-        }
+        // Load ảnh từ file path
+        String imagePath = tt.getAnh();
+        ImageLoader.loadFromFile(anh, imagePath, R.drawable.vest);
+
 
         // Thay đổi ở đây: Truyền thêm thông tin sản phẩm khi người dùng nhấn vào sản phẩm
         viewtemp.setOnClickListener(v -> {
@@ -139,13 +137,10 @@ public class SanPham_DanhMuc_Admin_Adapter extends BaseAdapter {
         soluongkho.setText(String.valueOf(tt.getSoluongkho()));
         manhomsanpham.setText(tt.getMansp());
 
-        byte[] anhByteArray = tt.getAnh();
-        if (anhByteArray != null && anhByteArray.length > 0) {
-            Bitmap imganhbs = BitmapFactory.decodeByteArray(anhByteArray, 0, anhByteArray.length);
-            anh.setImageBitmap(imganhbs);
-        } else {
-            anh.setImageResource(R.drawable.vest);
-        }
+        // Load ảnh từ file path
+        String imagePath = tt.getAnh();
+        ImageLoader.loadFromFile(anh, imagePath, R.drawable.vest);
+
 
         viewtemp.setOnClickListener(v -> {
             Intent intent = new Intent(parent.getContext(), ChiTietSanPham_Admin_Activity.class);

@@ -3,7 +3,6 @@ package com.example.tuan17.fragments;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Base64;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,7 +54,7 @@ public class CartFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         thanhtoan = view.findViewById(R.id.btnthanhtoan);
-        listView = view.findViewById(R.id.listtk);
+        listView = view.findViewById(R.id.productGroupList);
         TextView textTendn = view.findViewById(R.id.tendn);
 
         String tendn = SharedPrefHelper.getUsername(getActivity());
@@ -150,9 +149,10 @@ public class CartFragment extends Fragment {
                                     String masp = item.getSanPham().getMasp();
                                     int soluong = item.getSoLuong();
                                     float dongia = item.getSanPham().getDongia();
-                                    byte[] anhByte = item.getSanPham().getAnh();
-                                    String base64Image = Base64.encodeToString(anhByte, Base64.DEFAULT);
-                                    themChiTietDonHang(orderId, masp, soluong, dongia, base64Image);
+//                                    byte[] anhByte = item.getSanPham().getAnh();
+//                                    String base64Image = Base64.encodeToString(anhByte, Base64.DEFAULT);
+                                    String anh = item.getSanPham().getAnh();
+                                    themChiTietDonHang(orderId, masp, soluong, dongia, anh);
                                 }
 
                                 Toast.makeText(getActivity(), "Đặt hàng thành công!", Toast.LENGTH_SHORT).show();

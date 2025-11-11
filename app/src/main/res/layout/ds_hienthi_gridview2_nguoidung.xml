@@ -23,7 +23,7 @@
             app:cardCornerRadius="7dp"
             app:cardElevation="0dp"> <!-- Căn giữa CardView -->
             <ImageView
-                android:id="@+id/imgnsp"
+                android:id="@+id/product_group_img"
                 android:layout_width="80dp"
                 android:layout_height="40dp"
                 android:src="@mipmap/ic_launcher" /> <!-- Thay your_image bằng ảnh của bạn -->
@@ -39,7 +39,7 @@
             android:orientation="vertical"> <!-- Căn giữa LinearLayout -->
 
             <TextView
-                android:id="@+id/ten"
+                android:id="@+id/product_group_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -54,7 +54,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/idma"
+        android:id="@+id/product_group_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="1sp" />

@@ -1,14 +1,19 @@
 package com.example.tuan17.fragments;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -19,6 +24,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.tuan17.R;
 import com.example.tuan17.ThemSanPham_Activity;
 import com.example.tuan17.adapter.SanPhamAdapter;
+import com.example.tuan17.models.NhomSanPham;
 import com.example.tuan17.models.SanPham;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -29,10 +35,17 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class AdminProductManagementFragment extends Fragment {
-    private ListView lv;
-    private FloatingActionButton addButton;
-    private ArrayList<SanPham> mangSP;
-    private SanPhamAdapter adapter;
+    private ListView productListView;
+    private FloatingActionButton addNewProductButton;
+    private ArrayList<SanPham> productArrayList;
+    private SanPhamAdapter productAdapter;
+    private ActivityResultLauncher<Intent> pickImageLauncher;
+    private ImageView currentPreviewImage;
+    private Uri selectedImageUri;
+
+    private SanPham currentEditingProduct;
+
+
 
     @Nullable
     @Override
@@ -45,17 +58,47 @@ public class AdminProductManagementFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        lv = view.findViewById(R.id.listtk);
-        addButton = view.findViewById(R.id.btnthem);
+        productListView = view.findViewById(R.id.productGroupList);
+        addNewProductButton = view.findViewById(R.id.addProductGroupButton);
 
-        mangSP = new ArrayList<>();
-        adapter = new SanPhamAdapter(getActivity(), mangSP, true);
-        lv.setAdapter(adapter);
+        productArrayList = new ArrayList<>();
+        productAdapter = new SanPhamAdapter(getActivity(), productArrayList, true);
+        productListView.setAdapter(productAdapter);
         loadData();
 
-        addButton.setOnClickListener(v -> {
+        addNewProductButton.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), ThemSanPham_Activity.class);
             startActivity(intent);
+        });
+        // ✅ Gắn callback chọn ảnh
+        productAdapter.setOnImageSelectListener((product, previewImage) -> {
+            currentEditingProduct = product;
+            currentPreviewImage = previewImage;
+            Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            pickImageLauncher.launch(intent);
+        });
+
+        // ✅ Khởi tạo ActivityResultLauncher cho chọn ảnh
+        pickImageLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        selectedImageUri = result.getData().getData();
+
+                        if (selectedImageUri != null && currentPreviewImage != null && currentEditingProduct != null) {
+                            // Cập nhật ảnh hiển thị ngay trong dialog
+                            currentPreviewImage.setImageURI(selectedImageUri);
+
+                            // Lưu lại URI ảnh vào model và adapter
+                            currentEditingProduct.setAnh(selectedImageUri.toString());
+                            productAdapter.setSelectedImageUri(selectedImageUri);
+                        }
+                    }
+                }
+        );
+
+        productAdapter.setOnProductGroupUpdatedListener(() -> {
+            loadData(); // gọi lại API GET để load danh sách mới
         });
     }
 
@@ -72,33 +115,61 @@ public class AdminProductManagementFragment extends Fragment {
                 response -> {
                     try {
                         JSONArray jsonArray = new JSONArray(response);
-                        mangSP.clear();
+                        productArrayList.clear();
 
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject obj = jsonArray.getJSONObject(i);
 
-                            String masp = obj.getString("masp");
-                            String tensp = obj.getString("tensp");
-                            String dongiaStr = obj.getString("dongia");
-                            String mota = obj.getString("mota");
-                            String ghichu = obj.getString("ghichu");
-                            String soluongkhoStr = obj.getString("soluongkho");
-                            String maso = obj.getString("maso");
-                            String anhBase64 = obj.getString("anh");
-
-                            float dongia = Float.parseFloat(dongiaStr);
-                            int soluongkho = Integer.parseInt(soluongkhoStr);
-                            byte[] imageBytes = Base64.decode(anhBase64, Base64.DEFAULT);
-
+                            // Xử lý masp: nếu không có thì dùng maso, nếu maso cũng null thì dùng index
+                            String masp = obj.optString("masp", null);
+                            if (masp == null || masp.equals("null")) {
+                                Object masoObj = obj.opt("maso");
+                                if (masoObj != null && !masoObj.toString().equals("null")) {
+                                    masp = String.valueOf(masoObj);
+                                } else {
+                                    masp = "SP" + i;
+                                }
+                            }
+                            
+                            String tensp = obj.optString("tensp", "");
+                            // Xử lý dongia: có thể là string hoặc number
+                            float dongia = 0;
+                            if (obj.has("dongia") && !obj.isNull("dongia")) {
+                                if (obj.get("dongia") instanceof String) {
+                                    dongia = Float.parseFloat(obj.getString("dongia"));
+                                } else {
+                                    dongia = (float) obj.getDouble("dongia");
+                                }
+                            }
+                            String mota = obj.optString("mota", "");
+                            String ghichu = obj.optString("ghichu", "");
+                            // Xử lý soluongkho: có thể là string hoặc number
+                            int soluongkho = 0;
+                            if (obj.has("soluongkho") && !obj.isNull("soluongkho")) {
+                                if (obj.get("soluongkho") instanceof String) {
+                                    soluongkho = Integer.parseInt(obj.getString("soluongkho"));
+                                } else {
+                                    soluongkho = obj.getInt("soluongkho");
+                                }
+                            }
+                            // Xử lý maso có thể null
+                            Object masoObj = obj.opt("maso");
+                            String maso = (masoObj != null && !masoObj.toString().equals("null")) ? String.valueOf(masoObj) : null;
+                            // Xử lý picurl có thể null
+                            String picurl = obj.optString("picurl", null);
+                            if (picurl != null && (picurl.equals("null") || picurl.isEmpty())) {
+                                picurl = null;
+                            }
+                            
                             SanPham sp = new SanPham(
                                     masp, tensp, dongia, mota, ghichu,
-                                    soluongkho, maso, imageBytes
+                                    soluongkho, maso, picurl
                             );
 
-                            mangSP.add(sp);
+                            productArrayList.add(sp);
                         }
 
-                        adapter.notifyDataSetChanged();
+                        productAdapter.notifyDataSetChanged();
 
                     } catch (JSONException e) {
                         e.printStackTrace();

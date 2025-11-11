@@ -8,9 +8,9 @@ public class SanPham {
     int soluongkho;
 
 String mansp;
-    byte[] anh;
-
-    public SanPham(String masp, String tensp, Float dongia, String mota, String ghichu, int soluongkho, String mansp, byte[] anh) {
+//    byte[] anh;
+String anh;
+    public SanPham(String masp, String tensp, Float dongia, String mota, String ghichu, int soluongkho, String mansp, String anh) {
         this.masp = masp;
         this.tensp = tensp;
         this.dongia = dongia;
@@ -77,11 +77,11 @@ String mansp;
         this.mansp = ma;
     }
 
-    public byte[] getAnh() {
+    public String getAnh() {
         return anh;
     }
 
-    public void setAnh(byte[] anh) {
+    public void setAnh(String anh) {
         this.anh = anh;
     }
 
