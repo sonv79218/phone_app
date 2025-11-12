@@ -120,6 +120,8 @@ public class AdminProductManagementFragment extends Fragment {
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject obj = jsonArray.getJSONObject(i);
 
+                            // Optional server id
+                            String id = obj.optString("id", null);
                             // Xử lý masp: nếu không có thì dùng maso, nếu maso cũng null thì dùng index
                             String masp = obj.optString("masp", null);
                             if (masp == null || masp.equals("null")) {
@@ -162,7 +164,7 @@ public class AdminProductManagementFragment extends Fragment {
                             }
                             
                             SanPham sp = new SanPham(
-                                    masp, tensp, dongia, mota, ghichu,
+                                    id, masp, tensp, dongia, mota, ghichu,
                                     soluongkho, maso, picurl
                             );
 

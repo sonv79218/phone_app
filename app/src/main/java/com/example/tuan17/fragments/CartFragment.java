@@ -36,11 +36,11 @@ import java.util.List;
 import java.util.Map;
 
 public class CartFragment extends Fragment {
-    private ListView listView;
-    private GioHangAdapter adapter;
+    private ListView cartItemsView;
+    private GioHangAdapter cartAdapter;
     private GioHangManager gioHangManager;
-    private Button thanhtoan;
-    private TextView txtTongTien;
+    private Button paymentButton;
+    private TextView totalPriceTextView;
 
     @Nullable
     @Override
@@ -53,54 +53,39 @@ public class CartFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        thanhtoan = view.findViewById(R.id.btnthanhtoan);
-        listView = view.findViewById(R.id.productGroupList);
-        TextView textTendn = view.findViewById(R.id.tendn);
-
-        String tendn = SharedPrefHelper.getUsername(getActivity());
-
-        if (tendn != null) {
-            textTendn.setText(tendn);
-        } else {
-            Intent intent = new Intent(getActivity(), Login_Activity.class);
-            startActivity(intent);
-            getActivity().finish();
-            return;
-        }
-
-        txtTongTien = view.findViewById(R.id.tongtien);
+        paymentButton = view.findViewById(R.id.btnthanhtoan);
+        cartItemsView = view.findViewById(R.id.productGroupList);
+        totalPriceTextView = view.findViewById(R.id.tongtien);
 
         gioHangManager = GioHangManager.getInstance();
-
-        // Lấy danh sách giỏ hàng và cập nhật giao diện
         List<GioHang> gioHangList = gioHangManager.getGioHangList();
-        adapter = new GioHangAdapter(getActivity(), gioHangList, txtTongTien);
-        adapter.setOnSelectionChangedListener((selectedTotal, selectedCount) -> {
+        cartAdapter = new GioHangAdapter(getActivity(), gioHangList, totalPriceTextView);
+        cartAdapter.setOnSelectionChangedListener((selectedTotal, selectedCount) -> {
             // Hiển thị tổng tiền theo sản phẩm được chọn (nếu có chọn)
             if (selectedCount > 0) {
-                txtTongTien.setText(String.valueOf(selectedTotal));
+                totalPriceTextView.setText(String.valueOf(selectedTotal));
             } else {
-                txtTongTien.setText(String.valueOf(gioHangManager.getTongTien()));
+                totalPriceTextView.setText(String.valueOf(gioHangManager.getTongTien()));
             }
-            thanhtoan.setEnabled(selectedCount > 0);
+            paymentButton.setEnabled(selectedCount > 0);
         });
-        listView.setAdapter(adapter);
+        cartItemsView.setAdapter(cartAdapter);
 
         // Cập nhật tổng tiền ngay từ giỏ hàng
-        txtTongTien.setText(String.valueOf(gioHangManager.getTongTien()));
-        thanhtoan.setEnabled(false);
+        totalPriceTextView.setText(String.valueOf(gioHangManager.getTongTien()));
+        paymentButton.setEnabled(false);
 
         // Xử lý sự kiện click thanh toán
-        thanhtoan.setOnClickListener(v -> {
-            if (!adapter.hasSelection()) {
+        paymentButton.setOnClickListener(v -> {
+            if (!cartAdapter.hasSelection()) {
                 Toast.makeText(getActivity(), "Vui lòng chọn sản phẩm để thanh toán", Toast.LENGTH_SHORT).show();
                 return;
             }
             // Chuyển sang màn hình thanh toán với danh sách sản phẩm đã chọn
             Intent intent = new Intent(getActivity(), com.example.tuan17.Checkout_Activity.class);
-            ArrayList<com.example.tuan17.models.GioHang> selected = new ArrayList<>(adapter.getSelectedItems());
+            ArrayList<com.example.tuan17.models.GioHang> selected = new ArrayList<>(cartAdapter.getSelectedItems());
             intent.putParcelableArrayListExtra("selectedItems", selected);
-            intent.putExtra("selectedTotal", adapter.getSelectedTotal());
+            intent.putExtra("selectedTotal", cartAdapter.getSelectedTotal());
             startActivity(intent);
         });
     }
@@ -117,7 +102,7 @@ public class CartFragment extends Fragment {
         Button btnLuu = dialog.findViewById(R.id.btnxacnhandathang);
         TextView tvTongTien = dialog.findViewById(R.id.tienthanhtoan);
 
-        String tongTien = txtTongTien.getText().toString();
+        String tongTien = totalPriceTextView.getText().toString();
         tvTongTien.setText(tongTien);
 
         btnLuu.setOnClickListener(v -> {
@@ -157,11 +142,17 @@ public class CartFragment extends Fragment {
 
                                 Toast.makeText(getActivity(), "Đặt hàng thành công!", Toast.LENGTH_SHORT).show();
                                 gioHangManager.clearGioHang();
-                                txtTongTien.setText("0");
-                                adapter.notifyDataSetChanged();
+                                totalPriceTextView.setText("0");
+                                cartAdapter.notifyDataSetChanged();
                                 // Quay về HomeFragment
                                 if (getActivity() != null) {
                                     getActivity().getSupportFragmentManager().beginTransaction()
+                                            .setCustomAnimations(
+                                                    R.anim.slide_in_left,
+                                                    R.anim.slide_out_right,
+                                                    R.anim.slide_in_right,
+                                                    R.anim.slide_out_left
+                                            )
                                             .replace(R.id.fragment_container, new HomeFragment())
                                             .commit();
                                 }

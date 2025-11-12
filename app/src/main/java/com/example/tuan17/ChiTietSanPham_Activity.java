@@ -131,6 +131,7 @@ public class ChiTietSanPham_Activity extends AppCompatActivity {
                 startActivity(loginIntent);
             } else {
                 gioHangManager.addItem(chiTietSanPham); // Gọi phương thức addItem
+
                 Toast.makeText(ChiTietSanPham_Activity.this, "Thêm vào giỏ hàng thành công", Toast.LENGTH_SHORT).show();
             }
         });

@@ -2,9 +2,6 @@ package com.example.tuan17.fragments;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,14 +27,13 @@ import com.example.tuan17.util.ImageLoader;
 
 import org.json.JSONException;
 
-import java.io.File;
 import java.util.function.Consumer;
 
 public class ProductDetailFragment extends Fragment {
     private ChiTietSanPham chiTietSanPham;
     private GioHangManager gioHangManager;
     String masp;
-    Button btndathang, btnaddcart;
+    Button buyNowButton, addProductToCartButton;
     ImageView star1, star2, star3, star4, star5;
 
     @Nullable
@@ -52,8 +48,8 @@ public class ProductDetailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         TextView tvXemDanhGia = view.findViewById(R.id.tv_danhgia_title);
-        btndathang = view.findViewById(R.id.btndathang);
-        btnaddcart = view.findViewById(R.id.btnaddcart);
+        buyNowButton = view.findViewById(R.id.btndathang);
+        addProductToCartButton = view.findViewById(R.id.btnaddcart);
         star1 = view.findViewById(R.id.star1);
         star2 = view.findViewById(R.id.star2);
         star3 = view.findViewById(R.id.star3);
@@ -78,8 +74,7 @@ public class ProductDetailFragment extends Fragment {
             String ghichuStr = args.getString("ghichu");
             int soluongkhoInt = args.getInt("soluongkho");
             String maso = args.getString("maso");
-//            byte[] anh = args.getByteArray("anh");
-String imagePath = args.getString("picurl");
+            String imagePath = args.getString("picurl");
 
             chiTietSanPham = new ChiTietSanPham(masp, tenspStr, dongiaFloat, motaStr, ghichuStr, soluongkhoInt, maso, imagePath);
 
@@ -88,8 +83,6 @@ String imagePath = args.getString("picurl");
             dongia.setText(String.valueOf(dongiaFloat));
             mota.setText(motaStr != null ? motaStr : "Không có dữ liệu");
             soluongkho.setText(String.valueOf(soluongkhoInt));
-
-            // Load ảnh từ file path
             ImageLoader.loadFromFile(anh, imagePath, R.drawable.vest);
 
 
@@ -120,7 +113,7 @@ String imagePath = args.getString("picurl");
             }
         });
 
-        btnaddcart.setOnClickListener(v -> {
+        addProductToCartButton.setOnClickListener(v -> {
             SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MyPrefs", getActivity().MODE_PRIVATE);
             boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
 
@@ -129,11 +122,19 @@ String imagePath = args.getString("picurl");
                 startActivity(loginIntent);
             } else {
                 gioHangManager.addItem(chiTietSanPham);
+                Log.d("GIO_HANG", "Thêm sản phẩm: " + chiTietSanPham.getTensp() + " | masp=" + chiTietSanPham.getMasp());
+//                Toast.makeText(getActivity(), "Thêm vào giỏ hàng thành công", Toast.LENGTH_SHORT).show();
+                Toast.makeText(
+                        getActivity(),
+                        "Đã thêm sản phẩm: " + chiTietSanPham.getTensp() + " | Mã: " + chiTietSanPham.getMasp(),
+                        Toast.LENGTH_SHORT
+                ).show();
+
                 Toast.makeText(getActivity(), "Thêm vào giỏ hàng thành công", Toast.LENGTH_SHORT).show();
             }
         });
 
-        btndathang.setOnClickListener(v -> {
+        buyNowButton.setOnClickListener(v -> {
             SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MyPrefs", getActivity().MODE_PRIVATE);
             boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
 
@@ -146,7 +147,12 @@ String imagePath = args.getString("picurl");
                 CartFragment fragment = new CartFragment();
                 if (getActivity() != null) {
                     getActivity().getSupportFragmentManager().beginTransaction()
-                            .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                            .setCustomAnimations(
+                                    R.anim.slide_in_right,
+                                    R.anim.slide_out_left,
+                                    R.anim.slide_in_left,
+                                    R.anim.slide_out_right
+                            )
                             .replace(R.id.fragment_container, fragment)
                             .commit();
                 }

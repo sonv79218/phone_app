@@ -49,9 +49,9 @@ public class SanPhamAdapter extends BaseAdapter {
         void onProductGroupUpdated();
     }
 
-    private NhomSanPhamAdapter.OnProductGroupUpdatedListener updateListener;
+    private OnProductGroupUpdatedListener updateListener;
 
-    public void setOnProductGroupUpdatedListener(NhomSanPhamAdapter.OnProductGroupUpdatedListener listener) {
+    public void setOnProductGroupUpdatedListener(OnProductGroupUpdatedListener listener) {
         this.updateListener = listener;
     }
 
@@ -138,8 +138,9 @@ public class SanPhamAdapter extends BaseAdapter {
                 .setTitle("Xác nhận")
                 .setMessage("Bạn có chắc chắn muốn xóa sản phẩm này?")
                 .setPositiveButton("Có", (dialog, which) -> {
-                    String masp1 = tt.getMasp();
-                    String url = "http://10.0.2.2:3000/sanpham/" + masp1;
+                    // Prefer server id if available; fallback to masp
+                    String resourceId = tt.getId() != null ? tt.getId() : tt.getMasp();
+                    String url = "http://10.0.2.2:3000/sanpham/" + resourceId;
 
                     StringRequest request = new StringRequest(Request.Method.DELETE, url,
                             response -> {
@@ -277,7 +278,9 @@ public class SanPhamAdapter extends BaseAdapter {
         }
 
         // 🔹 URL API PUT
-        String url = "http://10.0.2.2:3000/sanpham/" + product.getMasp();
+        // Prefer server id if available; fallback to masp
+        String resourceId = product.getId() != null ? product.getId() : product.getMasp();
+        String url = "http://10.0.2.2:3000/sanpham/" + resourceId;
 
         // 🔹 Gửi yêu cầu cập nhật
         String finalNewProductName = newProductName;
@@ -310,29 +313,27 @@ public class SanPhamAdapter extends BaseAdapter {
         ) {
             @Override
             public byte[] getBody() {
-                Map<String, String> params = new HashMap<>();
-                params.put("tensp", finalNewProductName);
-                params.put("dongia", String.valueOf(finalNewPrice));
-                params.put("mota", finalNewDescription);
-                params.put("ghichu", finalNewNote);
-                params.put("soluongkho", String.valueOf(finalNewStockQuantity));
-                params.put("maso", finalNewGroupId); // ⚠️ trùng tên với backend
-                params.put("picurl", finalNewImagePath != null ? finalNewImagePath : "");
-
-                StringBuilder body = new StringBuilder();
-                for (Map.Entry<String, String> entry : params.entrySet()) {
-                    if (body.length() != 0) body.append("&");
-                    body.append(entry.getKey())
-                            .append("=")
-                            .append(Uri.encode(entry.getValue()));
+                try {
+                    JSONObject json = new JSONObject();
+                    // Include masp if backend uses it inside body
+                    json.put("masp", product.getMasp());
+                    json.put("tensp", finalNewProductName);
+                    json.put("dongia", finalNewPrice);
+                    json.put("mota", finalNewDescription);
+                    json.put("ghichu", finalNewNote);
+                    json.put("soluongkho", finalNewStockQuantity);
+                    json.put("maso", finalNewGroupId);
+                    json.put("picurl", finalNewImagePath != null ? finalNewImagePath : JSONObject.NULL);
+                    return json.toString().getBytes();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return null;
                 }
-
-                return body.toString().getBytes();
             }
 
             @Override
             public String getBodyContentType() {
-                return "application/x-www-form-urlencoded; charset=UTF-8";
+                return "application/json; charset=UTF-8";
             }
         };
 

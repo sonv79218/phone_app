@@ -5,13 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.example.tuan17.adapter.NhomSanPhamAdapter;
-import com.example.tuan17.database.Database;
+//import com.example.tuan17.database.Database;
 import com.example.tuan17.models.NhomSanPham;
 
 import java.util.ArrayList;
 
 public class SuaNhomsanpham_Activity extends AppCompatActivity {
-    Database database;
+//    Database database;
     ArrayList<NhomSanPham> mangNSP;
     NhomSanPhamAdapter adapter;
     @Override
@@ -20,8 +20,6 @@ public class SuaNhomsanpham_Activity extends AppCompatActivity {
         setContentView(R.layout.activity_sua_nhomsanpham);
         mangNSP = new ArrayList<>();
         adapter = new NhomSanPhamAdapter(SuaNhomsanpham_Activity.this, mangNSP, true);
-        database = new Database(this, "banhang.db", null, 1);
-        database.QueryData("CREATE TABLE IF NOT EXISTS nhomsanpham(maso INTEGER PRIMARY KEY AUTOINCREMENT, tennsp NVARCHAR(200), anh BLOB)");
 
     }
 }

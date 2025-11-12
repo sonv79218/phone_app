@@ -1,6 +1,8 @@
 package com.example.tuan17.models;
 
 public class SanPham {
+    // Optional server-side id (may differ from masp). Can be null.
+    String id;
     String masp;
     String tensp;
     Float dongia;
@@ -19,6 +21,27 @@ String anh;
         this.soluongkho = soluongkho;
         this.mansp = mansp;
         this.anh = anh;
+    }
+
+    // Overloaded constructor with server id
+    public SanPham(String id, String masp, String tensp, Float dongia, String mota, String ghichu, int soluongkho, String mansp, String anh) {
+        this.id = id;
+        this.masp = masp;
+        this.tensp = tensp;
+        this.dongia = dongia;
+        this.mota = mota;
+        this.ghichu = ghichu;
+        this.soluongkho = soluongkho;
+        this.mansp = mansp;
+        this.anh = anh;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getMasp() {

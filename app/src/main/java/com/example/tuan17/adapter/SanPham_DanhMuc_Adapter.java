@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.tuan17.ChiTietSanPham_Activity;
-import com.example.tuan17.database.Database;
+//import com.example.tuan17.database.Database;
 import com.example.tuan17.R;
 import com.example.tuan17.models.ChiTietSanPham;
 import com.example.tuan17.models.SanPham;
@@ -26,13 +26,13 @@ public class SanPham_DanhMuc_Adapter extends BaseAdapter {
     private Uri selectedImageUri;
     private ArrayList<SanPham> spList;
     private boolean showFullDetails;
-    private Database database;
+//    private Database database;
 
     public SanPham_DanhMuc_Adapter(Context context, ArrayList<SanPham> spList, boolean showFullDetails) {
         this.context = context;
         this.spList = spList;
         this.showFullDetails = showFullDetails;
-        this.database = new Database(context, "banhang.db", null, 1);
+//        this.database = new Database(context, "banhang.db", null, 1);
     }
 
     @Override

@@ -14,8 +14,6 @@ import com.android.volley.Request;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.tuan17.adapter.TaiKhoanAdapter;
-import com.example.tuan17.database.Database;
-//import com.example.tuan17.database.TaiKhoanDB;
 import com.example.tuan17.models.TaiKhoan;
 
 import java.util.ArrayList;

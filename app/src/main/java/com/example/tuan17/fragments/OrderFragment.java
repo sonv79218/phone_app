@@ -57,7 +57,12 @@ public class OrderFragment extends Fragment {
 
                     if (getActivity() != null) {
                         getActivity().getSupportFragmentManager().beginTransaction()
-                                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                                .setCustomAnimations(
+                                        R.anim.slide_in_right,
+                                        R.anim.slide_out_left,
+                                        R.anim.slide_in_left,
+                                        R.anim.slide_out_right
+                                )
                                 .replace(R.id.fragment_container, fragment)
                                 .addToBackStack(null)
                                 .commit();

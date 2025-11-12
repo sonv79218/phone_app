@@ -12,6 +12,7 @@ import com.example.tuan17.Nhomsanpham_admin_Actvity;
 import com.example.tuan17.R;
 import com.example.tuan17.Sanpham_admin_Activity;
 import com.example.tuan17.Taikhoan_admin_Activity;
+import com.example.tuan17.fragments.AdminAccountManagementFragment;
 import com.example.tuan17.fragments.AdminCategoryManagementFragment;
 import com.example.tuan17.fragments.AdminHomeFragment;
 import com.example.tuan17.fragments.AdminOrderFragment;
@@ -39,7 +40,12 @@ public class BottomBar_Admin_Helper {
                 public void onClick(View view) {
                     Fragment fragment = new AdminHomeFragment();
                     fragmentManager.beginTransaction()
-                            .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                            .setCustomAnimations(
+                                    R.anim.slide_in_right,
+                                    R.anim.slide_out_left,
+                                    R.anim.slide_in_left,
+                                    R.anim.slide_out_right
+                            )
                             .replace(R.id.admin_fragment_container, fragment)
                             .commit();
                 }
@@ -54,7 +60,12 @@ public class BottomBar_Admin_Helper {
                     if (isLoggedIn) {
                         Fragment fragment = new AdminProfileFragment();
                         fragmentManager.beginTransaction()
-                                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                                .setCustomAnimations(
+                                        R.anim.slide_in_right,
+                                        R.anim.slide_out_left,
+                                        R.anim.slide_in_left,
+                                        R.anim.slide_out_right
+                                )
                                 .replace(R.id.admin_fragment_container, fragment)
                                 .commit();
                     } else {
@@ -67,7 +78,12 @@ public class BottomBar_Admin_Helper {
             btndonhang.setOnClickListener(view -> {
                 Fragment fragment = new AdminOrderFragment();
                 fragmentManager.beginTransaction()
-                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                        .setCustomAnimations(
+                                R.anim.slide_in_right,
+                                R.anim.slide_out_left,
+                                R.anim.slide_in_left,
+                                R.anim.slide_out_right
+                        )
                         .replace(R.id.admin_fragment_container, fragment)
                         .commit();
             });
@@ -75,7 +91,12 @@ public class BottomBar_Admin_Helper {
             btnsanpham.setOnClickListener(view -> {
                 Fragment fragment = new AdminProductManagementFragment();
                 fragmentManager.beginTransaction()
-                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                        .setCustomAnimations(
+                                R.anim.slide_in_right,
+                                R.anim.slide_out_left,
+                                R.anim.slide_in_left,
+                                R.anim.slide_out_right
+                        )
                         .replace(R.id.admin_fragment_container, fragment)
                         .commit();
             });
@@ -89,9 +110,14 @@ public class BottomBar_Admin_Helper {
             });
 
             btntaikhoan.setOnClickListener(view -> {
-                Fragment fragment = new AdminProfileFragment();
+                Fragment fragment = new AdminAccountManagementFragment();
                 fragmentManager.beginTransaction()
-                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                        .setCustomAnimations(
+                                R.anim.slide_in_right,
+                                R.anim.slide_out_left,
+                                R.anim.slide_in_left,
+                                R.anim.slide_out_right
+                        )
                         .replace(R.id.admin_fragment_container, fragment)
                         .commit();
             });

@@ -31,7 +31,12 @@ public class BottomBar_Helper {
             btnTrangChu.setOnClickListener(view -> {
                 Fragment fragment = new HomeFragment();
                 fragmentManager.beginTransaction()
-                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                        .setCustomAnimations(
+                                R.anim.slide_in_right,
+                                R.anim.slide_out_left,
+                                R.anim.slide_in_left,
+                                R.anim.slide_out_right
+                        )
                         .replace(R.id.fragment_container, fragment)
                         .commit();
             });
@@ -39,7 +44,12 @@ public class BottomBar_Helper {
             btnDonHang.setOnClickListener(view -> {
                 Fragment fragment = new OrderFragment();
                 fragmentManager.beginTransaction()
-                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                        .setCustomAnimations(
+                                R.anim.slide_in_right,
+                                R.anim.slide_out_left,
+                                R.anim.slide_in_left,
+                                R.anim.slide_out_right
+                        )
                         .replace(R.id.fragment_container, fragment)
                         .commit();
             });
@@ -47,7 +57,12 @@ public class BottomBar_Helper {
             btnGioHang.setOnClickListener(view -> {
                 Fragment fragment = new CartFragment();
                 fragmentManager.beginTransaction()
-                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                        .setCustomAnimations(
+                                R.anim.slide_in_right,
+                                R.anim.slide_out_left,
+                                R.anim.slide_in_left,
+                                R.anim.slide_out_right
+                        )
                         .replace(R.id.fragment_container, fragment)
                         .commit();
             });
@@ -59,7 +74,12 @@ public class BottomBar_Helper {
                 if (isLoggedIn) {
                     Fragment fragment = new ProfileFragment();
                     fragmentManager.beginTransaction()
-                            .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                            .setCustomAnimations(
+                                    R.anim.slide_in_right,
+                                    R.anim.slide_out_left,
+                                    R.anim.slide_in_left,
+                                    R.anim.slide_out_right
+                            )
                             .replace(R.id.fragment_container, fragment)
                             .commit();
                 } else {
@@ -72,7 +92,12 @@ public class BottomBar_Helper {
                 btnTimKiem.setOnClickListener(view -> {
                     Fragment fragment = new SearchFragment();
                     fragmentManager.beginTransaction()
-                            .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                            .setCustomAnimations(
+                                    R.anim.slide_in_right,
+                                    R.anim.slide_out_left,
+                                    R.anim.slide_in_left,
+                                    R.anim.slide_out_right
+                            )
                             .replace(R.id.fragment_container, fragment)
                             .addToBackStack(null)
                             .commit();

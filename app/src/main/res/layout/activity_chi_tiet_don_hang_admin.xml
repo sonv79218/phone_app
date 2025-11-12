@@ -1,52 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F6F3EF">
 
-
-    android:name="android.permission.SYSTEM_ALERT_WINDOW"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Header -->
     <LinearLayout
-        android:id="@+id/bo"
+        android:id="@+id/layoutHeader"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:backgroundTint="#B8B519"
-        android:layout_alignParentTop="true"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
         android:background="#072349"
+        android:gravity="center_vertical">
 
-        android:padding="1dp">
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:background="#072349"
-            android:layout_height="60dp">
-            <TextView
-                android:layout_marginLeft="1dp"
-                android:layout_weight="9"
-                android:gravity="center"
-                android:fontFamily="sans-serif-condensed-light"
-                android:textStyle="bold"
-                android:textSize="20dp"
-                android:layout_gravity="center"
-                android:text="CHI TIẾT ĐƠN HÀNG"
-                android:textColor="#FFFFFF"
-                android:src="@drawable/logo1"
-                android:layout_width="80dp"
-                android:layout_height="80dp"></TextView>
-        </LinearLayout>
+        <ImageButton
+            android:id="@+id/button_back"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:background="@android:color/transparent"
+            android:src="@android:drawable/ic_menu_revert"
+            android:contentDescription="Quay lại" />
 
+        <TextView
+            android:id="@+id/text_view_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="CHI TIẾT ĐƠN HÀNG"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:fontFamily="sans-serif-condensed" />
     </LinearLayout>
+
+    <!-- Danh sách sản phẩm trong đơn hàng -->
     <ListView
-        android:layout_marginTop="5dp"
-        android:layout_width="match_parent"
         android:id="@+id/productGroupList"
-        android:layout_below="@+id/bo"
-        android:layout_marginLeft="10dp"
-        android:layout_marginBottom="50dp"
-        android:layout_marginRight="10dp"
-        android:layout_height="match_parent">
-
-    </ListView>
-
-
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/layoutHeader"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="0.5dp"
+        android:padding="8dp" />
 </RelativeLayout>

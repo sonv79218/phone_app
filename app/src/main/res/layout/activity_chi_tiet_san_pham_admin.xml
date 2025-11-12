@@ -1,231 +1,201 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#F9FAFB">
 
-    <!-- Tiêu đề -->
-    <TextView
+    <!-- Header -->
+    <LinearLayout
+        android:id="@+id/headerBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#F6F3EF"
-        android:padding="16dp"
-        android:gravity="center"
-        android:backgroundTint="#072349"
-        android:text="CHI TIẾT SẢN PHẨM"
-    android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        android:id="@+id/tieude"
-        android:textStyle="bold"
-        android:layout_alignParentTop="true"/>
-    <ImageView
+        android:layout_height="56dp"
+        android:background="#FF5722"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp">
 
-        android:layout_marginLeft="1dp"
-        android:layout_marginTop="10dp"
-        android:id="@+id/back"
-        android:src="@drawable/ql"
-        android:layout_width="40dp"
-        android:layout_height="40dp"></ImageView>
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ql"
+            android:tint="#FFFFFF" />
 
-    <!-- ScrollView cho nội dung -->
+        <TextView
+            android:id="@+id/tieude"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Chi tiết sản phẩm"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginStart="-24dp"/>
+    </LinearLayout>
+
+    <!-- Nội dung -->
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_above="@+id/bottomToolbar"
-        android:layout_below="@+id/tieude">
+        android:layout_height="match_parent"
+        android:layout_below="@id/headerBar"
+        android:paddingBottom="80dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <ImageView
-                android:id="@+id/imgsp"
-             android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:layout_width="280dp"
+            <!-- Ảnh sản phẩm -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
                 android:layout_height="250dp"
-                android:scaleType="centerCrop"
-                android:src="@mipmap/ic_launcher_round" /> <!-- Placeholder image -->
+                app:cardCornerRadius="12dp"
+                app:cardElevation="3dp"
+                android:layout_marginBottom="16dp">
 
+                <ImageView
+                    android:id="@+id/imgsp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/ic_launcher_round" />
+            </androidx.cardview.widget.CardView>
+
+            <!-- Tên sản phẩm -->
             <TextView
                 android:id="@+id/tensp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="16dp"
-                android:textAllCaps="true"
-                android:textColor="#46C501"
-                android:textSize="24sp"
-                android:text="Tên Sản Phẩm"
-                android:textStyle="bold"/>
+                android:text="Tên Sản Phẩm Nổi Bật"
+                android:textSize="22sp"
+                android:textColor="#212121"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_marginLeft="20dp"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Đơn giá:"
-                    android:textSize="15sp"
-                    android:textColor="#000000"
-                    android:textStyle="bold"
-                    android:layout_marginTop="5dp"/>
-
-                <TextView
-                    android:id="@+id/dongia"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Đơn giá"
-                    android:textColor="#FF0000"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginStart="8dp"/>
-                <TextView
-
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="(USD)"
-                    android:textColor="#FF0000"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginStart="8dp"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_marginLeft="20dp"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Số lượng:"
-                    android:textSize="15sp"
-                    android:textColor="#000000"
-                    android:textStyle="bold"
-                    android:layout_marginTop="6dp"/>
-
-                <TextView
-                    android:id="@+id/soluongkho"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="SL"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="6dp"
-                    android:layout_marginStart="8dp"/>
-                <TextView
-
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="(sản phẩm)"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="6dp"
-                    android:layout_marginStart="8dp"/>
-
-            </LinearLayout>
-
+            <!-- Giá -->
             <TextView
+                android:id="@+id/dongia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="299.000 đ"
+                android:textColor="#E91E63"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Số lượng -->
+            <TextView
+                android:id="@+id/soluongkho"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Còn lại: 15 sản phẩm"
+                android:textColor="#757575"
+                android:textSize="14sp"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Divider -->
+            <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="3dp"
-                android:background="#FF2020"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"/>
+                android:background="#DDDDDD"
+                android:layout_marginBottom="16dp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_marginLeft="20dp"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Mô tả:"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="#000000"
-                    android:layout_marginTop="10dp"/>
-
-                <TextView
-                    android:id="@+id/mota"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="Mô tả"
-                    android:textSize="16sp"
-                    android:maxLines="10"
-                    android:ellipsize="end"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginStart="8dp"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_marginLeft="20dp"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Ghi chú:"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="#000000"
-                    android:layout_marginTop="10dp"/>
-
-                <TextView
-                    android:id="@+id/ghichu"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="Ghichus"
-                    android:textSize="16sp"
-                    android:maxLines="10"
-                    android:ellipsize="end"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginStart="8dp"/>
-            </LinearLayout>
-            <LinearLayout
+            <!-- Mô tả -->
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dp">
-            </LinearLayout>
+                android:text="Mô tả sản phẩm"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginBottom="4dp"/>
+
+            <TextView
+                android:id="@+id/mota"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Chi tiết sản phẩm sẽ được hiển thị ở đây. Bao gồm chất liệu, kích thước, công dụng..."
+                android:textColor="#424242"
+                android:textSize="15sp"
+                android:lineSpacingExtra="4dp"
+                android:layout_marginBottom="12dp"/>
+
+            <!-- Ghi chú -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ghi chú thêm"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginBottom="4dp"/>
+
+            <TextView
+                android:id="@+id/ghichu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Hàng chính hãng, bảo hành 12 tháng."
+                android:textColor="#424242"
+                android:textSize="15sp"
+                android:lineSpacingExtra="4dp"
+                android:layout_marginBottom="24dp"/>
+
+            <!-- Ẩn các ID -->
+            <TextView
+                android:id="@+id/masp"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:textSize="1sp"/>
+
+            <TextView
+                android:id="@+id/manhomsanpham"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:textSize="1sp"/>
+
+            <TextView
+                android:id="@+id/tendn"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:textSize="1sp"/>
+
         </LinearLayout>
     </ScrollView>
 
-    <!-- Toolbar ở cuối màn hình -->
-    <include
+    <!-- Thanh hành động dưới -->
+    <LinearLayout
+        android:id="@+id/bottomToolbar"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/bottomToolbar"
-        layout="@layout/bottom_toolbar_admin" />
+        android:layout_height="64dp"
+        android:orientation="horizontal"
+        android:background="#FFFFFF"
+        android:padding="8dp"
+        android:elevation="8dp"
+        android:gravity="center_vertical">
 
-    <TextView
-        android:id="@+id/masp"
-        android:textSize="1sp"
-        android:layout_width="0dp"
-        android:layout_height="0dp" />
+        <Button
+            android:id="@+id/btnAddToCart"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="Thêm vào giỏ hàng"
+            android:backgroundTint="#FF9800"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:layout_marginEnd="8dp" />
 
-    <TextView
-        android:id="@+id/manhomsanpham"
-        android:textSize="1sp"
-        android:layout_width="0dp"
-        android:layout_height="0dp" />
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:id="@+id/tendn"
-        />
+        <Button
+            android:id="@+id/btnBuyNow"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="Mua ngay"
+            android:backgroundTint="#E91E63"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="15sp" />
+    </LinearLayout>
 </RelativeLayout>

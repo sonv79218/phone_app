@@ -30,16 +30,16 @@ import java.util.List;
 import android.os.Handler;
 
 public class HomeFragment extends Fragment {
-    GridView grv2;
-    GridView grv1;
+    GridView productGroupGridView;
+    GridView productGridView;
     ViewPager2 bannerPager;
     BannerAdapter bannerAdapter;
     Handler bannerHandler = new Handler();
     Runnable bannerRunnable;
-    ArrayList<SanPham> mangSPgrv1; // Danh sách cho GridView
-    ArrayList<NhomSanPham> mangNSPgrv2; // Danh sách cho ListView
-    NhomSanPhamAdapter adapterGrv2;
-    SanPhamAdapter adapterGrv1;
+    ArrayList<SanPham> productList; // Danh sách cho GridView
+    ArrayList<NhomSanPham> productGroupList; // Danh sách cho ListView
+    NhomSanPhamAdapter productGroupAdapter;
+    SanPhamAdapter productAdapter;
     String serverUrl = "http://10.0.2.2:3000"; // hoặc IP máy thật khi dùng điện thoại
 
     @Nullable
@@ -54,8 +54,8 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         EditText timkiem = view.findViewById(R.id.timkiem);
-        grv2 = view.findViewById(R.id.grv2);
-        grv1 = view.findViewById(R.id.grv1);
+        productGroupGridView = view.findViewById(R.id.grv2);
+        productGridView = view.findViewById(R.id.grv1);
         bannerPager = view.findViewById(R.id.bannerPager);
 
         // Banner setup: 3 images, swipeable, auto-slide
@@ -82,11 +82,10 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        grv2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        productGroupGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Lấy đối tượng nhóm sản phẩm từ adapter
-                NhomSanPham nhomSanPham = mangNSPgrv2.get(position);
+                NhomSanPham nhomSanPham = productGroupList.get(position);
 
                 if (nhomSanPham != null) {
                     // Navigate to CategoryFragment
@@ -97,7 +96,12 @@ public class HomeFragment extends Fragment {
 
                     if (getActivity() != null) {
                         getActivity().getSupportFragmentManager().beginTransaction()
-                                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                                .setCustomAnimations(
+                                        R.anim.slide_in_right,
+                                        R.anim.slide_out_left,
+                                        R.anim.slide_in_left,
+                                        R.anim.slide_out_right
+                                )
                                 .replace(R.id.fragment_container, fragment)
                                 .addToBackStack(null)
                                 .commit();
@@ -112,7 +116,12 @@ public class HomeFragment extends Fragment {
                 SearchFragment fragment = new SearchFragment();
                 if (getActivity() != null) {
                     getActivity().getSupportFragmentManager().beginTransaction()
-                            .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                            .setCustomAnimations(
+                                    R.anim.slide_in_right,
+                                    R.anim.slide_out_left,
+                                    R.anim.slide_in_left,
+                                    R.anim.slide_out_right
+                            )
                             .replace(R.id.fragment_container, fragment)
                             .addToBackStack(null)
                             .commit();
@@ -121,17 +130,17 @@ public class HomeFragment extends Fragment {
         });
 
         // Khởi tạo danh sách và adapter
-        mangNSPgrv2 = new ArrayList<>();
-        mangSPgrv1 = new ArrayList<>();
+        productGroupList = new ArrayList<>();
+        productList = new ArrayList<>();
 
-        adapterGrv2 = new NhomSanPhamAdapter(getActivity(), mangNSPgrv2, false);
-        adapterGrv1 = new SanPhamAdapter(getActivity(), mangSPgrv1, false);
+        productGroupAdapter = new NhomSanPhamAdapter(getActivity(), productGroupList, false);
+        productAdapter = new SanPhamAdapter(getActivity(), productList, false);
 
-        grv2.setAdapter(adapterGrv2);
-        grv1.setAdapter(adapterGrv1);
+        productGroupGridView.setAdapter(productGroupAdapter);
+        productGridView.setAdapter(productAdapter);
 
-        grv1.setOnItemClickListener((parent, view1, position, id) -> {
-            SanPham sanPham = mangSPgrv1.get(position);
+        productGridView.setOnItemClickListener((parent, view1, position, id) -> {
+            SanPham sanPham = productList.get(position);
             navigateToProductDetail(sanPham);
         });
 
@@ -144,7 +153,7 @@ public class HomeFragment extends Fragment {
         String url = serverUrl + "/nhomsanpham/random?limit=8";
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
                 response -> {
-                    mangNSPgrv2.clear();
+                    productGroupList.clear();
                     for (int i = 0; i < response.length(); i++) {
                         try {
                             JSONObject obj = response.getJSONObject(i);
@@ -156,12 +165,12 @@ public class HomeFragment extends Fragment {
                                 picurl = null;
                             }
 
-                            mangNSPgrv2.add(new NhomSanPham(ma, ten, picurl));
+                            productGroupList.add(new NhomSanPham(ma, ten, picurl));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
-                    adapterGrv2.notifyDataSetChanged();
+                    productGroupAdapter.notifyDataSetChanged();
                 },
                 error -> Toast.makeText(getActivity(), "Không thể tải nhóm sản phẩm", Toast.LENGTH_SHORT).show()
         );
@@ -172,7 +181,7 @@ public class HomeFragment extends Fragment {
         String url = serverUrl + "/sanpham/random?limit=8";
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
                 response -> {
-                    mangSPgrv1.clear();
+                    productList.clear();
                     for (int i = 0; i < response.length(); i++) {
                         try {
                             JSONObject obj = response.getJSONObject(i);
@@ -209,14 +218,14 @@ public class HomeFragment extends Fragment {
                                 anh = null;
                             }
 
-                            mangSPgrv1.add(new SanPham(masp, tensp, dongia, mota, ghichu, soluongkho, maso, anh));
+                            productList.add(new SanPham(masp, tensp, dongia, mota, ghichu, soluongkho, maso, anh));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         } catch (NumberFormatException e) {
                             e.printStackTrace();
                         }
                     }
-                    adapterGrv1.notifyDataSetChanged();
+                    productAdapter.notifyDataSetChanged();
                 },
                 error -> Toast.makeText(getActivity(), "Không thể tải sản phẩm", Toast.LENGTH_SHORT).show()
         );
@@ -238,7 +247,12 @@ public class HomeFragment extends Fragment {
 
         if (getActivity() != null) {
             getActivity().getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                    .setCustomAnimations(
+                            R.anim.slide_in_right,
+                            R.anim.slide_out_left,
+                            R.anim.slide_in_left,
+                            R.anim.slide_out_right
+                    )
                     .replace(R.id.fragment_container, fragment)
                     .addToBackStack(null)
                     .commit();

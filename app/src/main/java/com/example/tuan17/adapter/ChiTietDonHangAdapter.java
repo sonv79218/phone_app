@@ -42,11 +42,11 @@ public class ChiTietDonHangAdapter extends ArrayAdapter<ChiTietDonHang> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.ds_chitietdonhang, parent, false);
         }
 //        lấy các thành phần giao diện
-        TextView tvID_dathang = convertView.findViewById(R.id.txt_Iddathang);
+//        TextView tvID_dathang = convertView.findViewById(R.id.txt_Iddathang);
         TextView tvMaSp = convertView.findViewById(R.id.txtMasp);
         TextView tvTenSp = convertView.findViewById(R.id.txtTensp); // Thêm TextView cho tên sản phẩm
-        TextView tvSoLuong = convertView.findViewById(R.id.txtSoLuong);
-        TextView tvDonGia = convertView.findViewById(R.id.txtGia);
+//        TextView tvSoLuong = convertView.findViewById(R.id.txtSoLuong);
+//        TextView tvDonGia = convertView.findViewById(R.id.txtGia);
         ImageView ivAnh = convertView.findViewById(R.id.imgsp);
         Button danhGia = convertView.findViewById(R.id.btnDanhGia);
         // lấy id người mua, mã đơn hàng, và sản phẩm
@@ -84,7 +84,7 @@ public class ChiTietDonHangAdapter extends ArrayAdapter<ChiTietDonHang> {
             }
         });
         // Hiển thị ID đơn hàng
-        tvID_dathang.setText(String.valueOf(id_donhang));
+//        tvID_dathang.setText(String.valueOf(id_donhang));
 
         // Hiển thị mã sản phẩm
         tvMaSp.setText(String.valueOf(masp)); // Hiển thị mã sản phẩm
@@ -95,8 +95,8 @@ public class ChiTietDonHangAdapter extends ArrayAdapter<ChiTietDonHang> {
                 tvTenSp.setText("Không xác định");
             }
         });
-        tvSoLuong.setText(String.valueOf(detail.getSoLuong()));
-        tvDonGia.setText(String.valueOf(detail.getDonGia()));
+//        tvSoLuong.setText(String.valueOf(detail.getSoLuong()));
+//        tvDonGia.setText(String.valueOf(detail.getDonGia()));
         byte[] anhByteArray = detail.getAnh();
         if (anhByteArray != null && anhByteArray.length > 0) {
             Bitmap bitmap = BitmapFactory.decodeByteArray(anhByteArray, 0, anhByteArray.length);

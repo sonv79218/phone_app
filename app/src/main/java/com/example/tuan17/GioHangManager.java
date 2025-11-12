@@ -31,14 +31,28 @@ public class GioHangManager {
 
     public void addItem(ChiTietSanPham sanPham) {
         for (GioHang item : items) {
-            if (item.getSanPham().getMasp().equals(sanPham.getMasp())) {
-                item.setSoLuong(item.getSoLuong() + 1); // Tăng số lượng
-                return; // Trả về ngay sau khi tăng số lượng
+            String masp1 = item.getSanPham().getMasp();
+            String masp2 = sanPham.getMasp();
+
+            // So sánh kỹ: nếu cả hai đều null thì dùng tên sản phẩm thay thế
+            boolean sameProduct = false;
+
+            if (masp1 != null && masp2 != null) {
+                sameProduct = masp1.equals(masp2);
+            } else if (masp1 == null && masp2 == null) {
+                sameProduct = item.getSanPham().getTensp().equalsIgnoreCase(sanPham.getTensp());
+            }
+
+            if (sameProduct) {
+                item.setSoLuong(item.getSoLuong() + 1);
+                return;
             }
         }
-        // Nếu sản phẩm không tồn tại, thêm mới với số lượng 1
+
+        // Nếu sản phẩm chưa có trong giỏ → thêm mới
         items.add(new GioHang(sanPham, 1));
     }
+
     public void removeItem(int position) {
         if (position >= 0 && position < items.size()) {
 

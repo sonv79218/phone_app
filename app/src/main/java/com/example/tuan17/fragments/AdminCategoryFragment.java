@@ -59,7 +59,7 @@ public class AdminCategoryFragment extends Fragment {
     }
 
     private void loadSanPhamTheoNhom(String maso) {
-        String url = "http://10.0.2.2:3000/sanpham/nhom/" + maso;
+        String url = com.example.tuan17.util.ApiConfig.productsByGroup(maso);
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
@@ -115,7 +115,11 @@ public class AdminCategoryFragment extends Fragment {
                 },
                 error -> {
                     error.printStackTrace();
-                    Toast.makeText(getActivity(), "Lỗi kết nối đến API", Toast.LENGTH_SHORT).show();
+                    String message = "Lỗi kết nối đến API";
+                    if (error.networkResponse != null) {
+                        message += " (" + error.networkResponse.statusCode + ")";
+                    }
+                    Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                 }
         );
 
